@@ -1,0 +1,28 @@
+Leonardo:
+
+- Tad Lista; 
+
+- Arquivo de saida;
+
+(a) caminhamento em Largura;
+
+(f) Dijkstra: caminho mínimo (para grafos ou digrafos
+ponderados ou não); 
+
+(h) Prim: Árvore Geradora Mínima (para grafos não
+orientados ponderados ou não);
+
+
+Patrick:
+
+- Leitura do arquivo de entrada;
+
+- Tad Grafo; 
+
+(b) caminhamento em Profundidade;
+
+(g) Floyd: caminho mínimo (para grafos ou digrafos
+ponderados ou não);
+
+(i) Kruskal: Árvore Geradora Mínima (para grafos não
+orientados ponderados ou não);
