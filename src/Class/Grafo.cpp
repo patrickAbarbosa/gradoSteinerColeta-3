@@ -104,3 +104,20 @@ void Grafo::leArquivo()
   else
     cout << "Erro ao abrir Aquivo" << endl;
 }
+
+/*
+ * ExportaGrafo() Exporta os dados 
+ * analizados durante a execução do
+ * programa com determinada entrada
+ */
+void Grafo::exportaGrafo()
+{
+  cout << "Exportando analizes do Grafo!" << endl;
+
+  if(0)
+  {
+    cout << "Exportando" << endl; // continuar com o export
+  }
+  else
+    cout << "Erro ao exportar! Grafo não encontrado." << endl;  
+}
