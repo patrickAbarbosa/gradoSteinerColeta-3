@@ -9,11 +9,16 @@
  */
 
 #include <iostream>
+#include "src/Headers/Grafo.h"
 
 using namespace std;
 
 int main(){
   cout << "Grupo 03 - Steiner com Coleta de Prêmios" << endl;
   
+  Grafo *a;
+
+  a =  new Grafo("file.txt");
+  delete a;
   return 0;
 }
