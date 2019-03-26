@@ -1,7 +1,9 @@
 #include <iostream>
 #include <fstream> // Open File
 #include <string>
+
 #include "../Headers/Grafo.h" // .h Grafo
+#include "../Headers/Lista"
 
 using namespace std;
 
@@ -19,6 +21,8 @@ Grafo::Grafo()
 {
   cout << "Construindo Grafo" << endl;
 
+  vertices = new Lista();
+
   arquivoIn = NULL;
   arquivoOut = NULL;
 
@@ -33,6 +37,8 @@ Grafo::Grafo()
 Grafo::Grafo(string in)
 {
   cout << "Construindo Grafo" << endl;
+
+  vertices = new Lista();
 
   arquivoIn = new string;
   *arquivoIn = in;
@@ -54,6 +60,9 @@ Grafo::Grafo(string in)
 Grafo::Grafo(string in, string out)
 {
   cout << "Construindo Grafo" << endl;
+  
+  vertices = new Lista();
+
   arquivoIn = new string;
   *arquivoIn = in;
 
@@ -74,6 +83,9 @@ Grafo::Grafo(string in, string out)
 Grafo::~Grafo()
 {
   cout << "Destruindo Grafo" << endl;
+  
+  delete vertices;
+
   if (arquivoIn)
     delete arquivoIn;
   if (arquivoOut)
