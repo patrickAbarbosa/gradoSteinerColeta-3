@@ -1,4 +1,7 @@
-#include "Lista.h"
+#include "../Headers/Lista.h"
+
+
+//construtor inicializa os ponteiros com NULL e a variavel com 0
 
 Lista::Lista () {
 
@@ -8,6 +11,8 @@ Lista::Lista () {
 	
 }
 
+//insere um novo vertice a lista caso nao exista outro vertice com essa info
+
 void Lista::insereVertice (string info, int peso) {
 	
 	if (primeiro == NULL) {
@@ -16,12 +21,12 @@ void Lista::insereVertice (string info, int peso) {
 		quantidade ++;
 	}
 	if(buscaVertice(info) == NULL){
-		Vertice * p = primeiro;
+		Vertice *p = primeiro;
 		
 		while (p->getProx() != NULL)
 			p = p->getProx();
 		
-		Vertice * novo = new Vertice (info, peso);
+		Vertice *novo = new Vertice (info, peso);
 		p->setProx(novo);
 		
 		if (maiorGrau->getGrau() <= novo->getGrau())
@@ -33,6 +38,7 @@ void Lista::insereVertice (string info, int peso) {
 		
 }
 
+// Busca o vertice usando a informacao na lista e caso nao exista retorna NULL
 
 Vertice* Lista::buscaVertice(string info) {
 	 
@@ -47,6 +53,8 @@ Vertice* Lista::buscaVertice(string info) {
 	
 	return NULL;
 }
+
+//Deleta um vertice dado a info
 
 void Lista::deletaVertice (string info) {
 	

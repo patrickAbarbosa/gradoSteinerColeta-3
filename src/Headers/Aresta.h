@@ -1,7 +1,7 @@
 #ifndef ARESTA_H
 #define ARESTA_H
 
-#include Vertice.h
+#include "../Headers/Vertice.h"
 
 Class Aresta {
 	

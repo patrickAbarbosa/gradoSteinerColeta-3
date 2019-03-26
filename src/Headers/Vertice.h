@@ -1,7 +1,7 @@
 #ifndef VERTICE_H
 #def VERTICE_H
 
-#include Aresta.h
+#include "../Headers/Aresta.h"
 
 using namespace std;
 

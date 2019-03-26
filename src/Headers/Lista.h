@@ -1,7 +1,7 @@
 #ifndef LISTA_H
 #define LISTA_H
 
-#include Vertice.h
+#include "../Headers/Vertice.h"
 
 using namespace std;
 
