@@ -4,6 +4,9 @@
 #include <iostream>
 #include <string>
 
+#include "../Headers/Lista.h"
+#include "../Headers/Vertice.h"
+
 using namespace std;
 class Grafo
 {
@@ -13,7 +16,18 @@ class Grafo
     Grafo(string in, string out);
     ~Grafo();
 
+    //Public fnctions
+    void addVertice(int info, int peso);
+    void deleteVertice(int info);
+
+    void addAresta(int origem, int destino, int peso);
+    void deleteAresta(int info);
+
+    Vertice *getVertice(int info);
+
   private:
+    Lista  *vertices;
+ 
     string *arquivoIn;
     string *arquivoOut;
 
