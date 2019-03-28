@@ -1,13 +1,18 @@
-#ifndef ARESTA_H
-#define ARESTA_H
+#ifndef ARESTA_H_INCLUDED
+#define ARESTA_H_INCLUDED
 
-#include "../Headers/Vertice.h"
+#include "Vertice.h"
+#include <iostream>
 
-Class Aresta {
+using namespace std;
+
+class Vertice;
+
+class Aresta {
 	
 	public:
 	
-		Aresta();
+		Aresta(string um, string dois, int peso, bool direcionada);
 		~Aresta();
 		
 		int getPeso () { return peso; }
@@ -21,6 +26,6 @@ Class Aresta {
 		Vertice * adjacente;
 		Aresta * proxima;
 		
-}
+};
 
 #endif

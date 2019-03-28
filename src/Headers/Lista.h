@@ -1,11 +1,11 @@
-#ifndef LISTA_H
-#define LISTA_H
+#ifndef LISTA_H_INCLUDED
+#define LISTA_H_INCLUDED
 
-#include "../Headers/Vertice.h"
+#include "./Vertice.h"
 
 using namespace std;
 
-Class Lista {
+class Lista {
 	
 	public:
 	
@@ -22,6 +22,6 @@ Class Lista {
 		Vertice * maiorGrau;
 		int quantidade; 
 		
-}
+};
 
 #endif

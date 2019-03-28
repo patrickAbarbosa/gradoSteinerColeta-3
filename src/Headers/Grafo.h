@@ -1,3 +1,4 @@
+#pragma once
 #ifndef GRAFO_H_INCLUDED
 #define GRAFO_H_INCLUDED
 
@@ -5,6 +6,7 @@
 #include <string>
 
 using namespace std;
+
 class Grafo
 {
   public:
