@@ -1,9 +1,11 @@
-#include "Vertice.h"
+#include "../Headers/Vertice.h"
 
-Vertice::Vertice(string id, int peso) {
+//Contrutor padrao de vertices utilizando um id e um peso_vertice
+
+Vertice::Vertice(string id, int peso_vertice) {
 	
 	info = id;
-	peso = peso;
+	peso = peso_vertice;
 	proximo = NULL;
 	
 }

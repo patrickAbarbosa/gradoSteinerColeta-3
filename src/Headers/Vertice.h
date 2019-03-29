@@ -1,11 +1,14 @@
-#ifndef VERTICE_H
-#def VERTICE_H
+#ifndef VERTICE_H_INCLUDED
+#define VERTICE_H_INCLUDED
 
-#include Aresta.h
+#include "Aresta.h"
+#include <iostream>
 
 using namespace std;
 
-Class Vertice{
+class Aresta;
+
+class Vertice{
 
 	public:
 	
@@ -30,6 +33,6 @@ Class Vertice{
 		Vertice * proximo;
         Aresta * listaAdjacencia;
      
-}
+};
 
 #endif

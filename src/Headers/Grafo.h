@@ -1,3 +1,4 @@
+#pragma once
 #ifndef GRAFO_H_INCLUDED
 #define GRAFO_H_INCLUDED
 
@@ -8,6 +9,7 @@
 #include "../Headers/Vertice.h"
 
 using namespace std;
+
 class Grafo
 {
   public:
