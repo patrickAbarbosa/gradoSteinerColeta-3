@@ -1,9 +1,9 @@
-#pragma once
 #ifndef GRAFO_H_INCLUDED
 #define GRAFO_H_INCLUDED
 
 #include <iostream>
 #include <string>
+#include "Lista.h"
 
 #include "../Headers/Lista.h"
 #include "../Headers/Vertice.h"
@@ -32,7 +32,7 @@ class Grafo
  
     string *arquivoIn;
     string *arquivoOut;
-
+    Lista  *vertices;
     int numeroVertices;
     int numeroArestas;
 

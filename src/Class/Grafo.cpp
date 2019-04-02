@@ -108,10 +108,25 @@ void Grafo::leArquivo()
 
   if (file.is_open())
   {
-    cout << "Arquivo Aberto com sucesso!" << endl;
-    string str;
-    getline(file, str);
-    cout <<"## "<<  str << endl;
+    cout << "Lendo arquivo ..." << endl;
+    
+    while(file.eof())
+    {
+      string str;
+      getline(file, str);
+
+      if(str[0] >= '0' || str[0] <= '9')
+      {
+        string info;
+        int peso;
+        getline(str, info, ' ');
+
+        while(str !== '\n')
+        {
+          
+        }
+      }
+    }
   }
   else
     cout << "Erro ao abrir Aquivo" << endl;
