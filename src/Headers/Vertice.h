@@ -13,7 +13,7 @@ class Vertice{
 	public:
 	
 		Vertice(string id, int peso);
-		~Vertice();
+		virtual ~Vertice();
 		
 		int getGrau () { return grau; }
 		string getInfo () { return info; }

@@ -10,6 +10,10 @@ Vertice::Vertice(string id, int peso_vertice) {
 	
 }
 
+Vertice::~Vertice(){
+	
+}
+
 void Vertice::insereAresta() {
 	
 }

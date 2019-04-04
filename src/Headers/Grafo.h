@@ -32,7 +32,7 @@ class Grafo
  
     string *arquivoIn;
     string *arquivoOut;
-    Lista  *vertices;
+ 
     int numeroVertices;
     int numeroArestas;
 

@@ -3,7 +3,7 @@
 #include <string>
 
 #include "../Headers/Grafo.h" // .h Grafo
-#include "../Headers/Lista"
+#include "../Headers/Lista.h"
 
 using namespace std;
 
@@ -119,12 +119,7 @@ void Grafo::leArquivo()
       {
         string info;
         int peso;
-        getline(str, info, ' ');
-
-        while(str !== '\n')
-        {
-          
-        }
+        
       }
     }
   }
@@ -137,6 +132,7 @@ void Grafo::leArquivo()
  * analizados durante a execução do
  * programa com determinada entrada
  */
+/*
 void Grafo::exportaGrafo()
 {
   cout << "Exportando analizes do Grafo!" << endl;
@@ -148,3 +144,4 @@ void Grafo::exportaGrafo()
   else
     cout << "Erro ao exportar! Grafo não encontrado." << endl;  
 }
+*/
