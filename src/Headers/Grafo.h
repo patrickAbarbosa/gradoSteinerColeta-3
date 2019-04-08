@@ -3,6 +3,10 @@
 
 #include <iostream>
 #include <string>
+#include "Lista.h"
+
+#include "../Headers/Lista.h"
+#include "../Headers/Vertice.h"
 
 using namespace std;
 
@@ -14,10 +18,24 @@ class Grafo
     Grafo(string in, string out);
     ~Grafo();
 
+    //Public fnctions
+    void addVertice(int info, int peso);
+    void deleteVertice(int info);
+
+    void addAresta(int origem, int destino, int peso);
+    void deleteAresta(int info);
+
+    Vertice *getVertice(int info);
+
+    void menuSelecionado(char a);
+    void menu();
+
   private:
+    Lista  *vertices;
+ 
     string *arquivoIn;
     string *arquivoOut;
-
+ 
     int numeroVertices;
     int numeroArestas;
 

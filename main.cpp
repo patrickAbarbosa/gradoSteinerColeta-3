@@ -19,6 +19,7 @@ int main(){
   Grafo *a;
 
   a =  new Grafo("file.txt");
+  a->menu();
   delete a;
   return 0;
 }
