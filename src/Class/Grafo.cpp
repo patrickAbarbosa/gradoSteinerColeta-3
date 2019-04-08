@@ -61,7 +61,7 @@ Grafo::Grafo(string in)
 Grafo::Grafo(string in, string out)
 {
   cout << "Construindo Grafo" << endl;
-  
+
   vertices = new Lista();
 
   arquivoIn = new string;
@@ -84,7 +84,7 @@ Grafo::Grafo(string in, string out)
 Grafo::~Grafo()
 {
   cout << "Destruindo Grafo" << endl;
-  
+
   delete vertices;
 
   if (arquivoIn)
@@ -107,42 +107,41 @@ void Grafo::leArquivo()
 
   file.open(*arquivoIn);
 
-  if(file.is_open())
+  if (file.is_open())
   {
     bool link = false;
-    while(!file.eof())
+    while (!file.eof())
     {
       string str;
       getline(file, str);
-      if(str[0] >= '0' && str[0] <= '9')
+      if (str[0] >= '0' && str[0] <= '9')
       {
         stringstream line(str);
-        if(link)
+        if (link)
         {
           int lixo, peso;
           string verticeA, verticeB;
-          
+
           line >> lixo;
           line >> verticeA >> verticeB >> peso;
-        
-          //insere aresta
 
+          //insere aresta
         }
         else
         {
           string vertice;
-          int lixo,  peso;
+          int lixo, peso;
 
           line >> vertice;
           line >> lixo;
           line >> lixo;
           line >> peso;
 
-          vertices->insereVertice(vertice,  peso);
+          vertices->insereVertice(vertice, peso);
           numeroVertices++;
         }
       }
-      else if(str == "link")
+      else if (str == "link")
         link = true;
     }
   }
@@ -170,3 +169,80 @@ void Grafo::exportaGrafo()
     cout << "Erro ao exportar! Grafo não encontrado." << endl;  
 }
 */
+/* MenuSelecionado  recebe um caracter que identifica
+ * qual opção selecionada e requisita determinado
+ * parametro caso precise.
+ */
+void Grafo::menuSelecionado(char a)
+{
+  switch (a)
+  {
+  case '1':
+    cout << "Adicionando Aresta" << endl;
+    break;
+
+  case '2':
+    cout << "Removendo Aresta" << endl;
+    break;
+
+  case '3':
+    cout << "Digite o id vertice e em seguida o seu peso (ex: 2 10): ";
+    string id;
+    int peso;
+    cin >> id >> peso;
+    vertices->insereVertice(id, peso);
+    break;
+
+  case '4':
+    cout << "Removendo Veritce" << endl;
+    break;
+
+  case '5':
+    cout << "Adicionando Aresta" << endl;
+    break;
+
+  case '6':
+    cout << "Vertices Adjacentes" << endl;
+    break;
+
+  case '7':
+    cout << "Limpar Grafo" << endl;
+    break;
+
+  default:
+    break;
+  }
+}
+
+/* Mennu de funcionalidades do Grafo */
+void Grafo::menu()
+{
+  char menu;
+  while (true)
+  {
+    cout << "# Menu principal #" << endl;
+    cout << "[1] - Adicionar aresta" << endl;
+    cout << "[2] - Deletar aresta" << endl;
+    cout << "[3] - Adicionar vertice" << endl;
+    cout << "[4] - Deletar vertice" << endl;
+    cout << "[5] - Buscar vertice" << endl;
+    cout << "[6] - Verices adjacentes" << endl;
+    cout << "[7] - Limpar Grafo" << endl;
+    cout << "[0] - Imprimir Grafo" << endl;
+    cout << "[q] - Para sair" << endl;
+
+    do
+    {
+      cout << "Digite uma opcao do menu: ";
+      cin >> menu;
+    } while ((menu < '0' || menu > '9') && menu != 'q');
+
+    if (menu == 'q')
+    {
+      cout << "Saindo..." << endl;
+      cout << "Bye" << endl;
+      return;
+    }
+    menuSelecionado(menu);
+  }
+}

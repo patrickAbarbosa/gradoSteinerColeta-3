@@ -27,6 +27,9 @@ class Grafo
 
     Vertice *getVertice(int info);
 
+    void menuSelecionado(char a);
+    void menu();
+
   private:
     Lista  *vertices;
  
