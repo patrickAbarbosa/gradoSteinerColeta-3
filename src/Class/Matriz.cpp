@@ -6,7 +6,7 @@ using namespace std;
 
 Matriz::Matriz(int tam)
 {
-  if(tam < 0)
+  if(tam < 1)
   {
     cout << "Tamanho invalido do grafo!" << endl;
     return;
@@ -37,7 +37,10 @@ bool Matriz::validaPosicao(int x, int y)
 void Matriz::insereAresta(int x, int y, int peso) 
 {
   if(validaPosicao(x, y))
+  {
     mat[x][y] = peso;
+    mat[y][x] = peso;
+  }
   else
     cout << "Posicao invalida!" << endl;
 }
@@ -48,4 +51,20 @@ void Matriz::removeAresta(int x, int y)
     mat[x][y] = 0;
   else
     cout << "Posicao invalida!" << endl;
+}
+
+void Matriz::imprime()
+{
+  if(n == 0)
+    cout << "Matriz de adjacencia vazia" << endl;
+
+  else
+  {
+    for(int i = 0; i<n; i++)
+    {
+      for(int j = 0; j<n; j++)
+        cout << mat[i][j] << ", " << endl;
+      cout << endl;
+    }
+  } 
 }
