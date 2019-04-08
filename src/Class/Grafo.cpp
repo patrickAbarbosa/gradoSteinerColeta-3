@@ -228,6 +228,7 @@ void Grafo::menu()
     cout << "[5] - Buscar vertice" << endl;
     cout << "[6] - Verices adjacentes" << endl;
     cout << "[7] - Limpar Grafo" << endl;
+    cout << "[8] - Informaçoes do Grafo"<<endl;
     cout << "[0] - Imprimir Grafo" << endl;
     cout << "[q] - Para sair" << endl;
 
