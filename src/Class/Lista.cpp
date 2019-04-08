@@ -11,6 +11,21 @@ Lista::Lista () {
 	
 }
 
+Lista::~Lista()
+{
+	if(primeiro)
+	{
+		while(primeiro)
+		{
+			Vertice *p = primeiro->getProx();
+			delete primeiro;
+			primeiro = p;
+		}
+	}
+	if(maiorGrau)
+		delete maiorGrau;
+}
+
 //insere um novo vertice a lista caso nao exista outro vertice com essa info
 
 void Lista::insereVertice (string info, int peso) {

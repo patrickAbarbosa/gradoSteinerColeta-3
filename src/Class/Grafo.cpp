@@ -1,9 +1,10 @@
 #include <iostream>
 #include <fstream> // Open File
 #include <string>
+#include <sstream>
 
 #include "../Headers/Grafo.h" // .h Grafo
-#include "../Headers/Lista"
+#include "../Headers/Lista.h"
 
 using namespace std;
 
@@ -106,13 +107,66 @@ void Grafo::leArquivo()
 
   file.open(*arquivoIn);
 
-  if (file.is_open())
+  if(file.is_open())
   {
-    cout << "Arquivo Aberto com sucesso!" << endl;
-    string str;
-    getline(file, str);
-    cout <<"## "<<  str << endl;
+    bool link = false;
+    while(!file.eof())
+    {
+      string str;
+      getline(file, str);
+      if(str[0] >= '0' && str[0] <= '9')
+      {
+        stringstream line(str);
+        if(link)
+        {
+          int lixo, peso;
+          string verticeA, verticeB;
+          
+          line >> lixo;
+          line >> verticeA >> verticeB >> peso;
+        
+          //insere aresta
+
+        }
+        else
+        {
+          string vertice;
+          int lixo,  peso;
+
+          line >> vertice;
+          line >> lixo;
+          line >> lixo;
+          line >> peso;
+
+          vertices->insereVertice(vertice,  peso);
+          numeroVertices++;
+        }
+      }
+      else if(str == "link")
+        link = true;
+    }
   }
   else
-    cout << "Erro ao abrir Aquivo" << endl;
+  {
+    cout << "Erro ao carregar arquivo" << endl;
+  }
 }
+
+/*
+ * ExportaGrafo() Exporta os dados 
+ * analizados durante a execução do
+ * programa com determinada entrada
+ */
+/*
+void Grafo::exportaGrafo()
+{
+  cout << "Exportando analizes do Grafo!" << endl;
+
+  if(0)
+  {
+    cout << "Exportando" << endl; // continuar com o export
+  }
+  else
+    cout << "Erro ao exportar! Grafo não encontrado." << endl;  
+}
+*/
