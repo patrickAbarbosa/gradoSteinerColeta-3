@@ -11,7 +11,7 @@ Vertice::Vertice(string id, int peso_vertice) {
 }
 
 void Vertice::insereAresta() {
-	
+
 }
 
 void Vertice::deletaAresta() {

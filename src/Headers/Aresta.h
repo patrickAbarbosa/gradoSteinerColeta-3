@@ -11,21 +11,18 @@ class Vertice;
 class Aresta {
 	
 	public:
-	
 		Aresta(string um, string dois, int peso, bool direcionada);
 		~Aresta();
-		
 		int getPeso () { return peso; }
 		Vertice * getAdjacente () { return adjacente; }
 		void setProx (Aresta * prox) { proxima = prox; }  
 		Aresta * getProx () { return proxima; }
 		
 	private:
-	
 		int peso;
 		Vertice * adjacente;
 		Aresta * proxima;
 		
 };
 
-#endif
+#endif //ARESTA_H_INCLUDED

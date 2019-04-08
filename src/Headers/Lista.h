@@ -8,7 +8,6 @@ using namespace std;
 class Lista {
 	
 	public:
-	
 		Lista();
 		~Lista();
 		void insereVertice (string info, int peso);
@@ -17,11 +16,10 @@ class Lista {
 		Vertice * getMaiorGrau () { return maiorGrau; }		
 	
 	private:
-	
 		Vertice * primeiro;
 		Vertice * maiorGrau;
 		int quantidade; 
 		
 };
 
-#endif
+#endif //LISTA_H_INCLUDED

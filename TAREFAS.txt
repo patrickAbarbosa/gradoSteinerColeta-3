@@ -1,10 +1,15 @@
 Leonardo:
 
-- Tad Lista; 
+- Tad Lista;  (X)
 
-- Arquivo de saida;
+- Arquivo de saida; 
 
 (a) caminhamento em Largura;
+
+(d) - componentes fortemente conexas (para grafo
+orientado);
+
+(e) - ordenação topológica (para grafo orientado);
 
 (f) Dijkstra: caminho mínimo (para grafos ou digrafos
 ponderados ou não); 
@@ -15,7 +20,7 @@ orientados ponderados ou não);
 
 Patrick:
 
-- Leitura do arquivo de entrada;
+- Leitura do arquivo de entrada; 
 
 - Tad Grafo; 
 

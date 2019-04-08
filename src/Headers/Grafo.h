@@ -1,4 +1,3 @@
-#pragma once
 #ifndef GRAFO_H_INCLUDED
 #define GRAFO_H_INCLUDED
 
