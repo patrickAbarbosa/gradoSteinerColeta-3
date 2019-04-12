@@ -13,16 +13,16 @@ Lista::Lista () {
 
 Lista::~Lista()
 {
-	if(primeiro)
+	if(primeiro!=NULL)
 	{
-		while(primeiro)
+		while(primeiro!=NULL)
 		{
 			Vertice *p = primeiro->getProx();
 			delete primeiro;
 			primeiro = p;
 		}
 	}
-	if(maiorGrau)
+	if(maiorGrau!=NULL)
 		delete maiorGrau;
 }
 

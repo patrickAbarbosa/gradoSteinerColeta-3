@@ -19,14 +19,10 @@ class Grafo
     ~Grafo();
 
     //Public fnctions
-    void addVertice(int info, int peso);
-    void deleteVertice(int info);
-
-    void addAresta(int origem, int destino, int peso);
-    void deleteAresta(int info);
-
-    Vertice *getVertice(int info);
-
+    
+	void addAresta(string id_a, string id_b, int peso);
+	void deletaAresta(string id_a, string id_b);
+	void imprimeGrafoPNG();
     void menuSelecionado(char a);
     void menu();
 
@@ -35,8 +31,7 @@ class Grafo
  
     string *arquivoIn;
     string *arquivoOut;
- 
-    int numeroVertices;
+    
     int numeroArestas;
 
     //private functions
