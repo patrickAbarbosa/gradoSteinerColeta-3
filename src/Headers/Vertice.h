@@ -25,7 +25,8 @@ class Vertice{
 		void deletaAresta (Aresta * a);
 		
 		Aresta * getListaAdjacencia () { return listaAdjacencia; }
-
+		Aresta * buscaAresta(string adjacente);
+		
 	private:
 		int grau;
 		int peso;

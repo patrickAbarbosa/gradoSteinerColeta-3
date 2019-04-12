@@ -374,8 +374,8 @@ void Grafo::addAresta(string id_a, string id_b, int peso){
 	return;  
   }
   else{
-	Aresta * p = new Aresta(id_b, peso);
-	Aresta * t = new Aresta(id_a, peso);  
+	Aresta * p = new Aresta(a, peso);
+	Aresta * t = new Aresta(b, peso);  
 	a->insereAresta(p);
 	b->insereAresta(t);
   }
@@ -406,8 +406,8 @@ void Grafo::deletaAresta(string id_a, string id_b){
 	  return;
 	}
 	else{
-		a->deletaAresta(id_b);
-		b->deletaAresta(id_a);
+		a->deletaAresta(p);
+		b->deletaAresta(t);
 	} 
   }
   NumeroArestas--;
