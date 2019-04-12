@@ -179,13 +179,23 @@ void Grafo::menuSelecionado(char a)
   {
   case '1':
     cout << "Adicionando Aresta" << endl;
+    string id_a, id_b;
+    int peso;
+    cout<< "Digite o id dos vertices e em seguida o peso (ex: 23 45 0)"<<endl;
+    cin>> id_a >> id_b >> peso;
+    insereAresta(id_a,id_b,peso);
     break;
 
   case '2':
     cout << "Removendo Aresta" << endl;
+    string id_a, id_b;
+    cout<< "Digite o id dos vertices (ex: 23 45)"<<endl;
+    cin>> id_a >> id_b;
+    deletaAresta(id_a,id_b);
     break;
 
   case '3':
+	cout << "Adicionando vertice" << endl;
     cout << "Digite o id vertice e em seguida o seu peso (ex: 2 10): ";
     string id;
     int peso;
@@ -198,7 +208,7 @@ void Grafo::menuSelecionado(char a)
     break;
 
   case '5':
-    cout << "Adicionando Aresta" << endl;
+    cout << "Buscar vertice" << endl;
     break;
 
   case '6':
@@ -207,6 +217,14 @@ void Grafo::menuSelecionado(char a)
 
   case '7':
     cout << "Limpar Grafo" << endl;
+    break;
+    
+  case '8':
+    cout<< "Informaçoes do Grafo"<<endl;
+	break;
+	
+  case '0':
+    cout<< "Imprimir Grafo"<<endl;
     break;
 
   default:

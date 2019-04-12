@@ -13,6 +13,7 @@ Vertice::Vertice(string id, int peso_vertice)
 Vertice::~Vertice()
 {
 	//deletar lista de arestas
+	
 }
 
 void Vertice::insereAresta(Aresta * a)
