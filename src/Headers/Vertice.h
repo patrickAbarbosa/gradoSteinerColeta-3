@@ -13,13 +13,17 @@ class Vertice{
 	public:
 		Vertice(string id, int peso);
 		~Vertice();
-		int getGrau () { return grau; }
+		
 		string getInfo () { return info; }
+		int getGrau () { return grau; }
 		int getPeso () { return peso; }
+		
 		void setProx (Vertice * prox) { proximo = prox; } 
 		Vertice * getProx () { return proximo; }
+		
 		void insereAresta (Aresta * a);
 		void deletaAresta (Aresta * a);
+		
 		Aresta * getListaAdjacencia () { return listaAdjacencia; }
 
 	private:
