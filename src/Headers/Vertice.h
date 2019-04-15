@@ -27,7 +27,7 @@ class Vertice{
 		int peso;
 		string info;
 		Vertice * proximo;
-        Aresta * listaAdjacencia;
+    Aresta * listaAdjacencia;
      
 };
 

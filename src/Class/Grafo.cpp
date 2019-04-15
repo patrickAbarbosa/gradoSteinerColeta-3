@@ -183,7 +183,7 @@ void Grafo::menuSelecionado(char a)
     int peso;
     cout<< "Digite o id dos vertices e em seguida o peso (ex: 23 45 0)"<<endl;
     cin>> id_a >> id_b >> peso;
-    insereAresta(id_a,id_b,peso);
+    vertices->insereAresta(id_a, id_b, peso);
     break;
 
   case '2':

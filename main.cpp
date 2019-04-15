@@ -13,11 +13,13 @@
 
 using namespace std;
 
-int main(){
+int main(int argc, char *argv[]){
   cout << "Grupo 03 - Steiner com Coleta de Prêmios" << endl;
   
   Grafo *a;
-
+  for(int i = 0; i<argc; i++){
+    cout << "i: " << argv[i] << endl;
+  }
   a =  new Grafo("file.txt");
   a->menu();
   delete a;
