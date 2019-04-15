@@ -12,8 +12,10 @@ class Lista {
 		~Lista();
 		void insereVertice (string info, int peso);
 		void deletaVertice (string info);
+		Vertice * getPrimeiro() { return primeiro;}
 		Vertice * buscaVertice (string info);
-		Vertice * getMaiorGrau () { return maiorGrau; }		
+		Vertice * getMaiorGrau () { return maiorGrau; }
+		int getQuantidade() { return quantidade;}		
 	
 	private:
 		Vertice * primeiro;

@@ -12,7 +12,7 @@ class Aresta {
 	
 	public:
 		Aresta() {};
-		Aresta(string um, string dois, int peso, bool direcionada);
+		Aresta(Vertice * a, int p) { peso = p, adjacente = a, proxima = NULL;} 
 		~Aresta() {};
 		int getPeso () { return peso; }
 		Vertice * getAdjacente () { return adjacente; }
