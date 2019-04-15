@@ -23,8 +23,8 @@ class Grafo
 	void addAresta(string id_a, string id_b, int peso);
 	void deletaAresta(string id_a, string id_b);
 	void imprimeGrafoPNG();
-    void menuSelecionado(char a);
-    void menu();
+  void menuSelecionado(char a);
+  void menu();
 
   private:
     Lista  *vertices;
@@ -33,10 +33,13 @@ class Grafo
     string *arquivoOut;
     
     int numeroArestas;
+    int numeroVertices;
 
     //private functions
     void leArquivo();
     void exportGrafo();
+    void auxBuscaPorProfundidade(Vertice *vertice);
+    void buscaPorProfundidade(string verticeInicial);
 };
 
 #endif // GRAFO_H_INCLUDED

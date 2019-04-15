@@ -28,6 +28,7 @@ Grafo::Grafo()
   arquivoOut = NULL;
 
   numeroArestas = 0;
+  numeroVertices = 0;
 }
 
 /*
@@ -46,7 +47,7 @@ Grafo::Grafo(string in)
   arquivoOut = NULL;
 
   numeroArestas = 0;
-
+  numeroVertices = 0;
   leArquivo();
 }
 
@@ -69,7 +70,7 @@ Grafo::Grafo(string in, string out)
   *arquivoOut = out;
 
   numeroArestas = 0;
-
+  numeroVertices = 0;
   leArquivo();
 }
 
@@ -175,7 +176,7 @@ void Grafo::imprimeGrafoPNG (){
 			    arquivo<<" -- {";
 
 			    while(t != NULL){ //t é o ponteiro que está na lista de aresta do no
-			  		arquivo<<(t->getAdjacente())->getId()<<" ";
+			  		arquivo<<(t->getAdjacente())->getInfo()<<" ";
 			        t = t->getProx();
 			    }
 
@@ -231,7 +232,9 @@ void Grafo::menuSelecionado(char a)
     cout << "Adicionando Aresta" << endl;
     cout<< "Digite o id dos vertices e em seguida o peso (ex: 23 45 0)"<<endl;
     cin>> id_a >> id_b >> peso;
-    vertices->insereAresta(id_a, id_b, peso);
+    Vertice *a = vertices->buscaVertice(id_a);
+    Vertice *b = vertices->buscaVertice(id_b);
+    a->insereAresta()
     break;
 
   case '2':
@@ -262,7 +265,7 @@ void Grafo::menuSelecionado(char a)
     cout<< "Digite o id do vertice que deseja remover: "<< endl;
     cin>> id;
     
-    Vertices->deletaVertice(id);
+    vertices->deletaVertice(id);
     break;
 
   case '5':
@@ -379,7 +382,7 @@ void Grafo::addAresta(string id_a, string id_b, int peso){
 	b->insereAresta(t);
   }
   
-  NumeroArestas++;
+  numeroArestas++;
 }
 
 /*
@@ -409,5 +412,31 @@ void Grafo::deletaAresta(string id_a, string id_b){
 		b->deletaAresta(t);
 	} 
   }
-  NumeroArestas--;
+  numeroArestas--;
+}
+
+void Grafo::auxBuscaPorProfundidade(Vertice *vertice)
+{
+  if(vertice != NULL)
+  {
+    Aresta *p = vertice->getListaAdjacencia();
+    while(p != NULL)
+    {
+      Vertice *aux = p->getAdjacente();
+      cout << aux->getInfo() << endl;
+      auxBuscaPorProfundidade(aux);
+    }
+  }
+}
+
+void Grafo::buscaPorProfundidade(string verticeInicial)
+{
+  Vertice *p = vertices->buscaVertice(verticeInicial);
+
+  if(p == NULL)
+  {
+    cout << "Vertice nao encontrado!" << endl;
+    return;
+  }
+  auxBuscaPorProfundidade(p);
 }
