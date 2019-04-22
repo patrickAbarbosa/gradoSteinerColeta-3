@@ -14,7 +14,7 @@ Vertice::~Vertice()
 {
 	while(listaAdjacencia!=NULL){
 		Aresta * p = listaAdjacencia->getProx();
-		delete primeiro;
+		delete p;
 		listaAdjacencia = p;
 	}
 	//deletar lista de arestas
@@ -29,7 +29,7 @@ void Vertice::insereAresta(Aresta * a)
 		// cria uma copia da aresta para nao dar erro com o ponteiro para o proximo
 	}
 	else{
-		Aresta * p = new aresta();
+		Aresta * p = new Aresta();
 		Aresta * t = listaAdjacencia;
 		*p= *a;
 		 

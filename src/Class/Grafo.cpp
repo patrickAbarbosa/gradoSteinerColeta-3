@@ -2,6 +2,7 @@
 #include <fstream> // Open File
 #include <string>
 #include <sstream>
+#include <vector>
 
 #include "../Headers/Grafo.h" // .h Grafo
 #include "../Headers/Lista.h"
@@ -94,7 +95,6 @@ Grafo::~Grafo()
 //
 // End Contrutores e Destrutores
 
-
 /*
  * leArquivo() faz a leitura do arquivo
  * de entrada e coloca em variáveis 
@@ -124,7 +124,15 @@ void Grafo::leArquivo()
           line >> lixo;
           line >> verticeA >> verticeB >> peso;
 
-          //insere aresta
+          Vertice *a = vertices->buscaVertice(verticeA);
+          Vertice *b = vertices->buscaVertice(verticeB);
+          if(a != NULL && b != NULL)
+          {
+            Aresta *aresta =  new Aresta(b, peso);
+            a->insereAresta(aresta);
+            aresta = new Aresta(a, peso);
+            b->insereAresta(aresta);
+          }
         }
         else
         {
@@ -155,49 +163,52 @@ void Grafo::leArquivo()
  * .dot, cria a imagem a partir dele 
  * e exibe a imagem do grafo.
  * */
- 
-void Grafo::imprimeGrafoPNG (){
 
-    ofstream arquivo;
-    arquivo.open("GrafoPNG.dot",ios::app|ios::in); //cria se não existir ou reescreve no arquivo GrafoPNG.dot
+void Grafo::imprimeGrafoPNG()
+{
 
-	if(arquivo.is_open()){
-		arquivo<<"Strict Graph A{"<<endl;
-		arquivo<<"    rankdir=LR;"<<endl;
-		Vertice * p = vertices->getPrimeiro();
+  ofstream arquivo;
+  arquivo.open("GrafoPNG.dot", ios::app | ios::in); //cria se não existir ou reescreve no arquivo GrafoPNG.dot
 
-		while(p!=NULL){ //p é o ponteiro que está na lista de nos do grafo
-			arquivo<<"    ";
-			arquivo<<p->getInfo();
-			cout<<p->getGrau();
-			if(p->getGrau() > 0){
+  if (arquivo.is_open())
+  {
+    arquivo << "Strict Graph A{" << endl;
+    arquivo << "    rankdir=LR;" << endl;
+    Vertice *p = vertices->getPrimeiro();
 
-			    Aresta * t = p->getListaAdjacencia();
-			    arquivo<<" -- {";
+    while (p != NULL)
+    { //p é o ponteiro que está na lista de nos do grafo
+      arquivo << "    ";
+      arquivo << p->getInfo();
+      cout << p->getGrau();
+      if (p->getGrau() > 0)
+      {
 
-			    while(t != NULL){ //t é o ponteiro que está na lista de aresta do no
-			  		arquivo<<(t->getAdjacente())->getInfo()<<" ";
-			        t = t->getProx();
-			    }
+        Aresta *t = p->getListaAdjacencia();
+        arquivo << " -- {";
 
-			    arquivo<<"}";
-			}
-			arquivo<<";"<<endl;
-			p = p->getProx();
-		}
+        while (t != NULL)
+        { //t é o ponteiro que está na lista de aresta do no
+          arquivo << (t->getAdjacente())->getInfo() << " ";
+          t = t->getProx();
+        }
 
-		arquivo<<"}";
-		arquivo.close();
+        arquivo << "}";
+      }
+      arquivo << ";" << endl;
+      p = p->getProx();
+    }
 
-		system("dot -Tpng -O GrafoPNG.dot"); // cria o png do grafo
-		cout<<"Arquivo Concluido!"<<endl;
-		system("display GrafoPNG.dot.png"); // mostra a imagem do grafo
-	}
-	else
-		cout<<"Erro ao encontrar/criar o arquivo GrafoPNG.dot !"<<endl;
+    arquivo << "}";
+    arquivo.close();
+
+    system("dot -Tpng -O GrafoPNG.dot"); // cria o png do grafo
+    cout << "Arquivo Concluido!" << endl;
+    system("display GrafoPNG.dot.png"); // mostra a imagem do grafo
+  }
+  else
+    cout << "Erro ao encontrar/criar o arquivo GrafoPNG.dot !" << endl;
 }
-
-
 
 /*
  * ExportaGrafo() Exporta os dados 
@@ -223,104 +234,115 @@ void Grafo::exportaGrafo()
  */
 void Grafo::menuSelecionado(char a)
 {
-  switch (a)
+  switch(a)
   {
-  case '1':
+  case '1': 
+  {
     string id_a, id_b;
     int peso;
-    
+
     cout << "Adicionando Aresta" << endl;
-    cout<< "Digite o id dos vertices e em seguida o peso (ex: 23 45 0)"<<endl;
-    cin>> id_a >> id_b >> peso;
+    cout << "Digite o id dos vertices e em seguida o peso (ex: 23 45 0)" << endl;
+    cin >> id_a >> id_b >> peso;
     Vertice *a = vertices->buscaVertice(id_a);
     Vertice *b = vertices->buscaVertice(id_b);
-    a->insereAresta()
+    //a->insereAresta();
     break;
-
+  }
   case '2':
+  {
     string id_a, id_b;
-    
-    cout << "Removendo Aresta" << endl;
-    cout<< "Digite o id dos vertices (ex: 23 45)"<<endl;
-    cin>> id_a >> id_b;
-    
-    deletaAresta(id_a,id_b);
-    break;
 
+    cout << "Removendo Aresta" << endl;
+    cout << "Digite o id dos vertices (ex: 23 45)" << endl;
+    cin >> id_a >> id_b;
+
+    deletaAresta(id_a, id_b);
+    break;
+  }
   case '3':
+  {
     string id;
     int peso;
-    
-	cout << "Adicionando vertice" << endl;
+
+    cout << "Adicionando vertice" << endl;
     cout << "Digite o id vertice e em seguida o seu peso (ex: 2 10): ";
     cin >> id >> peso;
-    
+
     vertices->insereVertice(id, peso);
     break;
-
+  }
   case '4':
+  {
     string id;
-    
-    cout<< "Removendo Veritce" << endl;
-    cout<< "Digite o id do vertice que deseja remover: "<< endl;
-    cin>> id;
-    
+
+    cout << "Removendo Veritce" << endl;
+    cout << "Digite o id do vertice que deseja remover: " << endl;
+    cin >> id;
+
     vertices->deletaVertice(id);
     break;
-
+  }
   case '5':
-	string id;
+  {
+    string id;
     cout << "Buscar vertice" << endl;
-    cout<< "Digite o id do vertice que deseja procurar: "<<endl;
-    cin>>id;
-    
-    Vertice * aux = vertices->buscaVertice(id);
-   
-    if(aux != NULL)
-	  cout<< "Vertice de id "<< <<" encontrado!"<<endl;
-    else
-	  cout<< "Vertice não encontrado!"<<endl;
-    break;
+    cout << "Digite o id do vertice que deseja procurar: " << endl;
+    cin >> id;
 
+    Vertice *aux = vertices->buscaVertice(id);
+
+    if (aux != NULL)
+      cout << "Vertice de id " << " encontrado!" << endl;
+    else
+      cout << "Vertice não encontrado!" << endl;
+    break;
+  }
   case '6':
+  {
     string id;
     cout << "Vertices Adjacentes" << endl;
-    cout<< "Digite o id do vertice: "<<endl;
-    cin>>id;
-    
-    Vertice * aux = vertices->buscaVertice(id);
-   
-    if(aux != NULL){
-	  Aresta * adjacentes = aux->getListaAdjacencia();
-	 
-	  while(adjacentes!=NULL){
-		cout<<adjacentes->getAdjacente()->getInfo()<<endl;
-		adjacentes = adjacentes->getProx();
-	  }
-	}
-    else
-	  cout<< "Vertice não encontrado!"<<endl;
-	
-    break;
+    cout << "Digite o id do vertice: " << endl;
+    cin >> id;
 
+    Vertice *aux = vertices->buscaVertice(id);
+
+    if (aux != NULL)
+    {
+      Aresta *adjacentes = aux->getListaAdjacencia();
+
+      while (adjacentes != NULL)
+      {
+        cout << adjacentes->getAdjacente()->getInfo() << endl;
+        adjacentes = adjacentes->getProx();
+      }
+    }
+    else
+      cout << "Vertice não encontrado!" << endl;
+
+    break;
+  }
   case '7':
+  { 
     cout << "Limpar Grafo" << endl;
     delete vertices;
     vertices = new Lista();
     break;
-    
+  }
   case '8':
-    cout<< "Informaçoes do Grafo"<<endl;
-	cout<< "Numero de Vertices: "<< vertices->getQuantidade()<<endl;
-	cout<< "Numero de Arestas: "<< <<endl;
-	cout<< "Maior Grau: "<< vertices->getMaiorGrau()->getGrau() <<endl;
-	break;
-	
+  {
+    cout << "Informaçoes do Grafo" << endl;
+    cout << "Numero de Vertices: " << vertices->getQuantidade() << endl;
+    cout << "Numero de Arestas: " << endl;
+    cout << "Maior Grau: " << vertices->getMaiorGrau()->getGrau() << endl;
+    break;
+  }
   case '0':
-    cout<< "Imprimir Grafo"<<endl;
+  {
+    cout << "Imprimir Grafo" << endl;
     imprimeGrafoPNG();
     break;
-
+  }
   default:
     break;
   }
@@ -338,12 +360,11 @@ void Grafo::menu()
     cout << "[3] - Adicionar vertice" << endl;
     cout << "[4] - Deletar vertice" << endl;
     cout << "[5] - Buscar vertice" << endl;
-    cout << "[6] - Verices adjacentes" << endl;
+    cout << "[6] - Vertices adjacentes" << endl;
     cout << "[7] - Limpar Grafo" << endl;
-    cout << "[8] - Informaçoes do Grafo"<<endl;
+    cout << "[8] - Informaçoes do Grafo" << endl;
     cout << "[0] - Imprimir Grafo" << endl;
     cout << "[q] - Para sair" << endl;
-
     do
     {
       cout << "Digite uma opcao do menu: ";
@@ -366,22 +387,25 @@ void Grafo::menu()
  * no numero de arestas do grafo
  * */
 
-void Grafo::addAresta(string id_a, string id_b, int peso){
-  
-  Vertice * a = vertices->buscaVertice(id_a);
-  Vertice * b = vertices->buscaVertice(id_b);
-  
-  if(a == NULL || b == NULL){
-	cout<< "Erro: Vertice invalido!"<<endl;
-	return;  
+void Grafo::addAresta(string id_a, string id_b, int peso)
+{
+
+  Vertice *a = vertices->buscaVertice(id_a);
+  Vertice *b = vertices->buscaVertice(id_b);
+
+  if (a == NULL || b == NULL)
+  {
+    cout << "Erro: Vertice invalido!" << endl;
+    return;
   }
-  else{
-	Aresta * p = new Aresta(a, peso);
-	Aresta * t = new Aresta(b, peso);  
-	a->insereAresta(p);
-	b->insereAresta(t);
+  else
+  {
+    Aresta *p = new Aresta(a, peso);
+    Aresta *t = new Aresta(b, peso);
+    a->insereAresta(p);
+    b->insereAresta(t);
   }
-  
+
   numeroArestas++;
 }
 
@@ -390,41 +414,65 @@ void Grafo::addAresta(string id_a, string id_b, int peso){
  * será apagada e diminui 1 no numero de arestas do grafo
  * */
 
-void Grafo::deletaAresta(string id_a, string id_b){
-  
-  Vertice * a = vertices->buscaVertice(id_a);
-  Vertice * b = vertices->buscaVertice(id_b);
-  
-  if(a == NULL || b == NULL){
-	cout<< "Erro: Vertice invalido!"<<endl;
-	return;  
+void Grafo::deletaAresta(string id_a, string id_b)
+{
+
+  Vertice *a = vertices->buscaVertice(id_a);
+  Vertice *b = vertices->buscaVertice(id_b);
+
+  if (a == NULL || b == NULL)
+  {
+    cout << "Erro: Vertice invalido!" << endl;
+    return;
   }
-  else{
-	Aresta * p = a->buscaAresta(id_b);
-	Aresta * t = b->buscaAresta(id_a);
-	
-	if(p == NULL || t == NULL){
-	  cout<< "Erro: Aresta invalida!"<<endl;
-	  return;
-	}
-	else{
-		a->deletaAresta(p);
-		b->deletaAresta(t);
-	} 
+  else
+  {
+    Aresta *p = a->buscaAresta(id_b);
+    Aresta *t = b->buscaAresta(id_a);
+
+    if (p == NULL || t == NULL)
+    {
+      cout << "Erro: Aresta invalida!" << endl;
+      return;
+    }
+    else
+    {
+      a->deletaAresta(p);
+      b->deletaAresta(t);
+    }
   }
   numeroArestas--;
 }
 
-void Grafo::auxBuscaPorProfundidade(Vertice *vertice)
+bool isVector(vector <string> *vet, string value)
 {
-  if(vertice != NULL)
+  if(!vet){
+    cout << "Vetor nao alocado!" << endl;    
+    exit(1);
+  }
+
+  for(vector<string>::iterator it = vet->begin(); it != vet->end(); ++it)
+    if(*it == value)
+      return true;
+  return false;
+}
+
+void Grafo::auxBuscaPorProfundidade(Vertice *vertice, vector <string> *nosLidos)
+{
+  if (vertice != NULL)
   {
+    cout << vertice->getInfo() << endl;
+
     Aresta *p = vertice->getListaAdjacencia();
-    while(p != NULL)
+    while (p != NULL)
     {
       Vertice *aux = p->getAdjacente();
-      cout << aux->getInfo() << endl;
-      auxBuscaPorProfundidade(aux);
+      if(!isVector(nosLidos, aux->getInfo()))
+      {
+        nosLidos->push_back(vertice->getInfo());
+        auxBuscaPorProfundidade(aux, nosLidos);      
+      }
+      p  = p->getProx();
     }
   }
 }
@@ -432,11 +480,20 @@ void Grafo::auxBuscaPorProfundidade(Vertice *vertice)
 void Grafo::buscaPorProfundidade(string verticeInicial)
 {
   Vertice *p = vertices->buscaVertice(verticeInicial);
-
-  if(p == NULL)
+  vector <string> nosLidos;
+  
+  if (p == NULL)
   {
     cout << "Vertice nao encontrado!" << endl;
-    return;
+  
   }
-  auxBuscaPorProfundidade(p);
+  
+  auxBuscaPorProfundidade(p, &nosLidos);
+  
+  for(Vertice *aux = vertices->getPrimeiro(); aux != NULL; aux = aux->getProx())
+    if(!isVector(&nosLidos, aux->getInfo()))
+    {
+      nosLidos.push_back(aux->getInfo());
+      auxBuscaPorProfundidade(aux, &nosLidos);
+    } 
 }

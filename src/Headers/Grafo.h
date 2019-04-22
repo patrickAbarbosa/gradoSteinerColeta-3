@@ -3,10 +3,10 @@
 
 #include <iostream>
 #include <string>
-#include "Lista.h"
+#include <vector>
 
-#include "../Headers/Lista.h"
-#include "../Headers/Vertice.h"
+#include "Lista.h"
+#include "Vertice.h"
 
 using namespace std;
 
@@ -25,7 +25,8 @@ class Grafo
 	void imprimeGrafoPNG();
   void menuSelecionado(char a);
   void menu();
-
+  void buscaPorProfundidade(string verticeInicial);
+  
   private:
     Lista  *vertices;
  
@@ -38,8 +39,8 @@ class Grafo
     //private functions
     void leArquivo();
     void exportGrafo();
-    void auxBuscaPorProfundidade(Vertice *vertice);
-    void buscaPorProfundidade(string verticeInicial);
+    void auxBuscaPorProfundidade(Vertice *vertice, vector <string> *nosLidos);
+    
 };
 
 #endif // GRAFO_H_INCLUDED

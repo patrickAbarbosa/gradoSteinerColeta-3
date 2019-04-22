@@ -4,3 +4,5 @@ g++ main.cpp src/Class/* src/Headers/* -o Teste
 
 echo "--- Run Build ---"
 ./Teste
+
+echo "--- End Build ---"

@@ -20,8 +20,10 @@ int main(int argc, char *argv[]){
   for(int i = 0; i<argc; i++){
     cout << "i: " << argv[i] << endl;
   }
-  a =  new Grafo("file.txt");
-  a->menu();
+  a =  new Grafo("K400.3.con.red");
+  //a->menu();
+  cout << "Busca Profunda" << endl;
+  a->buscaPorProfundidade("210");
   delete a;
   return 0;
 }

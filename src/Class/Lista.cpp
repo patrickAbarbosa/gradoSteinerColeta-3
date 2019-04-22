@@ -8,7 +8,6 @@ Lista::Lista () {
 	primeiro = NULL;
 	maiorGrau = NULL;
 	quantidade = 0;
-	
 }
 
 Lista::~Lista()
@@ -47,7 +46,7 @@ void Lista::insereVertice (string info, int peso) {
 		quantidade ++;
 	}
 	else
-		cout<<"ERRO: Vertice "<<info<<"ja existe !";
+		cout<<"Vertice: "<<info<<" ja existe!"<< endl;
 		
 }
 
