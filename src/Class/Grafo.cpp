@@ -168,7 +168,7 @@ void Grafo::imprimeGrafoPNG()
 {
 
   ofstream arquivo;
-  arquivo.open("GrafoPNG.dot", ios::app | ios::in); //cria se não existir ou reescreve no arquivo GrafoPNG.dot
+  arquivo.open("GrafoPNG.dot", ios::trunc | ios::in); //cria se não existir ou reescreve no arquivo GrafoPNG.dot
 
   if (arquivo.is_open())
   {
@@ -177,7 +177,7 @@ void Grafo::imprimeGrafoPNG()
     Vertice *p = vertices->getPrimeiro();
 
     while (p != NULL)
-    { //p é o ponteiro que está na lista de nos do grafo
+    { //p é o ponteiro que está na lista de vertices do grafo
       arquivo << "    ";
       arquivo << p->getInfo();
       cout << p->getGrau();
@@ -402,8 +402,8 @@ void Grafo::addAresta(string id_a, string id_b, int peso)
   {
     Aresta *p = new Aresta(a, peso);
     Aresta *t = new Aresta(b, peso);
-    a->insereAresta(p);
-    b->insereAresta(t);
+    a->insereAresta(t);
+    b->insereAresta(p);
   }
 
   numeroArestas++;
