@@ -13,17 +13,31 @@
 
 using namespace std;
 
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[])
+{
   cout << "Grupo 03 - Steiner com Coleta de Prêmios" << endl;
-  
-  Grafo *a;
-  for(int i = 0; i<argc; i++){
-    cout << "i: " << argv[i] << endl;
+
+  Grafo *a = NULL;
+
+  switch (argc)
+  {
+  case 1:
+    a = new Grafo();
+    break;
+  case 2:
+    a = new Grafo(argv[1]);
+    break;
+  case 3:
+    a = new Grafo(argv[1], argv[2]);
+    break;
+  default:
+    break;
   }
-  a =  new Grafo("K400.3.con.red");
-  //a->menu();
-  cout << "Busca Profunda" << endl;
-  a->buscaPorProfundidade("210");
-  delete a;
+
+  if (a)
+  {
+    a->menu();
+    delete a;  
+  }
   return 0;
 }
