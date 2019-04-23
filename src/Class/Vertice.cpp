@@ -13,10 +13,10 @@ Vertice::Vertice(string id, int peso_vertice)
 
 Vertice::~Vertice()
 {
-	while(listaAdjacencia!=NULL){
+	while(listaAdjacencia != NULL){
 		Aresta * p = listaAdjacencia->getProx();
 		delete p;
-		listaAdjacencia = p;
+		listaAdjacencia = NULL;
 	}
 	//deletar lista de arestas
 	
