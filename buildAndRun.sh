@@ -6,3 +6,10 @@ echo "--- Run Build ---"
 ./Teste K400.3.con.red
 
 echo "--- End Build ---"
+
+echo "remove file Teste"
+rm Teste
+
+echo "remove files"
+rm GrafoPNG.dot
+rm GrafoPNG.dot.png

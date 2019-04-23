@@ -403,10 +403,9 @@ void Grafo::addAresta(string id_a, string id_b, int peso)
   {
     Aresta *p = new Aresta(a, peso);
     Aresta *t = new Aresta(b, peso);
-    a->insereAresta(p);
-    b->insereAresta(t);
+    a->insereAresta(t);
+    b->insereAresta(p);
   }
-
   numeroArestas++;
 }
 
