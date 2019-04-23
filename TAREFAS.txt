@@ -24,7 +24,7 @@ Patrick:
 
 - Tad Grafo; 
 
-(b) caminhamento em Profundidade;
+OK (b) caminhamento em Profundidade;
 
 (g) Floyd: caminho mínimo (para grafos ou digrafos
 ponderados ou não);

@@ -124,15 +124,7 @@ void Grafo::leArquivo()
           line >> lixo;
           line >> verticeA >> verticeB >> peso;
 
-          Vertice *a = vertices->buscaVertice(verticeA);
-          Vertice *b = vertices->buscaVertice(verticeB);
-          if(a != NULL && b != NULL)
-          {
-            Aresta *aresta =  new Aresta(b, peso);
-            a->insereAresta(aresta);
-            aresta = new Aresta(a, peso);
-            b->insereAresta(aresta);
-          }
+          addAresta(verticeA, verticeB, peso);
         }
         else
         {
@@ -333,8 +325,16 @@ void Grafo::menuSelecionado(char a)
   {
     cout << "Informaçoes do Grafo" << endl;
     cout << "Numero de Vertices: " << vertices->getQuantidade() << endl;
-    cout << "Numero de Arestas: " << endl;
+    cout << "Numero de Arestas: " <<  numeroArestas <<endl;
     cout << "Maior Grau: " << vertices->getMaiorGrau()->getGrau() << endl;
+    break;
+  }
+  case '9':
+  {
+    string inicio;
+    cout << "Digite o vertice de partida: ";
+    cin >> inicio;
+    buscaPorProfundidade(inicio);
     break;
   }
   case '0':
@@ -363,6 +363,7 @@ void Grafo::menu()
     cout << "[6] - Vertices adjacentes" << endl;
     cout << "[7] - Limpar Grafo" << endl;
     cout << "[8] - Informaçoes do Grafo" << endl;
+    cout << "[9] - Busca por profundidade" << endl;
     cout << "[0] - Imprimir Grafo" << endl;
     cout << "[q] - Para sair" << endl;
     do
@@ -485,7 +486,6 @@ void Grafo::buscaPorProfundidade(string verticeInicial)
   if (p == NULL)
   {
     cout << "Vertice nao encontrado!" << endl;
-  
   }
   
   auxBuscaPorProfundidade(p, &nosLidos);
