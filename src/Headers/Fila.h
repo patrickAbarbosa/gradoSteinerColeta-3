@@ -8,9 +8,13 @@ using namespace std;
 class Fila {
 
     public:
+    	Fila();
+    	~Fila();
+    	void insere(Vertice * p);
+    	Vertice * retira();
 	
     private:
-	Vertice * primeiro;
-	Vertice * ultima;
+		Vertice * primeiro;
+		Vertice * ultimo;
 };
 #endif // Fila_H_INCLUDED
