@@ -16,6 +16,7 @@ class Grafo
     Grafo();
     Grafo(string in);
     Grafo(string in, string out);
+    Grafo(string in, string out, string ehDigrafo);
     ~Grafo();
 
     //Public fnctions
@@ -35,6 +36,8 @@ class Grafo
     
     int numeroArestas;
     int numeroVertices;
+
+    bool ehDigrafo;
 
     //private functions
     void leArquivo();
