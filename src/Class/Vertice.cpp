@@ -8,6 +8,7 @@ Vertice::Vertice(string id, int peso_vertice)
 	peso = peso_vertice;
 	proximo = NULL;
 	listaAdjacencia = NULL;
+	grau = 0;
 }
 
 Vertice::~Vertice()
@@ -37,6 +38,7 @@ void Vertice::insereAresta(Aresta * a)
 			t = t->getProx();
 		t->setProx(p);
 	}
+	grau++;
 }
 
 void Vertice::deletaAresta(Aresta * a)
