@@ -30,6 +30,9 @@ int main(int argc, char *argv[])
   case 3:
     a = new Grafo(argv[1], argv[2]);
     break;
+  case 4:
+    a = new Grafo(argv[1], argv[2], argv[3]);
+    break;
   default:
     break;
   }

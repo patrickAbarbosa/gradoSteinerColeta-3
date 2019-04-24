@@ -27,7 +27,7 @@ Grafo::Grafo()
 
   arquivoIn = NULL;
   arquivoOut = NULL;
-
+  ehDigrafo = false;
   numeroArestas = 0;
   numeroVertices = 0;
 }
@@ -46,7 +46,7 @@ Grafo::Grafo(string in)
   *arquivoIn = in;
 
   arquivoOut = NULL;
-
+  ehDigrafo = false;
   numeroArestas = 0;
   numeroVertices = 0;
   leArquivo();
@@ -70,11 +70,32 @@ Grafo::Grafo(string in, string out)
   arquivoOut = new string;
   *arquivoOut = out;
 
+  ehDigrafo = false;
   numeroArestas = 0;
   numeroVertices = 0;
   leArquivo();
 }
 
+Grafo::Grafo(string in, string out, string ehDigrafo)
+{
+  cout << "Construindo Grafo" << endl;
+
+  vertices = new Lista();
+
+  arquivoIn = new string;
+  *arquivoIn = in;
+
+  arquivoOut = new string;
+  *arquivoOut = out;
+
+  if(ehDigrafo == "1" )
+    ehDigrafo = true;
+  else
+    ehDigrafo = false;
+  numeroArestas = 0;
+  numeroVertices = 0;
+  leArquivo();
+}
 /*
  * ~Grafo() analiza memória alocada dinamicamente
  * que está sendo utilizado pela classe para 

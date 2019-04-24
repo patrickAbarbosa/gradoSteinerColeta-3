@@ -1,14 +1,14 @@
 #!/bin/bash
 echo "Criando Build..."
-g++ main.cpp src/Class/* src/Headers/* -o Teste
+g++ main.cpp src/Class/* src/Headers/* -o grafosGrupo3
 
 echo "--- Run Build ---"
-./Teste K400.3.con.red
+./grafosGrupo3 K400.3.con.red
 
 echo "--- End Build ---"
 
 echo "remove file Teste"
-rm Teste
+rm grafosGrupo3
 
 echo "remove files"
 rm GrafoPNG.dot
