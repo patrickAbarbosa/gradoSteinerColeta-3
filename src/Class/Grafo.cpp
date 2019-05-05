@@ -6,6 +6,7 @@
 
 #include "../Headers/Grafo.h" // .h Grafo
 #include "../Headers/Lista.h"
+#include "../Headers/Data.h"
 
 using namespace std;
 
@@ -49,6 +50,7 @@ Grafo::Grafo(string in)
   ehDigrafo = false;
   numeroArestas = 0;
   numeroVertices = 0;
+  db = new Data();
   leArquivo();
 }
 
@@ -73,6 +75,7 @@ Grafo::Grafo(string in, string out)
   ehDigrafo = false;
   numeroArestas = 0;
   numeroVertices = 0;
+  db = new Data();
   leArquivo();
 }
 
@@ -88,12 +91,13 @@ Grafo::Grafo(string in, string out, string ehDigrafo)
   arquivoOut = new string;
   *arquivoOut = out;
 
-  if(ehDigrafo == "1" )
+  if (ehDigrafo == "1")
     ehDigrafo = true;
   else
     ehDigrafo = false;
   numeroArestas = 0;
   numeroVertices = 0;
+  db = new Data();
   leArquivo();
 }
 /*
@@ -104,7 +108,7 @@ Grafo::Grafo(string in, string out, string ehDigrafo)
 Grafo::~Grafo()
 {
   cout << "Destruindo Grafo" << endl;
-
+  delete db;
   delete vertices;
 
   if (arquivoIn)
@@ -247,9 +251,9 @@ void Grafo::exportaGrafo()
  */
 void Grafo::menuSelecionado(char a)
 {
-  switch(a)
+  switch (a)
   {
-  case '1': 
+  case '1':
   {
     string id_a, id_b;
     int peso;
@@ -306,7 +310,8 @@ void Grafo::menuSelecionado(char a)
     Vertice *aux = vertices->buscaVertice(id);
 
     if (aux != NULL)
-      cout << "Vertice de id " << " encontrado!" << endl;
+      cout << "Vertice de id "
+           << " encontrado!" << endl;
     else
       cout << "Vertice não encontrado!" << endl;
     break;
@@ -336,7 +341,7 @@ void Grafo::menuSelecionado(char a)
     break;
   }
   case '7':
-  { 
+  {
     cout << "Limpar Grafo" << endl;
     delete vertices;
     vertices = new Lista();
@@ -346,7 +351,7 @@ void Grafo::menuSelecionado(char a)
   {
     cout << "Informaçoes do Grafo" << endl;
     cout << "Numero de Vertices: " << vertices->getQuantidade() << endl;
-    cout << "Numero de Arestas: " <<  numeroArestas <<endl;
+    cout << "Numero de Arestas: " << numeroArestas << endl;
     cout << "Maior Grau: " << vertices->getMaiorGrau()->getGrau() << endl;
     break;
   }
@@ -415,6 +420,11 @@ void Grafo::addAresta(string id_a, string id_b, int peso)
   Vertice *a = vertices->buscaVertice(id_a);
   Vertice *b = vertices->buscaVertice(id_b);
 
+  auxAddAresta(a, b, peso);
+}
+
+void Grafo::auxAddAresta(Vertice *a, Vertice *b, int peso)
+{
   if (a == NULL || b == NULL)
   {
     cout << "Erro: Vertice invalido!" << endl;
@@ -426,8 +436,8 @@ void Grafo::addAresta(string id_a, string id_b, int peso)
     Aresta *t = new Aresta(b, peso);
     a->insereAresta(t);
     b->insereAresta(p);
+    numeroArestas++;
   }
-  numeroArestas++;
 }
 
 /*
@@ -465,20 +475,21 @@ void Grafo::deletaAresta(string id_a, string id_b)
   numeroArestas--;
 }
 
-bool isVector(vector <string> *vet, string value)
+bool isVector(vector<string> *vet, string value)
 {
-  if(!vet){
-    cout << "Vetor nao alocado!" << endl;    
+  if (!vet)
+  {
+    cout << "Vetor nao alocado!" << endl;
     exit(1);
   }
 
-  for(vector<string>::iterator it = vet->begin(); it != vet->end(); ++it)
-    if(*it == value)
+  for (vector<string>::iterator it = vet->begin(); it != vet->end(); ++it)
+    if (*it == value)
       return true;
   return false;
 }
 
-void Grafo::auxBuscaPorProfundidade(Vertice *vertice, vector <string> *nosLidos)
+void Grafo::auxBuscaPorProfundidade(Vertice *vertice, vector<string> *nosLidos)
 {
   if (vertice != NULL)
   {
@@ -488,12 +499,12 @@ void Grafo::auxBuscaPorProfundidade(Vertice *vertice, vector <string> *nosLidos)
     while (p != NULL)
     {
       Vertice *aux = p->getAdjacente();
-      if(!isVector(nosLidos, aux->getInfo()))
+      if (!isVector(nosLidos, aux->getInfo()))
       {
         nosLidos->push_back(vertice->getInfo());
-        auxBuscaPorProfundidade(aux, nosLidos);      
+        auxBuscaPorProfundidade(aux, nosLidos);
       }
-      p  = p->getProx();
+      p = p->getProx();
     }
   }
 }
@@ -501,19 +512,74 @@ void Grafo::auxBuscaPorProfundidade(Vertice *vertice, vector <string> *nosLidos)
 void Grafo::buscaPorProfundidade(string verticeInicial)
 {
   Vertice *p = vertices->buscaVertice(verticeInicial);
-  vector <string> nosLidos;
-  
+  vector<string> nosLidos;
+
   if (p == NULL)
   {
     cout << "Vertice nao encontrado!" << endl;
   }
-  
-  auxBuscaPorProfundidade(p, &nosLidos);
-  
-  for(Vertice *aux = vertices->getPrimeiro(); aux != NULL; aux = aux->getProx())
-    if(!isVector(&nosLidos, aux->getInfo()))
+  else
+    auxBuscaPorProfundidade(p, &nosLidos);
+
+  for (Vertice *aux = vertices->getPrimeiro(); aux != NULL; aux = aux->getProx())
+    if (!isVector(&nosLidos, aux->getInfo()))
     {
       nosLidos.push_back(aux->getInfo());
       auxBuscaPorProfundidade(aux, &nosLidos);
-    } 
+    }
+}
+
+bool Grafo::ehConexo()
+{
+  if (!vertices || numeroVertices == 0)
+  {
+    cout << "Grafo vazio" << endl;
+    return 0;
+  }
+  return 0;
+}
+
+void Grafo::auxComplementar(Vertice *v, Grafo *g)
+{
+  //if(v != NULL)
+}
+Grafo *Grafo::complementar()
+{
+  Grafo *complementar = new Grafo();
+
+  if (numeroVertices == 0)
+    return complementar;
+  else
+  {
+    //obtem o primeiro vertice da lista
+    Vertice *p = vertices->getPrimeiro();
+
+    //para todos os vertice do grafo no grafo complementar
+    for (; p != NULL; p = p->getProx(), complementar->numeroVertices++)
+    {
+      complementar->vertices->insereVertice(p->getInfo(), p->getPeso());
+      Vertice *atual = complementar->vertices->buscaVertice(p->getInfo());
+
+      for (Vertice *aux = vertices->getPrimeiro(); aux != NULL; aux = aux->getProx())
+        if (aux->)
+    }
+
+    p = vertices->getPrimeiro();
+
+    /*
+      complementar->vertices->insereVertice(p->getInfo(), p->getPeso());
+      Vertice *aux = complementar->vertices->buscaVertice(p->getInfo());
+
+      if (p->getGrau() != (numeroVertices - 1))
+      {
+        for (int j = 0; j < numeroVertices; j++)
+        {
+          Aresta *aresta = p->getListaAdjacencia();
+          bool ehAdjacente = false;
+          for(;aresta !== NULL; aresta = aresta->getProx())
+            if(aresta->getAdjacente()->getInfo == p->getInfo())
+              ehAdjacente = true;
+          if(!ehAdjacente)
+      */
+  }
 }

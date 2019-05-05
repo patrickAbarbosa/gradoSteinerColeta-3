@@ -7,9 +7,9 @@ echo "--- Run Build ---"
 
 echo "--- End Build ---"
 
-echo "remove file Teste"
+echo "remove file executavel"
 rm grafosGrupo3
 
-echo "remove files"
+echo "remove files" 
 rm GrafoPNG.dot
 rm GrafoPNG.dot.png
