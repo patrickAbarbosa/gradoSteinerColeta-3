@@ -4,8 +4,9 @@
 #include <sstream>
 #include <vector>
 
-#include "../Headers/Grafo.h" // .h Grafo
+#include "../Headers/Grafo.h"
 #include "../Headers/Lista.h"
+#include "../Headers/Fila.h"
 
 using namespace std;
 
@@ -516,4 +517,82 @@ void Grafo::buscaPorProfundidade(string verticeInicial)
       nosLidos.push_back(aux->getInfo());
       auxBuscaPorProfundidade(aux, &nosLidos);
     } 
+}
+
+/*
+ * buscaPorLargura() usa uma fila parar ir buscando sempre
+ * os adjacentes do vertice utilizando a ordem da lista de adjacencia
+ * */
+
+///melhorar esse comenntário
+
+void Grafo::buscaPorLargura(string verticeInicial){
+
+  Vertice * p = vertices->buscaVertice(verticeInicial);
+
+  if(p == NULL){
+    cout << "Vertice nao encontrado!" << endl;
+  }
+  
+  vector <string> nosLidos;
+  Fila aux;
+  aux.insere(p);
+
+  while(!aux.vazia()){
+
+    p = aux.retira();
+    Aresta * t = p->getListaAdjacencia(); 
+
+    if(!isVector(&nosLidos,p->getInfo(){
+        nosLidos->push_back(p->getInfo());
+    }    
+
+    while(t != NULL){
+      if(!isVector(&nosLidos,t->getAdjacente()->getInfo()){
+        aux.insere(t->getAdjacente());
+      }
+      t = t->getProx();
+    }
+  }
+}
+
+void Grafo::algoritimoDijkstra(){
+
+  Vertice * p = vertices->getPrimeiro();
+  //adicionar caminho no vertice
+  int tamCaminho = 0;
+  
+  vector <string> nosLidos;
+  Fila aux;
+  aux.insere(p);
+
+  while(!aux.vazia()){
+
+    p = aux.retira();
+    Aresta * t = p->getListaAdjacencia(); 
+
+    if(!isVector(&nosLidos,p->getInfo(){
+        nosLidos->push_back(p->getInfo());
+    }    
+
+    while(t != NULL){
+      if(!isVector(&nosLidos,t->getAdjacente()->getInfo()){
+        aux.insere(t->getAdjacente());
+        //adicionar tamanho do caminho ao chegar no vertice
+      }
+      t = t->getProx();
+    }
+    tamCaminho ++;
+  }
+}
+
+void Grafo::auxPrim(){
+
+    //cria arvore
+}
+
+void Grafo::algoritmoPrim(){
+
+  //gera arvore de custo minimo
+
 }

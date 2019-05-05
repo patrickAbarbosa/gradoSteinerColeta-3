@@ -26,7 +26,9 @@ class Grafo
 	void imprimeGrafoPNG();
   void menuSelecionado(char a);
   void menu();
+
   void buscaPorProfundidade(string verticeInicial);
+  void buscaPorLargura(string verticeInicial);
   
   private:
     Lista  *vertices;

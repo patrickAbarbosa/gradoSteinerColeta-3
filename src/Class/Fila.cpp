@@ -12,6 +12,15 @@ Fila::~Fila(){
 	while(retira() != NULL); 
 }
 
+bool Fila::vazia(){
+
+	if(primeiro == NULL)
+		return true;
+	else
+		return false;
+
+}
+
 void Fila::insere(Vertice * p){ //entra no final da fila
 
 	if(ultimo == NULL){ //fila vazia
