@@ -27,29 +27,30 @@ public:
   void imprimeGrafoPNG();
   void menuSelecionado(char a);
   void menu();
+
   void buscaPorProfundidade(string verticeInicial);
+  void buscaPorLargura(string verticeInicial);
   Grafo *complementar();
 
-private:
-  Lista *vertices;
+  private:
+    Lista  *vertices;
+ 
+    string *arquivoIn;
+    string *arquivoOut;
+    
+    int numeroArestas;
+    int numeroVertices;
 
-  string *arquivoIn;
-  string *arquivoOut;
+    bool ehDigrafo;
 
-  int numeroArestas;
-  int numeroVertices;
-
-  bool ehDigrafo;
-
-  Data *db;
-
-  //private functions
-  void leArquivo();
-  void exportGrafo();
-  void auxBuscaPorProfundidade(Vertice *vertice, vector<string> *nosLidos);
-  bool ehConexo();
-  void auxAddAresta(Vertice *a,  Vertice *b, int peso);
-  void auxComplementar(Vertice *v, Grafo *g);
+    Data *db;
+    //private functions
+    void leArquivo();
+    void exportGrafo();
+    void auxBuscaPorProfundidade(Vertice *vertice, vector <string> *nosLidos);
+    bool ehConexo();
+    void auxAddAresta(Vertice *a,  Vertice *b, int peso);
+    void auxComplementar(Vertice *v, Grafo *g);
 };
 
 #endif // GRAFO_H_INCLUDED
