@@ -12,6 +12,7 @@ class Fila {
     	~Fila();
     	void insere(Vertice * p);
     	Vertice * retira();
+    	bool vazia();
 	
     private:
 		Vertice * primeiro;

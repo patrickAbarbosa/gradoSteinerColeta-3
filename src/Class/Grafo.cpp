@@ -543,12 +543,12 @@ void Grafo::buscaPorLargura(string verticeInicial){
     p = aux.retira();
     Aresta * t = p->getListaAdjacencia(); 
 
-    if(!isVector(&nosLidos,p->getInfo(){
-        nosLidos->push_back(p->getInfo());
+    if(!isVector(&nosLidos,p->getInfo())){
+        nosLidos.push_back(p->getInfo());
     }    
 
     while(t != NULL){
-      if(!isVector(&nosLidos,t->getAdjacente()->getInfo()){
+      if(!isVector(&nosLidos,t->getAdjacente()->getInfo())){
         aux.insere(t->getAdjacente());
       }
       t = t->getProx();
@@ -571,12 +571,12 @@ void Grafo::algoritimoDijkstra(){
     p = aux.retira();
     Aresta * t = p->getListaAdjacencia(); 
 
-    if(!isVector(&nosLidos,p->getInfo(){
-        nosLidos->push_back(p->getInfo());
+    if(!isVector(&nosLidos,p->getInfo())){
+        nosLidos.push_back(p->getInfo());
     }    
 
     while(t != NULL){
-      if(!isVector(&nosLidos,t->getAdjacente()->getInfo()){
+      if(!isVector(&nosLidos,t->getAdjacente()->getInfo())){
         aux.insere(t->getAdjacente());
         //adicionar tamanho do caminho ao chegar no vertice
       }
