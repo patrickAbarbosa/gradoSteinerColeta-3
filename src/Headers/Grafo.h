@@ -31,6 +31,7 @@ public:
   void buscaPorProfundidade(string verticeInicial);
   void buscaPorLargura(string verticeInicial);
   Grafo *complementar();
+  Vertice **ordenacaoTopologica();
 
   private:
     Lista  *vertices;
@@ -50,7 +51,9 @@ public:
     void auxBuscaPorProfundidade(Vertice *vertice, vector <string> *nosLidos);
     bool ehConexo();
     void auxAddAresta(Vertice *a,  Vertice *b, int peso);
-    void auxComplementar(Vertice *v, Grafo *g);
+    int auxOrdenacaoTopologica(int vet[], int tam);
+    Vertice **montaVetorVertices(int *cont, int tam);
+    
 };
 
 #endif // GRAFO_H_INCLUDED

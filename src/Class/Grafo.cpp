@@ -6,11 +6,9 @@
 
 #include "../Headers/Grafo.h"
 #include "../Headers/Lista.h"
-<<<<<<< HEAD
 #include "../Headers/Data.h"
-=======
 #include "../Headers/Fila.h"
->>>>>>> 0eed296348f90e0fdbb0d31eb1ab37e37d03666c
+#include "../Headers/Vertice.h"
 
 using namespace std;
 
@@ -533,6 +531,23 @@ void Grafo::buscaPorProfundidade(string verticeInicial)
     }
 }
 
+Vertice** Grafo::montaVetorVertices(int *cont, int tam){
+  Vertice **infoVertice = new Vertice *[numeroVertices];
+  
+  int i = 0;
+  for(Vertice *aux = vertices->getPrimeiro(); aux != NULL; aux = aux->getProx())
+    infoVertice[i] = aux;
+
+  for(Vertice *aux = vertices->getPrimeiro(); aux != NULL; aux = aux->getProx())
+  {
+    i = 0;
+    for(Aresta *adjacente = aux->getListaAdjacencia(); i < numeroVertices && adjacente != NULL; i++)
+      if(infoVertice[i]->getInfo() == adjacente->getAdjacente()->getInfo())
+        cont[i]++;
+  }
+  return infoVertice;
+}
+
 bool Grafo::ehConexo()
 {
   if (!vertices || numeroVertices == 0)
@@ -540,14 +555,20 @@ bool Grafo::ehConexo()
     cout << "Grafo vazio" << endl;
     return 0;
   }
-  return 0;
+
+  int cont[numeroVertices];
+  montaVetorVertices(cont, numeroVertices);
+  for(int i = 0; i < numeroVertices; i++)
+    if(cont[i] = 0)
+      return false;
+  
+  return true;
 }
 
-void Grafo::auxComplementar(Vertice *v, Grafo *g)
-{
-  //if(v != NULL)
-}
-
+/*
+ * Complementar retorna o grafo complementar do grafo alocado na memória. 
+ * As arestas do Grafo coplementar recebem peso igual a um.
+ */
 Grafo *Grafo::complementar()
 {
   Grafo *complementar = new Grafo();
@@ -578,7 +599,45 @@ Grafo *Grafo::complementar()
         adjacente = adjacente->getProx();
       }
     }
-    return complementar;
+  }
+  return complementar;
+}
+
+/* 
+ * AuxOrdenacao auxilia a ordenacao topoligica buscando
+ * o menor valor do vetor >= 0 e retorna seu indice
+ */
+int Grafo::auxOrdenacaoTopologica(int vet[], int tam)
+{
+  if(tam = 0)
+    return -1;
+
+  int menor = 0;
+  
+  for(int i = 0; i<tam; i++)
+    if(vet[i] != -1 && vet[i] < vet[menor])
+      menor = i;
+
+  vet[menor] = -1;
+  return menor;
+}
+
+/*
+ * OrdenacaoTopologica
+ */
+Vertice** Grafo::ordenacaoTopologica()
+{
+  if(vertices->getPrimeiro() == NULL)
+    return NULL;
+
+  int cont[numeroVertices];
+  Vertice **infoVertice = montaVetorVertices(cont, numeroVertices);
+  
+  Vertice **ordenado = new Vertice *[numeroVertices];
+  for(int i = 0; i<numeroVertices; i++)
+    ordenado[i] = infoVertice[auxOrdenacaoTopologica(cont, numeroVertices)];
+  
+  return ordenado; 
 }
 
 /*
@@ -586,53 +645,55 @@ Grafo *Grafo::complementar()
  * os adjacentes do vertice utilizando a ordem da lista de adjacencia
  * */
 ///melhorar esse comenntário
-void Grafo::buscaPorLargura(string verticeInicial){
+void Grafo::buscaPorLargura(string verticeInicial)
+{
+  Vertice *p = vertices->buscaVertice(verticeInicial);
 
-  Vertice * p = vertices->buscaVertice(verticeInicial);
-
-  if(p == NULL){
+  if (p == NULL)
+  {
     cout << "Vertice nao encontrado!" << endl;
   }
-  
-  vector <string> nosLidos;
+  p = vertices->getPrimeiro();
+  vector<string> nosLidos;
   Fila aux;
   aux.insere(p);
 
-  while(!aux.vazia()){
-
+  while (!aux.vazia())
+  {
     p = aux.retira();
-    Aresta * t = p->getListaAdjacencia(); 
+    Aresta *t = p->getListaAdjacencia();
 
-    if(!isVector(&nosLidos,p->getInfo(){
-        nosLidos->push_back(p->getInfo());
+    if(!isVector(&nosLidos,p->getInfo())){
+      nosLidos.push_back(p->getInfo());
     }    
 
     while(t != NULL){
-      if(!isVector(&nosLidos,t->getAdjacente()->getInfo()){
+      if(!isVector(&nosLidos,t->getAdjacente()->getInfo()))
         aux.insere(t->getAdjacente());
-      }
       t = t->getProx();
     }
   }
 }
+/*
+void Grafo::algoritimoDijkstra()
+{
 
-void Grafo::algoritimoDijkstra(){
-
-  Vertice * p = vertices->getPrimeiro();
+  Vertice *p = vertices->getPrimeiro();
   //adicionar caminho no vertice
   int tamCaminho = 0;
-  
-  vector <string> nosLidos;
+
+  vector<string> nosLidos;
   Fila aux;
   aux.insere(p);
 
-  while(!aux.vazia()){
+  while (!aux.vazia())
+  {
 
     p = aux.retira();
-    Aresta * t = p->getListaAdjacencia(); 
+    Aresta *t = p->getListaAdjacencia();
 
     if(!isVector(&nosLidos,p->getInfo(){
-        nosLidos->push_back(p->getInfo());
+      nosLidos->push_back(p->getInfo());
     }    
 
     while(t != NULL){
@@ -646,13 +707,16 @@ void Grafo::algoritimoDijkstra(){
   }
 }
 
-void Grafo::auxPrim(){
+void Grafo::auxPrim()
+{
 
-    //cria arvore
+  //cria arvore
 }
 
-void Grafo::algoritmoPrim(){
+void Grafo::algoritmoPrim()
+{
 
   //gera arvore de custo minimo
-
 }
+*/
+
