@@ -6,7 +6,9 @@
 
 #include "../Headers/Grafo.h"
 #include "../Headers/Lista.h"
+#include "../Headers/Data.h"
 #include "../Headers/Fila.h"
+#include "../Headers/Vertice.h"
 
 using namespace std;
 
@@ -50,6 +52,7 @@ Grafo::Grafo(string in)
   ehDigrafo = false;
   numeroArestas = 0;
   numeroVertices = 0;
+  db = new Data();
   leArquivo();
 }
 
@@ -74,6 +77,7 @@ Grafo::Grafo(string in, string out)
   ehDigrafo = false;
   numeroArestas = 0;
   numeroVertices = 0;
+  db = new Data();
   leArquivo();
 }
 
@@ -89,12 +93,13 @@ Grafo::Grafo(string in, string out, string ehDigrafo)
   arquivoOut = new string;
   *arquivoOut = out;
 
-  if(ehDigrafo == "1" )
+  if (ehDigrafo == "1")
     ehDigrafo = true;
   else
     ehDigrafo = false;
   numeroArestas = 0;
   numeroVertices = 0;
+  db = new Data();
   leArquivo();
 }
 /*
@@ -105,7 +110,7 @@ Grafo::Grafo(string in, string out, string ehDigrafo)
 Grafo::~Grafo()
 {
   cout << "Destruindo Grafo" << endl;
-
+  delete db;
   delete vertices;
 
   if (arquivoIn)
@@ -248,9 +253,9 @@ void Grafo::exportaGrafo()
  */
 void Grafo::menuSelecionado(char a)
 {
-  switch(a)
+  switch (a)
   {
-  case '1': 
+  case '1':
   {
     string id_a, id_b;
     int peso;
@@ -307,7 +312,8 @@ void Grafo::menuSelecionado(char a)
     Vertice *aux = vertices->buscaVertice(id);
 
     if (aux != NULL)
-      cout << "Vertice de id " << " encontrado!" << endl;
+      cout << "Vertice de id "
+           << " encontrado!" << endl;
     else
       cout << "Vertice não encontrado!" << endl;
     break;
@@ -337,7 +343,7 @@ void Grafo::menuSelecionado(char a)
     break;
   }
   case '7':
-  { 
+  {
     cout << "Limpar Grafo" << endl;
     delete vertices;
     vertices = new Lista();
@@ -347,7 +353,7 @@ void Grafo::menuSelecionado(char a)
   {
     cout << "Informaçoes do Grafo" << endl;
     cout << "Numero de Vertices: " << vertices->getQuantidade() << endl;
-    cout << "Numero de Arestas: " <<  numeroArestas <<endl;
+    cout << "Numero de Arestas: " << numeroArestas << endl;
     cout << "Maior Grau: " << vertices->getMaiorGrau()->getGrau() << endl;
     break;
   }
@@ -416,6 +422,11 @@ void Grafo::addAresta(string id_a, string id_b, int peso)
   Vertice *a = vertices->buscaVertice(id_a);
   Vertice *b = vertices->buscaVertice(id_b);
 
+  auxAddAresta(a, b, peso);
+}
+
+void Grafo::auxAddAresta(Vertice *a, Vertice *b, int peso)
+{
   if (a == NULL || b == NULL)
   {
     cout << "Erro: Vertice invalido!" << endl;
@@ -427,8 +438,8 @@ void Grafo::addAresta(string id_a, string id_b, int peso)
     Aresta *t = new Aresta(b, peso);
     a->insereAresta(t);
     b->insereAresta(p);
+    numeroArestas++;
   }
-  numeroArestas++;
 }
 
 /*
@@ -466,20 +477,21 @@ void Grafo::deletaAresta(string id_a, string id_b)
   numeroArestas--;
 }
 
-bool isVector(vector <string> *vet, string value)
+bool isVector(vector<string> *vet, string value)
 {
-  if(!vet){
-    cout << "Vetor nao alocado!" << endl;    
+  if (!vet)
+  {
+    cout << "Vetor nao alocado!" << endl;
     exit(1);
   }
 
-  for(vector<string>::iterator it = vet->begin(); it != vet->end(); ++it)
-    if(*it == value)
+  for (vector<string>::iterator it = vet->begin(); it != vet->end(); ++it)
+    if (*it == value)
       return true;
   return false;
 }
 
-void Grafo::auxBuscaPorProfundidade(Vertice *vertice, vector <string> *nosLidos)
+void Grafo::auxBuscaPorProfundidade(Vertice *vertice, vector<string> *nosLidos)
 {
   if (vertice != NULL)
   {
@@ -489,12 +501,12 @@ void Grafo::auxBuscaPorProfundidade(Vertice *vertice, vector <string> *nosLidos)
     while (p != NULL)
     {
       Vertice *aux = p->getAdjacente();
-      if(!isVector(nosLidos, aux->getInfo()))
+      if (!isVector(nosLidos, aux->getInfo()))
       {
         nosLidos->push_back(vertice->getInfo());
-        auxBuscaPorProfundidade(aux, nosLidos);      
+        auxBuscaPorProfundidade(aux, nosLidos);
       }
-      p  = p->getProx();
+      p = p->getProx();
     }
   }
 }
@@ -502,46 +514,154 @@ void Grafo::auxBuscaPorProfundidade(Vertice *vertice, vector <string> *nosLidos)
 void Grafo::buscaPorProfundidade(string verticeInicial)
 {
   Vertice *p = vertices->buscaVertice(verticeInicial);
-  vector <string> nosLidos;
-  
+  vector<string> nosLidos;
+
   if (p == NULL)
   {
     cout << "Vertice nao encontrado!" << endl;
   }
-  
-  auxBuscaPorProfundidade(p, &nosLidos);
-  
-  for(Vertice *aux = vertices->getPrimeiro(); aux != NULL; aux = aux->getProx())
-    if(!isVector(&nosLidos, aux->getInfo()))
+  else
+    auxBuscaPorProfundidade(p, &nosLidos);
+
+  for (Vertice *aux = vertices->getPrimeiro(); aux != NULL; aux = aux->getProx())
+    if (!isVector(&nosLidos, aux->getInfo()))
     {
       nosLidos.push_back(aux->getInfo());
       auxBuscaPorProfundidade(aux, &nosLidos);
-    } 
+    }
+}
+
+Vertice** Grafo::montaVetorVertices(int *cont, int tam){
+  Vertice **infoVertice = new Vertice *[numeroVertices];
+  
+  int i = 0;
+  for(Vertice *aux = vertices->getPrimeiro(); aux != NULL; aux = aux->getProx())
+    infoVertice[i] = aux;
+
+  for(Vertice *aux = vertices->getPrimeiro(); aux != NULL; aux = aux->getProx())
+  {
+    i = 0;
+    for(Aresta *adjacente = aux->getListaAdjacencia(); i < numeroVertices && adjacente != NULL; i++)
+      if(infoVertice[i]->getInfo() == adjacente->getAdjacente()->getInfo())
+        cont[i]++;
+  }
+  return infoVertice;
+}
+
+bool Grafo::ehConexo()
+{
+  if (!vertices || numeroVertices == 0)
+  {
+    cout << "Grafo vazio" << endl;
+    return 0;
+  }
+
+  int cont[numeroVertices];
+  montaVetorVertices(cont, numeroVertices);
+  for(int i = 0; i < numeroVertices; i++)
+    if(cont[i] = 0)
+      return false;
+  
+  return true;
+}
+
+/*
+ * Complementar retorna o grafo complementar do grafo alocado na memória. 
+ * As arestas do Grafo coplementar recebem peso igual a um.
+ */
+Grafo *Grafo::complementar()
+{
+  Grafo *complementar = new Grafo();
+
+  if (numeroVertices == 0)
+    return complementar;
+  else
+  {
+    //obtem o primeiro vertice da lista
+    Vertice *p = vertices->getPrimeiro();
+
+    //para todos os vertice do grafo no grafo complementar
+    for (; p != NULL; p = p->getProx(), complementar->numeroVertices++)
+    {
+      complementar->vertices->insereVertice(p->getInfo(), p->getPeso());
+      Vertice *atual = complementar->vertices->buscaVertice(p->getInfo());
+
+      Aresta *adjacente = p->getListaAdjacencia();
+
+      //Adiciona os vertices que não são adjacentes ao vertice de forma ordenada.
+      for (Vertice *aux = vertices->getPrimeiro(); aux != NULL && adjacente != NULL; aux = aux->getProx())
+      {
+        if (adjacente->getAdjacente()->getInfo() != aux->getInfo())
+        {
+          Aresta *novaAresta = new Aresta(aux, 1);
+          atual->insereAresta(novaAresta);
+        }
+        adjacente = adjacente->getProx();
+      }
+    }
+  }
+  return complementar;
+}
+
+/* 
+ * AuxOrdenacao auxilia a ordenacao topoligica buscando
+ * o menor valor do vetor >= 0 e retorna seu indice
+ */
+int Grafo::auxOrdenacaoTopologica(int vet[], int tam)
+{
+  if(tam = 0)
+    return -1;
+
+  int menor = 0;
+  
+  for(int i = 0; i<tam; i++)
+    if(vet[i] != -1 && vet[i] < vet[menor])
+      menor = i;
+
+  vet[menor] = -1;
+  return menor;
+}
+
+/*
+ * OrdenacaoTopologica
+ */
+Vertice** Grafo::ordenacaoTopologica()
+{
+  if(vertices->getPrimeiro() == NULL)
+    return NULL;
+
+  int cont[numeroVertices];
+  Vertice **infoVertice = montaVetorVertices(cont, numeroVertices);
+  
+  Vertice **ordenado = new Vertice *[numeroVertices];
+  for(int i = 0; i<numeroVertices; i++)
+    ordenado[i] = infoVertice[auxOrdenacaoTopologica(cont, numeroVertices)];
+  
+  return ordenado; 
 }
 
 /*
  * buscaPorLargura() usa uma fila parar ir buscando sempre
  * os adjacentes do vertice utilizando a ordem da lista de adjacencia
  * */
-
 ///melhorar esse comenntário
+void Grafo::buscaPorLargura(string verticeInicial)
+{
+  Vertice *p = vertices->buscaVertice(verticeInicial);
 
-void Grafo::buscaPorLargura(string verticeInicial){
-
-  Vertice * p = vertices->buscaVertice(verticeInicial);
-
-  if(p == NULL){
+  if (p == NULL)
+  {
     cout << "Vertice nao encontrado!" << endl;
   }
-  
-  vector <string> nosLidos;
+  p = vertices->getPrimeiro();
+  vector<string> nosLidos;
   Fila aux;
   aux.insere(p);
 
-  while(!aux.vazia()){
-
+  while (!aux.vazia())
+  {
     p = aux.retira();
-    Aresta * t = p->getListaAdjacencia(); 
+    Aresta *t = p->getListaAdjacencia();
 
     if(!isVector(&nosLidos,p->getInfo())){
         nosLidos.push_back(p->getInfo());
@@ -550,11 +670,13 @@ void Grafo::buscaPorLargura(string verticeInicial){
     while(t != NULL){
       if(!isVector(&nosLidos,t->getAdjacente()->getInfo())){
         aux.insere(t->getAdjacente());
-      }
       t = t->getProx();
     }
   }
 }
+/*
+void Grafo::algoritimoDijkstra()
+{
 
 /*
 * algoritmoDijkstra() calcula e retorna o valor do menor caminho saindo
@@ -575,7 +697,8 @@ int Grafo::algoritmoDijkstra(string origem, string destino){
   Fila aux;
   aux.insere(p);
 
-  while(!aux.vazia()){
+  while (!aux.vazia())
+  {
 
     p = aux.retira();
     Aresta * t = p->getListaAdjacencia(); 
@@ -600,13 +723,16 @@ int Grafo::algoritmoDijkstra(string origem, string destino){
   return q->getTamCaminho();
 }
 
-void Grafo::auxPrim(){
+void Grafo::auxPrim()
+{
 
-    //cria arvore
+  //cria arvore
 }
 
-void Grafo::algoritmoPrim(){
+void Grafo::algoritmoPrim()
+{
 
   //gera arvore de custo minimo
-
 }
+*/
+

@@ -7,28 +7,31 @@
 
 #include "Lista.h"
 #include "Vertice.h"
+#include "./Data.h"
 
 using namespace std;
 
 class Grafo
 {
-  public:
-    Grafo();
-    Grafo(string in);
-    Grafo(string in, string out);
-    Grafo(string in, string out, string ehDigrafo);
-    ~Grafo();
+public:
+  Grafo();
+  Grafo(string in);
+  Grafo(string in, string out);
+  Grafo(string in, string out, string ehDigrafo);
+  ~Grafo();
 
-    //Public fnctions
-    
-	void addAresta(string id_a, string id_b, int peso);
-	void deletaAresta(string id_a, string id_b);
-	void imprimeGrafoPNG();
+  //Public fnctions
+
+  void addAresta(string id_a, string id_b, int peso);
+  void deletaAresta(string id_a, string id_b);
+  void imprimeGrafoPNG();
   void menuSelecionado(char a);
   void menu();
 
   void buscaPorProfundidade(string verticeInicial);
   void buscaPorLargura(string verticeInicial);
+  Vertice **ordenacaoTopologica();
+  Grafo *complementar();
 
   int algoritmoDijkstra();
   void algoritmoPrim();
@@ -45,10 +48,15 @@ class Grafo
 
     bool ehDigrafo;
 
+    Data *db;
     //private functions
     void leArquivo();
     void exportGrafo();
     void auxBuscaPorProfundidade(Vertice *vertice, vector <string> *nosLidos);
+    bool ehConexo();
+    void auxAddAresta(Vertice *a,  Vertice *b, int peso);
+    int auxOrdenacaoTopologica(int vet[], int tam);
+    Vertice **montaVetorVertices(int *cont, int tam);
     
 };
 
