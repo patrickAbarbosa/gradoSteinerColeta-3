@@ -556,12 +556,21 @@ void Grafo::buscaPorLargura(string verticeInicial){
   }
 }
 
-void Grafo::algoritimoDijkstra(){
+/*
+* algoritmoDijkstra() calcula e retorna o valor do menor caminho saindo
+* do vertice de origem ate o de destino, usando busca em largura.
+*/
 
-  Vertice * p = vertices->getPrimeiro();
-  //adicionar caminho no vertice
-  int tamCaminho = 0;
-  
+int Grafo::algoritmoDijkstra(string origem, string destino){
+
+  Vertice * p = vertices->buscaVertice(origem);
+  Vertice * q = vertices->buscaVertice(destino);
+
+  if(p == NULL || q == NULL){
+    cout << "Vertice nao encontrado!" << endl;
+    return;
+  }
+
   vector <string> nosLidos;
   Fila aux;
   aux.insere(p);
@@ -570,20 +579,25 @@ void Grafo::algoritimoDijkstra(){
 
     p = aux.retira();
     Aresta * t = p->getListaAdjacencia(); 
+    int caminho = p->getTamCaminho() + t->getInfo();
 
     if(!isVector(&nosLidos,p->getInfo())){
-        nosLidos.push_back(p->getInfo());
-    }    
+      nosLidos.push_back(p->getInfo());
+    }
 
     while(t != NULL){
-      if(!isVector(&nosLidos,t->getAdjacente()->getInfo())){
-        aux.insere(t->getAdjacente());
+      Vertice * r = t->getAdjacente();
+      if(!isVector(&nosLidos,r->getInfo())){
+        aux.insere(r);
         //adicionar tamanho do caminho ao chegar no vertice
+      }
+      if( caminho < r->getTamCaminho()){
+        r->setTamCaminho(caminho);
       }
       t = t->getProx();
     }
-    tamCaminho ++;
   }
+  return q->getTamCaminho();
 }
 
 void Grafo::auxPrim(){

@@ -30,7 +30,7 @@ class Grafo
   void buscaPorProfundidade(string verticeInicial);
   void buscaPorLargura(string verticeInicial);
 
-  void algoritimoDijkstra();
+  int algoritmoDijkstra();
   void algoritmoPrim();
   void auxPrim();
   

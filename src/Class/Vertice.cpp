@@ -9,6 +9,7 @@ Vertice::Vertice(string id, int peso_vertice)
 	proximo = NULL;
 	listaAdjacencia = NULL;
 	grau = 0;
+	tamCaminho = 100000; //parametro utilizado como infinito por nao ter aresta de peso superior a esse
 }
 
 Vertice::~Vertice()
