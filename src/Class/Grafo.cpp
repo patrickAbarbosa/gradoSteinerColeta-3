@@ -645,6 +645,7 @@ Vertice** Grafo::ordenacaoTopologica()
  * os adjacentes do vertice utilizando a ordem da lista de adjacencia
  * */
 ///melhorar esse comenntário
+
 void Grafo::buscaPorLargura(string verticeInicial)
 {
   Vertice *p = vertices->buscaVertice(verticeInicial);
@@ -668,15 +669,15 @@ void Grafo::buscaPorLargura(string verticeInicial)
     }    
 
     while(t != NULL){
+      
       if(!isVector(&nosLidos,t->getAdjacente()->getInfo())){
         aux.insere(t->getAdjacente());
+      }
       t = t->getProx();
+      
     }
   }
 }
-/*
-void Grafo::algoritimoDijkstra()
-{
 
 /*
 * algoritmoDijkstra() calcula e retorna o valor do menor caminho saindo
@@ -734,5 +735,95 @@ void Grafo::algoritmoPrim()
 
   //gera arvore de custo minimo
 }
-*/
 
+void Grafo::algoritmoKruskal()
+{
+
+
+}
+
+
+/*---------------------------------------------------------------------------
+  O Algoritmo Guloso funciona usando ...
+
+
+
+
+---------------------------------------------------------------------------*/
+
+int Grafo::custo (Grafo * arvore){
+  
+  int custo_arestas = 0;
+  int custo_nos = 0;
+  Vertice * p = arvore->getVertices()->getPrimeiro();
+  
+  while(p != NULL){
+    
+    Aresta * t = p->getListaAdjacencia();
+
+    for(int i = p->getGrau(); i>0;i++){
+      custo_arestas+= t->getPeso();
+      t = t->getProx();
+    }
+    p = p->getProx();
+  }
+  custo_arestas= custo_arestas/2;
+  
+  p = vertices->getPrimeiro();
+
+  while(p != NULL){
+    if(arvore->getVertices->buscaVertice(p->getInfo()) != NULL)
+      custo_nos+= p->getPeso();  
+    p->getProx();
+  }
+    
+  return custo_arestas + custo_nos;
+}
+
+int Grafo::auxGuloso(Vertice * p, Grafo * resultado){
+
+  if(true == false)  //condição de parada da recursão
+    return custo(resultado); //calcula e retorna o custo da arvore criada
+
+  Aresta * adjacentes = p->getListaAdjacencia();
+  Aresta * melhor = adjacentes;
+  int gasto_melhor = melhor->getAdjacente()->getPeso() - melhor->getPeso();
+
+  while(adjacentes != NULL){   //procura o melhor vertice na arvore
+
+    int gasto_outro = adjacentes->getAdjacente()->getPeso() - adjacentes->getPeso();  //preenche com o "lucro" de ir para um no
+
+    if(gasto_melhor > gasto_outro){    
+      melhor = adjacentes;
+      gasto_melhor = gasto_outro;
+    }
+    
+    adjacentes = adjacentes->getProximo();              
+  }
+
+  Lista * verticesR = resultado->getVertices();
+  Vertice * melhorVertice = melhor->getAdjacente();
+  Vertice * verifica = verticesR->buscaVertice(melhorVertice->getInfo());
+
+  if(verifica != NULL){ //verifica se o vertice ja está na solucao
+    
+    //ver a melhor forma de optimizar
+
+  }
+  else{
+    verticesR->insereVertice(melhorVertice->getInfo(),melhorVertice->getPeso());  //coloca o vertice na arvore
+    resultado->addAresta(p->getInfo(),melhorVertice->getInfo(),melhor->getPeso());  //cria aresta existente entre os vertices
+    return auxGuloso(melhorVertice,resultado);       
+  }
+}
+
+int Grafo::guloso(Vertice * vertice_inicial){
+
+  if(vertices->buscaVertice(vertice_inicial) == NULL){
+    cout<<"Erro: vertice não encontrado!"<<endl;
+    return exit(1);
+  }
+
+  Grafo * resultado = new Grafo();
+  return auxGuloso(vertice_inicial,resultado);
+}

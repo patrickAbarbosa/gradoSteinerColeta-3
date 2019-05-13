@@ -20,22 +20,31 @@ public:
   Grafo(string in, string out, string ehDigrafo);
   ~Grafo();
 
-  //Public fnctions
+  //Public functions
 
   void addAresta(string id_a, string id_b, int peso);
   void deletaAresta(string id_a, string id_b);
   void imprimeGrafoPNG();
   void menuSelecionado(char a);
   void menu();
+  Lista * getVertices(){ return vertices;}
 
   void buscaPorProfundidade(string verticeInicial);
   void buscaPorLargura(string verticeInicial);
   Vertice **ordenacaoTopologica();
   Grafo *complementar();
 
+  void algoritmoKruskal();
   int algoritmoDijkstra();
   void algoritmoPrim();
   void auxPrim();
+
+  //resolucao do problema de steiner
+
+  int custo (Grafo * arvore);
+  int auxGuloso(Vertice * p, Grafo * resultado);
+  int guloso(Vertice * vertice_inicial);
+  
   
   private:
     Lista  *vertices;
@@ -57,7 +66,7 @@ public:
     void auxAddAresta(Vertice *a,  Vertice *b, int peso);
     int auxOrdenacaoTopologica(int vet[], int tam);
     Vertice **montaVetorVertices(int *cont, int tam);
-    
+
 };
 
 #endif // GRAFO_H_INCLUDED

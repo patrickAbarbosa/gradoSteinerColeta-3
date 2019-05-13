@@ -2,32 +2,31 @@ Leonardo:
 
 - Tad Lista;  (X)
 
-- Arquivo de saida; 
-
 (a) caminhamento em Largura;  (X)
 
 (d) - componentes fortemente conexas (para grafo
 orientado);
 
-(e) - ordenação topológica (para grafo orientado);
-
 (f) Dijkstra: caminho mínimo (para grafos ou digrafos
 ponderados ou não);  (X)
 
 (h) Prim: Árvore Geradora Mínima (para grafos não
-orientados ponderados ou não);
+orientados ponderados ou não);  
 
+(i) Kruskal: Árvore Geradora Mínima (para grafos não
+orientados ponderados ou não);
 
 Patrick:
 
 - Leitura do arquivo de entrada; 
 
-- Tad Grafo; 
+- Tad Grafo;
+ 
+- Arquivo de saida; 
 
-OK (b) caminhamento em Profundidade;
+(b) caminhamento em Profundidade;  (X)
+
+(e) - ordenação topológica (para grafo orientado); (X)
 
 (g) Floyd: caminho mínimo (para grafos ou digrafos
 ponderados ou não);
-
-(i) Kruskal: Árvore Geradora Mínima (para grafos não
-orientados ponderados ou não);
