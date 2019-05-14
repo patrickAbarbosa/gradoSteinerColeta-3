@@ -30,6 +30,7 @@ Grafo::Grafo()
 
   arquivoIn = NULL;
   arquivoOut = NULL;
+  menorValor = NULL;
   ehDigrafo = false;
   numeroArestas = 0;
   numeroVertices = 0;
@@ -434,11 +435,19 @@ void Grafo::auxAddAresta(Vertice *a, Vertice *b, int peso)
   }
   else
   {
-    Aresta *p = new Aresta(a, peso);
-    Aresta *t = new Aresta(b, peso);
-    a->insereAresta(t);
-    b->insereAresta(p);
+    Aresta *p = new Aresta(a, b, peso);
+    Aresta *t  = new Aresta(b, a, peso);
+    a->insereAresta(p);
+    b->insereAresta(t);
     numeroArestas++;
+
+    //Aresta de menor valor
+    if(menorValor == NULL){
+      menorValor = p;
+    }
+    else if(menorValor->getPeso() > peso){
+      menorValor = p;
+    }
   }
 }
 
@@ -559,7 +568,7 @@ bool Grafo::ehConexo()
   int cont[numeroVertices];
   montaVetorVertices(cont, numeroVertices);
   for(int i = 0; i < numeroVertices; i++)
-    if(cont[i] = 0)
+    if(cont[i] == 0)
       return false;
   
   return true;
@@ -724,16 +733,48 @@ int Grafo::algoritmoDijkstra(string origem, string destino){
   return q->getTamCaminho();
 }
 
-void Grafo::auxPrim()
-{
+Vertice * buscaVertice(int i){
 
-  //cria arvore
+  Vertice * p = vertices->getPrimeiro();
+
+  for(int j = i; j > 0; j--){
+    p->getProx();
+  }
+
+  return p;
 }
 
-void Grafo::algoritmoPrim()
+void Grafo::auxPrim()
 {
+  //procura menor aresta
+}
 
-  //gera arvore de custo minimo
+Grafo * Grafo::algoritmoPrim(){
+
+  Grafo * arvore= new Grafo ();
+  Lista * arv_vertices = arvore->getVertices();
+  String proximos[numeroVertices];
+  
+  Vertice * p = menorValor->getOrigem();
+  vertice * q = menorValor->getAdjacente();
+
+  arv_vertices->insereVertice(p->getInfo(),p->getPeso());
+  arv_vertices->insereVertice(q->getInfo(),q->getPeso());
+  arvore->insereAresta(p->getInfo(), q->getInfo(), menorValor->getPeso);
+
+  
+
+  int count = 0
+
+  while(){
+
+
+    for(int i = 0; )
+
+
+      count ++;
+  }
+  return 
 }
 
 void Grafo::algoritmoKruskal()
@@ -782,7 +823,7 @@ int Grafo::custo (Grafo * arvore){
 
 int Grafo::auxGuloso(Vertice * p, Grafo * resultado){
 
-  if(true == false)  //condição de parada da recursão
+  if(true)  //condição de parada da recursão
     return custo(resultado); //calcula e retorna o custo da arvore criada
 
   Aresta * adjacentes = p->getListaAdjacencia();
@@ -798,7 +839,7 @@ int Grafo::auxGuloso(Vertice * p, Grafo * resultado){
       gasto_melhor = gasto_outro;
     }
     
-    adjacentes = adjacentes->getProximo();              
+    adjacentes = adjacentes->getProx();              
   }
 
   Lista * verticesR = resultado->getVertices();
@@ -821,6 +862,10 @@ int Grafo::guloso(Vertice * vertice_inicial){
 
   if(vertices->buscaVertice(vertice_inicial) == NULL){
     cout<<"Erro: vertice não encontrado!"<<endl;
+    return exit(1);
+  }
+  if(!ehConexo()){
+    cout<<"Erro: o Grafo não é conexo!"<<endl;
     return exit(1);
   }
 

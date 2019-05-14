@@ -21,7 +21,7 @@ public:
   ~Grafo();
 
   //Public functions
-
+  
   void addAresta(string id_a, string id_b, int peso);
   void deletaAresta(string id_a, string id_b);
   void imprimeGrafoPNG();
@@ -34,9 +34,9 @@ public:
   Vertice **ordenacaoTopologica();
   Grafo *complementar();
 
-  void algoritmoKruskal();
+  int algoritmoKruskal();
   int algoritmoDijkstra();
-  void algoritmoPrim();
+  int algoritmoPrim();
   void auxPrim();
 
   //resolucao do problema de steiner
@@ -56,6 +56,7 @@ public:
     int numeroVertices;
 
     bool ehDigrafo;
+    Aresta * menorValor;
 
     Data *db;
     //private functions
