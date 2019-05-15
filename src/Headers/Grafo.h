@@ -34,9 +34,9 @@ public:
   Vertice **ordenacaoTopologica();
   Grafo *complementar();
 
-  int algoritmoKruskal();
-  int algoritmoDijkstra();
-  int algoritmoPrim();
+  void algoritmoKruskal();
+  int algoritmoDijkstra(string origem, string destino);
+  Grafo* algoritmoPrim();
   void auxPrim();
 
   //resolucao do problema de steiner

@@ -602,7 +602,7 @@ Grafo *Grafo::complementar()
       {
         if (adjacente->getAdjacente()->getInfo() != aux->getInfo())
         {
-          Aresta *novaAresta = new Aresta(aux, 1);
+          Aresta *novaAresta = new Aresta(atual, aux, 1);
           atual->insereAresta(novaAresta);
         }
         adjacente = adjacente->getProx();
@@ -700,7 +700,7 @@ int Grafo::algoritmoDijkstra(string origem, string destino){
 
   if(p == NULL || q == NULL){
     cout << "Vertice nao encontrado!" << endl;
-    return;
+    //return exit(1);
   }
 
   vector <string> nosLidos;
@@ -709,10 +709,9 @@ int Grafo::algoritmoDijkstra(string origem, string destino){
 
   while (!aux.vazia())
   {
-
     p = aux.retira();
-    Aresta * t = p->getListaAdjacencia(); 
-    int caminho = p->getTamCaminho() + t->getInfo();
+    Aresta * t = p->getListaAdjacencia();
+    int caminho = p->getTamCaminho() + t->getPeso();
 
     if(!isVector(&nosLidos,p->getInfo())){
       nosLidos.push_back(p->getInfo());
@@ -732,7 +731,7 @@ int Grafo::algoritmoDijkstra(string origem, string destino){
   }
   return q->getTamCaminho();
 }
-
+/*
 Vertice * buscaVertice(int i){
 
   Vertice * p = vertices->getPrimeiro();
@@ -743,7 +742,7 @@ Vertice * buscaVertice(int i){
 
   return p;
 }
-
+*/
 void Grafo::auxPrim()
 {
   //procura menor aresta
@@ -753,33 +752,30 @@ Grafo * Grafo::algoritmoPrim(){
 
   Grafo * arvore= new Grafo ();
   Lista * arv_vertices = arvore->getVertices();
-  String proximos[numeroVertices];
+  string proximos[numeroVertices];
   
   Vertice * p = menorValor->getOrigem();
-  vertice * q = menorValor->getAdjacente();
+  Vertice * q = menorValor->getAdjacente();
 
   arv_vertices->insereVertice(p->getInfo(),p->getPeso());
   arv_vertices->insereVertice(q->getInfo(),q->getPeso());
-  arvore->insereAresta(p->getInfo(), q->getInfo(), menorValor->getPeso);
+  arvore->addAresta(p->getInfo(), q->getInfo(), menorValor->getPeso());
 
-  
+  int count = 0;
 
-  int count = 0
+  while(true){
+    
 
-  while(){
-
-
-    for(int i = 0; )
-
-
-      count ++;
+    for(int i = 5;i>0;i-- ){
+    
+    }
+    count ++;
   }
-  return 
+  return arvore; 
 }
 
 void Grafo::algoritmoKruskal()
 {
-
 
 }
 
@@ -796,7 +792,7 @@ int Grafo::custo (Grafo * arvore){
   
   int custo_arestas = 0;
   int custo_nos = 0;
-  Vertice * p = arvore->getVertices()->getPrimeiro();
+  Vertice * p = (arvore->getVertices())->getPrimeiro();
   
   while(p != NULL){
     
@@ -813,7 +809,7 @@ int Grafo::custo (Grafo * arvore){
   p = vertices->getPrimeiro();
 
   while(p != NULL){
-    if(arvore->getVertices->buscaVertice(p->getInfo()) != NULL)
+    if(arvore->getVertices()->buscaVertice(p->getInfo()) != NULL)
       custo_nos+= p->getPeso();  
     p->getProx();
   }
@@ -860,13 +856,13 @@ int Grafo::auxGuloso(Vertice * p, Grafo * resultado){
 
 int Grafo::guloso(Vertice * vertice_inicial){
 
-  if(vertices->buscaVertice(vertice_inicial) == NULL){
+  if(vertices->buscaVertice(vertice_inicial->getInfo()) == NULL){
     cout<<"Erro: vertice não encontrado!"<<endl;
-    return exit(1);
+    //return exit(1);
   }
   if(!ehConexo()){
     cout<<"Erro: o Grafo não é conexo!"<<endl;
-    return exit(1);
+    //return exit(1);
   }
 
   Grafo * resultado = new Grafo();
