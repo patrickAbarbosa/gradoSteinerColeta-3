@@ -712,7 +712,7 @@ int Grafo::algoritmoDijkstra(string origem, string destino){
     p = aux.retira();
     Aresta * t = p->getListaAdjacencia();
     int caminho = p->getTamCaminho() + t->getPeso();
-
+    
     if(!isVector(&nosLidos,p->getInfo())){
       nosLidos.push_back(p->getInfo());
     }
@@ -731,8 +731,8 @@ int Grafo::algoritmoDijkstra(string origem, string destino){
   }
   return q->getTamCaminho();
 }
-/*
-Vertice * buscaVertice(int i){
+
+Vertice * Grafo::buscaVertice(int i){
 
   Vertice * p = vertices->getPrimeiro();
 
@@ -742,18 +742,20 @@ Vertice * buscaVertice(int i){
 
   return p;
 }
-*/
+
 void Grafo::auxPrim()
 {
   //procura menor aresta
 }
+/*
+  AlgoritmoPrim() retorna uma arvore geradora minima
+*/
 
 Grafo * Grafo::algoritmoPrim(){
 
-  Grafo * arvore= new Grafo ();
+  Grafo * arvore = new Grafo ();
   Lista * arv_vertices = arvore->getVertices();
-  string proximos[numeroVertices];
-  
+  Vertices* proximos[numeroVertices];
   Vertice * p = menorValor->getOrigem();
   Vertice * q = menorValor->getAdjacente();
 
@@ -761,14 +763,26 @@ Grafo * Grafo::algoritmoPrim(){
   arv_vertices->insereVertice(q->getInfo(),q->getPeso());
   arvore->addAresta(p->getInfo(), q->getInfo(), menorValor->getPeso());
 
-  int count = 0;
+  int count = 2;
 
-  while(true){
-    
+  while(cout < numeroVertices){
+  
+    Vertices * a = vertices->getPrimeiro();
 
-    for(int i = 5;i>0;i-- ){
-    
+    while(a!=NULL){
+
+      Aresta * maisPerto = a->getListaAdjacencia();
+
+      for(Aresta * aux = maisPerto->getProx(); aux!= NULL; aux = axu->getProx()){
+        if(maisPerto->getPeso() > aux->getPeso()){
+          if(arvore->buscaVertice(aux->getOrigem()) != NULL)
+            maisPerto = aux->getOrigem();
+        }
+      }
+      a = a->getProx();
     }
+    arv_vertices->insereVertice(maisPerto); // arrumar os parametros
+    arvore->addAresta(maisPerto) // arrumar os parametros
     count ++;
   }
   return arvore; 
@@ -776,7 +790,7 @@ Grafo * Grafo::algoritmoPrim(){
 
 void Grafo::algoritmoKruskal()
 {
-
+   
 }
 
 
@@ -788,7 +802,7 @@ void Grafo::algoritmoKruskal()
 
 ---------------------------------------------------------------------------*/
 
-int Grafo::custo (Grafo * arvore){
+int Grafo::custoSteiner (Grafo * arvore){
   
   int custo_arestas = 0;
   int custo_nos = 0;

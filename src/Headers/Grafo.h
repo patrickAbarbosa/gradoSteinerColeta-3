@@ -37,11 +37,12 @@ public:
   void algoritmoKruskal();
   int algoritmoDijkstra(string origem, string destino);
   Grafo* algoritmoPrim();
+  Vertice * buscaVertice(int i)
   void auxPrim();
 
   //resolucao do problema de steiner
 
-  int custo (Grafo * arvore);
+  int custoSteiner (Grafo * arvore);
   int auxGuloso(Vertice * p, Grafo * resultado);
   int guloso(Vertice * vertice_inicial);
   
