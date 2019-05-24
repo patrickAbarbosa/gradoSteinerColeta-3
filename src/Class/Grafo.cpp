@@ -703,7 +703,7 @@ int Grafo::algoritmoDijkstra(string origem, string destino){
 
     p = aux.retira();
     Aresta * t = p->getListaAdjacencia(); 
-    int caminho = p->getTamCaminho() + t->getInfo();
+    int caminho = p->getTamCaminho() + t->getAdjacente()->getInfo();
 
     if(!isVector(&nosLidos,p->getInfo())){
       nosLidos.push_back(p->getInfo());
@@ -798,17 +798,15 @@ int Grafo::auxGuloso(Vertice * p, Grafo * resultado){
       gasto_melhor = gasto_outro;
     }
     
-    adjacentes = adjacentes->getProximo();              
+    adjacentes = adjacentes->getProx();              
   }
 
   Lista * verticesR = resultado->getVertices();
   Vertice * melhorVertice = melhor->getAdjacente();
   Vertice * verifica = verticesR->buscaVertice(melhorVertice->getInfo());
 
-  if(verifica != NULL){ //verifica se o vertice ja está na solucao
-    
+  if(verifica != NULL){ //verifica se o vertice ja está na solucao    
     //ver a melhor forma de optimizar
-
   }
   else{
     verticesR->insereVertice(melhorVertice->getInfo(),melhorVertice->getPeso());  //coloca o vertice na arvore
@@ -819,11 +817,11 @@ int Grafo::auxGuloso(Vertice * p, Grafo * resultado){
 
 int Grafo::guloso(Vertice * vertice_inicial){
 
-  if(vertices->buscaVertice(vertice_inicial) == NULL){
+  if(vertices->buscaVertice(vertice_inicial->getInfo()) == NULL){
     cout<<"Erro: vertice não encontrado!"<<endl;
-    return exit(1);
+    exit(1);
   }
 
   Grafo * resultado = new Grafo();
-  return auxGuloso(vertice_inicial,resultado);
+  return auxGuloso(vertice_inicial, resultado);
 }
