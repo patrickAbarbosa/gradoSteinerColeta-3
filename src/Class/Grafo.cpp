@@ -868,7 +868,7 @@ int Grafo::auxGuloso(Vertice * p, Grafo * resultado){
   }
 }
 
-int Grafo::guloso(Vertice * vertice_inicial){
+Grafo * Grafo::guloso(Vertice * vertice_inicial){
 
   if(vertices->buscaVertice(vertice_inicial->getInfo()) == NULL){
     cout<<"Erro: vertice não encontrado!"<<endl;
@@ -880,5 +880,36 @@ int Grafo::guloso(Vertice * vertice_inicial){
   }
 
   Grafo * resultado = new Grafo();
-  return auxGuloso(vertice_inicial,resultado);
+  auxGuloso(vertice_inicial,resultado);
+  return resultado;
+}
+
+/*---------------------------------------------------------------------------
+  O Algoritmo Guloso Randomizado funciona ...
+
+
+
+
+---------------------------------------------------------------------------*/
+
+Grafo * Grafo::gulosoRandomizado (float alfa){
+
+  srand(time(NULL);
+  int numeroInterecoes = 1000;  //quantidade de vezes que o algoritmo sera rodado
+  Grafo * melhor = guloso(vertices->getPrimeiro());
+  int vertice_randomizado = (rand()%numeroVertices)*alfa; 
+  vertice * p = buscaVertice(vertice_randomizado);
+
+  for(int i = 0; i<numeroInterecoes;i++){
+    
+    Grafo * aux = guloso(p);
+
+    if(aux->custoSteiner() < melhor->custoSteiner())
+      melhor = aux;
+
+    vertice_randomizado = (rand()%numeroVertices) * alfa;
+    vertice * p = buscaVertice(vertice_randomizado);
+  }
+
+  return melhor;
 }

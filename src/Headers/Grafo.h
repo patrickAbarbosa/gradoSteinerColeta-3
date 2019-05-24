@@ -44,8 +44,8 @@ public:
 
   int custoSteiner (Grafo * arvore);
   int auxGuloso(Vertice * p, Grafo * resultado);
-  int guloso(Vertice * vertice_inicial);
-  
+  Grafo * guloso(Vertice * vertice_inicial);
+  Grafo * gulosoRandomizado (float alfa);
   
   private:
     Lista  *vertices;
