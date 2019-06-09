@@ -755,7 +755,7 @@ Grafo * Grafo::algoritmoPrim(){
 
   Grafo * arvore = new Grafo ();
   Lista * arv_vertices = arvore->getVertices();
-  Vertices* proximos[numeroVertices];
+  Vertice * proximos[numeroVertices];
   Vertice * p = menorValor->getOrigem();
   Vertice * q = menorValor->getAdjacente();
 
@@ -765,17 +765,16 @@ Grafo * Grafo::algoritmoPrim(){
 
   int count = 2;
 
-  while(cout < numeroVertices){
+  while(count < numeroVertices){
   
-    Vertices * a = vertices->getPrimeiro();
+    Vertice * a = vertices->getPrimeiro();
+    Aresta * maisPerto = a->getListaAdjacencia();
 
     while(a!=NULL){
 
-      Aresta * maisPerto = a->getListaAdjacencia();
-
-      for(Aresta * aux = maisPerto->getProx(); aux!= NULL; aux = axu->getProx()){
+      for(Aresta * aux = maisPerto->getProx(); aux!= NULL; aux = aux->getProx()){
         if(maisPerto->getPeso() > aux->getPeso()){
-          if(arvore->buscaVertice(aux->getOrigem()) != NULL)
+          if(arv_vertices->buscaVertice(aux->getOrigem()->getInfo()) != NULL)
             maisPerto = aux->getOrigem();
         }
       }
@@ -790,15 +789,20 @@ Grafo * Grafo::algoritmoPrim(){
 
 void Grafo::algoritmoKruskal()
 {
-   
+  Grafo * arvore = new Grafo ();
+  Lista * arv_vertices = arvore->getVertices();
+  Vertice * proximos[numeroVertices];
+  Vertice * p = menorValor->getOrigem();
+  Vertice * q = menorValor->getAdjacente();
 }
 
 
 /*---------------------------------------------------------------------------
   O Algoritmo Guloso funciona usando ...
 
-
-
+  Temos uma função auxiliar custoSteiner(Grafo * arvore), que é 
+  utilizada para encontrar o custo da arvore passada em relacao a 
+  original.
 
 ---------------------------------------------------------------------------*/
 
@@ -834,7 +838,7 @@ int Grafo::custoSteiner (Grafo * arvore){
 int Grafo::auxGuloso(Vertice * p, Grafo * resultado){
 
   if(true)  //condição de parada da recursão
-    return custo(resultado); //calcula e retorna o custo da arvore criada
+    return custoSteiner(resultado); //calcula e retorna o custo da arvore criada
 
   Aresta * adjacentes = p->getListaAdjacencia();
   Aresta * melhor = adjacentes;
@@ -885,7 +889,8 @@ Grafo * Grafo::guloso(Vertice * vertice_inicial){
 }
 
 /*---------------------------------------------------------------------------
-  O Algoritmo Guloso Randomizado funciona ...
+  O Algoritmo Guloso Randomizado funciona recevendo um parametro alfa
+  que é utilizado para auxilar na randomização
 
 
 
@@ -894,21 +899,21 @@ Grafo * Grafo::guloso(Vertice * vertice_inicial){
 
 Grafo * Grafo::gulosoRandomizado (float alfa){
 
-  srand(time(NULL);
+  srand(time(NULL));
   int numeroInterecoes = 1000;  //quantidade de vezes que o algoritmo sera rodado
   Grafo * melhor = guloso(vertices->getPrimeiro());
   int vertice_randomizado = (rand()%numeroVertices)*alfa; 
-  vertice * p = buscaVertice(vertice_randomizado);
+  Vertice * p = buscaVertice(vertice_randomizado);
 
   for(int i = 0; i<numeroInterecoes;i++){
     
     Grafo * aux = guloso(p);
 
-    if(aux->custoSteiner() < melhor->custoSteiner())
+    if(custoSteiner(aux) < custoSteiner(melhor))
       melhor = aux;
 
     vertice_randomizado = (rand()%numeroVertices) * alfa;
-    vertice * p = buscaVertice(vertice_randomizado);
+    p = buscaVertice(vertice_randomizado);
   }
 
   return melhor;

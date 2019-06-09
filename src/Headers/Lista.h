@@ -14,7 +14,7 @@ class Lista {
 		void deletaVertice (string info);
 		Vertice * getPrimeiro() { return primeiro;}
 		Vertice * buscaVertice (string info);
-		void setMaiorGrau(maior) { maiorGrau = maior;}
+		void setMaiorGrau(Vertice * maior) { maiorGrau = maior;}
 		Vertice * getMaiorGrau () { return maiorGrau; }
 		int getQuantidade() { return quantidade;}		
 	
