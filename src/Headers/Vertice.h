@@ -18,7 +18,7 @@ class Vertice{
 		int getGrau () { return grau; }
 		int getPeso () { return peso; }
 		int getTamCaminho(){ return tamCaminho; }
-		void setTamCaminho(int tamanho) { tamCaminho = tam; }
+		void setTamCaminho(int tamanho) { tamCaminho = tamanho; }
 		
 		void setProx (Vertice * prox) { proximo = prox; } 
 		Vertice * getProx () { return proximo; }

@@ -21,7 +21,7 @@ public:
   ~Grafo();
 
   //Public functions
-
+  
   void addAresta(string id_a, string id_b, int peso);
   void deletaAresta(string id_a, string id_b);
   void imprimeGrafoPNG();
@@ -35,13 +35,14 @@ public:
   Grafo *complementar();
 
   void algoritmoKruskal();
-  int algoritmoDijkstra();
-  void algoritmoPrim();
+  int algoritmoDijkstra(string origem, string destino);
+  Grafo* algoritmoPrim();
+  Vertice * buscaVertice(int i)
   void auxPrim();
 
   //resolucao do problema de steiner
 
-  int custo (Grafo * arvore);
+  int custoSteiner (Grafo * arvore);
   int auxGuloso(Vertice * p, Grafo * resultado);
   int guloso(Vertice * vertice_inicial);
   
@@ -56,6 +57,7 @@ public:
     int numeroVertices;
 
     bool ehDigrafo;
+    Aresta * menorValor;
 
     Data *db;
     //private functions
