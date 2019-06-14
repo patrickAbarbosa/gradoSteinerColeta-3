@@ -37,15 +37,15 @@ public:
   void algoritmoKruskal();
   int algoritmoDijkstra(string origem, string destino);
   Grafo* algoritmoPrim();
-  Vertice * buscaVertice(int i)
+  Vertice * buscaVertice(int i);
   void auxPrim();
 
   //resolucao do problema de steiner
 
   int custoSteiner (Grafo * arvore);
   int auxGuloso(Vertice * p, Grafo * resultado);
-  int guloso(Vertice * vertice_inicial);
-  
+  Grafo * guloso(Vertice * vertice_inicial);
+  Grafo * gulosoRandomizado (float alfa);
   
   private:
     Lista  *vertices;
@@ -68,7 +68,6 @@ public:
     void auxAddAresta(Vertice *a,  Vertice *b, int peso);
     int auxOrdenacaoTopologica(int vet[], int tam);
     Vertice **montaVetorVertices(int *cont, int tam);
-
 };
 
 #endif // GRAFO_H_INCLUDED

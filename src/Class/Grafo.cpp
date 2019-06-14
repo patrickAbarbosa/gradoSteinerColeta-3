@@ -710,15 +710,9 @@ int Grafo::algoritmoDijkstra(string origem, string destino){
   while (!aux.vazia())
   {
     p = aux.retira();
-<<<<<<< HEAD
-    Aresta * t = p->getListaAdjacencia(); 
-    int caminho = p->getTamCaminho() + t->getAdjacente()->getInfo();
-
-=======
     Aresta * t = p->getListaAdjacencia();
     int caminho = p->getTamCaminho() + t->getPeso();
     
->>>>>>> 139120595204530b74a743ea384ee6d4668e4801
     if(!isVector(&nosLidos,p->getInfo())){
       nosLidos.push_back(p->getInfo());
     }
@@ -761,7 +755,7 @@ Grafo * Grafo::algoritmoPrim(){
 
   Grafo * arvore = new Grafo ();
   Lista * arv_vertices = arvore->getVertices();
-  Vertices* proximos[numeroVertices];
+  Vertice * proximos[numeroVertices];
   Vertice * p = menorValor->getOrigem();
   Vertice * q = menorValor->getAdjacente();
 
@@ -771,17 +765,16 @@ Grafo * Grafo::algoritmoPrim(){
 
   int count = 2;
 
-  while(cout < numeroVertices){
+  while(count < numeroVertices){
   
-    Vertices * a = vertices->getPrimeiro();
+    Vertice * a = vertices->getPrimeiro();
+    Aresta * maisPerto = a->getListaAdjacencia();
 
     while(a!=NULL){
 
-      Aresta * maisPerto = a->getListaAdjacencia();
-
-      for(Aresta * aux = maisPerto->getProx(); aux!= NULL; aux = axu->getProx()){
+      for(Aresta * aux = maisPerto->getProx(); aux!= NULL; aux = aux->getProx()){
         if(maisPerto->getPeso() > aux->getPeso()){
-          if(arvore->buscaVertice(aux->getOrigem()) != NULL)
+          if(arv_vertices->buscaVertice(aux->getOrigem()->getInfo()) != NULL)
             maisPerto = aux->getOrigem();
         }
       }
@@ -796,15 +789,20 @@ Grafo * Grafo::algoritmoPrim(){
 
 void Grafo::algoritmoKruskal()
 {
-   
+  Grafo * arvore = new Grafo ();
+  Lista * arv_vertices = arvore->getVertices();
+  Vertice * proximos[numeroVertices];
+  Vertice * p = menorValor->getOrigem();
+  Vertice * q = menorValor->getAdjacente();
 }
 
 
 /*---------------------------------------------------------------------------
   O Algoritmo Guloso funciona usando ...
 
-
-
+  Temos uma função auxiliar custoSteiner(Grafo * arvore), que é 
+  utilizada para encontrar o custo da arvore passada em relacao a 
+  original.
 
 ---------------------------------------------------------------------------*/
 
@@ -840,7 +838,7 @@ int Grafo::custoSteiner (Grafo * arvore){
 int Grafo::auxGuloso(Vertice * p, Grafo * resultado){
 
   if(true)  //condição de parada da recursão
-    return custo(resultado); //calcula e retorna o custo da arvore criada
+    return custoSteiner(resultado); //calcula e retorna o custo da arvore criada
 
   Aresta * adjacentes = p->getListaAdjacencia();
   Aresta * melhor = adjacentes;
@@ -872,21 +870,49 @@ int Grafo::auxGuloso(Vertice * p, Grafo * resultado){
   }
 }
 
-int Grafo::guloso(Vertice * vertice_inicial){
+Grafo * Grafo::guloso(Vertice * vertice_inicial){
 
   if(vertices->buscaVertice(vertice_inicial->getInfo()) == NULL){
     cout<<"Erro: vertice não encontrado!"<<endl;
-<<<<<<< HEAD
-    exit(1);
-=======
     //return exit(1);
   }
   if(!ehConexo()){
     cout<<"Erro: o Grafo não é conexo!"<<endl;
     //return exit(1);
->>>>>>> 139120595204530b74a743ea384ee6d4668e4801
   }
 
   Grafo * resultado = new Grafo();
-  return auxGuloso(vertice_inicial, resultado);
+  auxGuloso(vertice_inicial,resultado);
+  return resultado;
+}
+
+/*---------------------------------------------------------------------------
+  O Algoritmo Guloso Randomizado funciona recevendo um parametro alfa
+  que é utilizado para auxilar na randomização
+
+
+
+
+---------------------------------------------------------------------------*/
+
+Grafo * Grafo::gulosoRandomizado (float alfa){
+
+  srand(time(NULL));
+  int numeroInterecoes = 1000;  //quantidade de vezes que o algoritmo sera rodado
+  Grafo * melhor = guloso(vertices->getPrimeiro());
+  int vertice_randomizado = (rand()%numeroVertices)*alfa; 
+  Vertice * p = buscaVertice(vertice_randomizado);
+
+  for(int i = 0; i<numeroInterecoes;i++){
+    
+    Grafo * aux = guloso(p);
+
+    if(custoSteiner(aux) < custoSteiner(melhor))
+      melhor = aux;
+
+    vertice_randomizado = (rand()%numeroVertices) * alfa;
+    p = buscaVertice(vertice_randomizado);
+  }
+
+  return melhor;
 }

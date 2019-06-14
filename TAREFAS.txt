@@ -18,9 +18,9 @@ orientados ponderados ou não);
 
 Patrick:
 
-- Leitura do arquivo de entrada; 
+- Leitura do arquivo de entrada; (X)
 
-- Tad Grafo;
+- Tad Grafo; (X)
  
 - Arquivo de saida; 
 
