@@ -29,15 +29,15 @@ public:
   void menu();
   Lista * getVertices(){ return vertices;}
 
+  Vertice * buscaVertice(int i);
   void buscaPorProfundidade(string verticeInicial);
   void buscaPorLargura(string verticeInicial);
   Vertice **ordenacaoTopologica();
-  Grafo *complementar();
+  Grafo * complementar();
 
-  void algoritmoKruskal();
   int algoritmoDijkstra(string origem, string destino);
   Grafo* algoritmoPrim();
-  Vertice * buscaVertice(int i);
+  Grafo * algoritmoKruskal();
 
   //resolucao do problema de steiner
 

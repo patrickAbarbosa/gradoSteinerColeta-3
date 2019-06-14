@@ -787,12 +787,22 @@ Grafo * Grafo::algoritmoPrim(){
   return arvore; 
 }
 
-void Grafo::algoritmoKruskal()
-{
+/*
+* algoritmoKruskal() 
+*
+*/
+
+Grafo * Grafo::algoritmoKruskal(){
+
   Grafo * arvore = new Grafo ();
   Lista * arv_vertices = arvore->getVertices();
   Vertice * p = menorValor->getOrigem();
   Vertice * q = menorValor->getAdjacente();
+
+  arv_vertices->insereVertice(p->getInfo(),p->getPeso());
+  arv_vertices->insereVertice(q->getInfo(),q->getPeso());
+  arvore->addAresta(p->getInfo(), q->getInfo(), menorValor->getPeso());
+
 }
 
 
@@ -802,6 +812,44 @@ void Grafo::algoritmoKruskal()
   Temos uma função auxiliar custoSteiner(Grafo * arvore), que é 
   utilizada para encontrar o custo da arvore passada em relacao a 
   original.
+
+
+  --------------------------Pseudocódigo--------------------------
+
+  Guloso(Vertice * p, Grafo * arvore):
+
+    se condição de parada então
+      retorne custoSteiner(resultado); //calcula e retorna o custo da arvore criada
+    fim-se
+
+    adjacentes <- p->getListaAdjacencia();
+    melhor <- adjacentes;
+    gasto_melhor <- melhor->getAdjacente()->getPeso() - melhor->getPeso();
+
+    enquanto adjacentes != NULL faça
+
+      gasto_outro <- adjacentes->getAdjacente()->getPeso() - adjacentes->getPeso();
+
+      se gasto_melhor > gasto_outro então    
+        melhor <- adjacentes;
+        gasto_melhor <- gasto_outro;
+      fim-se
+      
+      adjacentes <- adjacentes->getProx();              
+    fim-enquanto
+
+    listaVertices <- resultado->getVertices();
+    melhorVertice <- melhor->getAdjacente();
+
+    se o melhorVertice encontrado ja está na solucao então  
+      //ver a melhor forma de optimizar
+    fim-se
+    senão
+      insere o melhor vertice na arvore;
+      cria aresta existente entre os vertices;
+      retorne Guloso(melhorVertice, arvore);       
+    fim-se
+  fim
 
 ---------------------------------------------------------------------------*/
 
