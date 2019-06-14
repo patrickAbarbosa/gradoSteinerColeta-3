@@ -449,6 +449,7 @@ void Grafo::auxAddAresta(Vertice *a, Vertice *b, int peso)
       menorValor = p;
     }
   }
+  atualizaMaiorgrau();
 }
 
 /*
@@ -484,6 +485,28 @@ void Grafo::deletaAresta(string id_a, string id_b)
     }
   }
   numeroArestas--;
+  atualizaMaiorgrau();
+}
+
+
+/*
+ * atualizaMaiorgrau() compara os graus dos vertices para achar o
+ * de maior grau.
+ * */
+
+void Grafo::atualizaMaiorgrau(){
+
+  Vertice * p = vertices->getPrimeiro();
+
+  while(p != NULL){
+    Vertice * maiorGrau = vertices->getMaiorGrau();
+    if(maiorGrau == NULL)
+      vertices->setMaiorGrau(p);
+    if(p->getGrau() > maiorGrau->getGrau()){
+      vertices->setMaiorGrau(p);
+    }
+    p = p->getProx();
+  }
 }
 
 Vertice * Grafo::buscaVertice(int i){
@@ -814,7 +837,7 @@ Grafo * Grafo::algoritmoKruskal(){
   original.
 
 
-  --------------------------Pseudocódigo--------------------------
+ --------------------------Pseudocódigo--------------------------
 
   Guloso(Vertice * p, Grafo * arvore):
 

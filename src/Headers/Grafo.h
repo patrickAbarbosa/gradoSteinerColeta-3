@@ -29,6 +29,7 @@ public:
   void menu();
   Lista * getVertices(){ return vertices;}
 
+  void atualizaMaiorgrau();
   Vertice * buscaVertice(int i);
   void buscaPorProfundidade(string verticeInicial);
   void buscaPorLargura(string verticeInicial);
