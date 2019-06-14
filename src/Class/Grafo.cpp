@@ -486,6 +486,20 @@ void Grafo::deletaAresta(string id_a, string id_b)
   numeroArestas--;
 }
 
+Vertice * Grafo::buscaVertice(int i){
+
+  if(i<0 || i>=numeroVertices){ //fora do alcance dos vertices
+    return NULL;
+  }
+  Vertice * p = vertices->getPrimeiro();
+
+  for(int j = i; j > 0; j--){
+    p->getProx();
+  }
+
+  return p;
+}
+
 bool isVector(vector<string> *vet, string value)
 {
   if (!vet)
@@ -732,30 +746,16 @@ int Grafo::algoritmoDijkstra(string origem, string destino){
   return q->getTamCaminho();
 }
 
-Vertice * Grafo::buscaVertice(int i){
-
-  Vertice * p = vertices->getPrimeiro();
-
-  for(int j = i; j > 0; j--){
-    p->getProx();
-  }
-
-  return p;
-}
-
-void Grafo::auxPrim()
-{
-  //procura menor aresta
-}
 /*
-  AlgoritmoPrim() retorna uma arvore geradora minima
+* algoritmoPrim() calcula a arvore geradora minima de um grafo,
+* procura sempre a aresta de menor peso que conecte um vértice
+* da árvore a outro que ainda não esteja na árvore. 
 */
 
 Grafo * Grafo::algoritmoPrim(){
 
   Grafo * arvore = new Grafo ();
   Lista * arv_vertices = arvore->getVertices();
-  Vertice * proximos[numeroVertices];
   Vertice * p = menorValor->getOrigem();
   Vertice * q = menorValor->getAdjacente();
 
@@ -763,26 +763,26 @@ Grafo * Grafo::algoritmoPrim(){
   arv_vertices->insereVertice(q->getInfo(),q->getPeso());
   arvore->addAresta(p->getInfo(), q->getInfo(), menorValor->getPeso());
 
-  int count = 2;
+  while(arv_vertices->getQuantidade() != numeroVertices){
 
-  while(count < numeroVertices){
-  
-    Vertice * a = vertices->getPrimeiro();
-    Aresta * maisPerto = a->getListaAdjacencia();
+    Vertice * t = arv_vertices->getPrimeiro();
+    Aresta * aux_aresta;
 
-    while(a!=NULL){
+    while(t!=NULL){
 
-      for(Aresta * aux = maisPerto->getProx(); aux!= NULL; aux = aux->getProx()){
-        if(maisPerto->getPeso() > aux->getPeso()){
-          if(arv_vertices->buscaVertice(aux->getOrigem()->getInfo()) != NULL)
-            maisPerto = aux->getOrigem();
+      Aresta * aux = vertices->buscaVertice(t->getInfo())->getListaAdjacencia();
+
+      for(; aux!= NULL; aux = aux->getProx()){
+        if(aux_aresta->getPeso() > aux->getPeso()){
+          if(arv_vertices->buscaVertice(aux->getAdjacente()->getInfo()) == NULL)
+            aux_aresta = aux;
         }
       }
-      a = a->getProx();
+      t = t->getProx();
     }
-    arv_vertices->insereVertice(maisPerto); // arrumar os parametros
-    arvore->addAresta(maisPerto) // arrumar os parametros
-    count ++;
+    Vertice * vertice_auxiliar = aux_aresta->getAdjacente();
+    arv_vertices->insereVertice(vertice_auxiliar->getInfo(),vertice_auxiliar->getPeso());
+    arvore->addAresta(aux_aresta->getOrigem()->getInfo(),aux_aresta->getAdjacente()->getInfo(),aux_aresta->getPeso());
   }
   return arvore; 
 }
@@ -791,7 +791,6 @@ void Grafo::algoritmoKruskal()
 {
   Grafo * arvore = new Grafo ();
   Lista * arv_vertices = arvore->getVertices();
-  Vertice * proximos[numeroVertices];
   Vertice * p = menorValor->getOrigem();
   Vertice * q = menorValor->getAdjacente();
 }

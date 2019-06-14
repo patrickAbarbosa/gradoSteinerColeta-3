@@ -38,7 +38,6 @@ public:
   int algoritmoDijkstra(string origem, string destino);
   Grafo* algoritmoPrim();
   Vertice * buscaVertice(int i);
-  void auxPrim();
 
   //resolucao do problema de steiner
 
