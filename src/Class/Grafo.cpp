@@ -361,9 +361,9 @@ void Grafo::menuSelecionado(char a)
   case '9':
   {
     string inicio;
-    cout << "Digite o vertice de partida: ";
+    cout << "Digite o vertice de inicial: ";
     cin >> inicio;
-    buscaPorProfundidade(inicio);
+    guloso(inicio);
     break;
   }
   case '0':
@@ -392,7 +392,7 @@ void Grafo::menu()
     cout << "[6] - Vertices adjacentes" << endl;
     cout << "[7] - Limpar Grafo" << endl;
     cout << "[8] - Informaçoes do Grafo" << endl;
-    cout << "[9] - Busca por profundidade" << endl;
+    cout << "[9] - Guloso << endl;
     cout << "[0] - Imprimir Grafo" << endl;
     cout << "[q] - Para sair" << endl;
     do
@@ -829,13 +829,17 @@ Grafo * Grafo::algoritmoKruskal(){
 }
 
 
-/*---------------------------------------------------------------------------
+/*----------------------Algoritmo Guloso--------------------------
+  
   O Algoritmo Guloso funciona usando ...
+  
 
-  Temos uma função auxiliar custoSteiner(Grafo * arvore), que é 
-  utilizada para encontrar o custo da arvore passada em relacao a 
-  original.
 
+
+
+  Também temos uma função auxiliar custoSteiner(Grafo * arvore),
+  que é utilizada para encontrar o custo da arvore passada em 
+  relacao ao original.
 
  --------------------------Pseudocódigo--------------------------
 
@@ -905,9 +909,9 @@ int Grafo::custoSteiner (Grafo * arvore){
   return custo_arestas + custo_nos;
 }
 
-int Grafo::auxGuloso(Vertice * p, Grafo * resultado){
+int Grafo::auxGuloso(Vertice * p, Grafo * resultado,int count){
 
-  if(true)  //condição de parada da recursão
+  if(count == 420)  //condição de parada da recursão
     return custoSteiner(resultado); //calcula e retorna o custo da arvore criada
 
   Aresta * adjacentes = p->getListaAdjacencia();
@@ -936,13 +940,14 @@ int Grafo::auxGuloso(Vertice * p, Grafo * resultado){
   else{
     verticesR->insereVertice(melhorVertice->getInfo(),melhorVertice->getPeso());  //coloca o vertice na arvore
     resultado->addAresta(p->getInfo(),melhorVertice->getInfo(),melhor->getPeso());  //cria aresta existente entre os vertices
-    return auxGuloso(melhorVertice,resultado);       
+    return auxGuloso(melhorVertice,resultado,count++);       
   }
 }
 
-Grafo * Grafo::guloso(Vertice * vertice_inicial){
+Grafo * Grafo::guloso(string vertice_inicial){
 
-  if(vertices->buscaVertice(vertice_inicial->getInfo()) == NULL){
+  Vertice * vertice_aux = vertices->buscaVertice(vertice_inicial);
+  if(vertice_aux == NULL){
     cout<<"Erro: vertice não encontrado!"<<endl;
     //return exit(1);
   }
@@ -952,7 +957,8 @@ Grafo * Grafo::guloso(Vertice * vertice_inicial){
   }
 
   Grafo * resultado = new Grafo();
-  auxGuloso(vertice_inicial,resultado);
+  int count = 0;
+  auxGuloso(vertice_aux,resultado,count);
   return resultado;
 }
 
@@ -969,13 +975,13 @@ Grafo * Grafo::gulosoRandomizado (float alfa){
 
   srand(time(NULL));
   int numeroInterecoes = 1000;  //quantidade de vezes que o algoritmo sera rodado
-  Grafo * melhor = guloso(vertices->getPrimeiro());
+  Grafo * melhor = guloso(vertices->getPrimeiro()->getInfo());
   int vertice_randomizado = (rand()%numeroVertices)*alfa; 
   Vertice * p = buscaVertice(vertice_randomizado);
 
   for(int i = 0; i<numeroInterecoes;i++){
     
-    Grafo * aux = guloso(p);
+    Grafo * aux = guloso(p->getInfo());
 
     if(custoSteiner(aux) < custoSteiner(melhor))
       melhor = aux;

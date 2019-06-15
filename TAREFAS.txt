@@ -11,7 +11,7 @@ orientado);
 ponderados ou não);  (X)
 
 (h) Prim: Árvore Geradora Mínima (para grafos não
-orientados ponderados ou não);  
+orientados ponderados ou não); (X)  
 
 (i) Kruskal: Árvore Geradora Mínima (para grafos não
 orientados ponderados ou não);
