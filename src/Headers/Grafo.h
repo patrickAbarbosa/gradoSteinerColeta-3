@@ -50,22 +50,23 @@ public:
   Grafo * gulosoRandomizado (float alfa);
   
   private:
-    Lista  *vertices;
+    Lista  *vertices; // Vetor com os vertices do Grafo
  
-    string *arquivoIn;
-    string *arquivoOut;
+    string *arquivoIn; // Estacia de entrada
+    string *arquivoOut; // Dados pra saida
     
-    int numeroArestas;
-    int numeroVertices;
+    int numeroArestas; // Número de arestas contidas no grafo
+    int numeroVertices; // Número de vértices contidos no grafo
 
-    bool ehDigrafo;
-    Aresta * menorValor;
+    bool ehDigrafo; // Se verdadeiro é um digrafo
+    Aresta *menorValor; // Aresta de menor valor
 
     Data *db;
+
     //private functions
-    void leArquivo();
-    void exportGrafo();
-    void auxBuscaPorProfundidade(Vertice *vertice, vector <string> *nosLidos);
+    void leArquivo(); // Lê a instância e insere as informaçõe no grafo
+    void exportGrafo(); // exporta as informações do grafo para um arquivo .txt
+    void auxBuscaPorProfundidade(Vertice *vertice, vector <string> *nosLidos); 
     bool ehConexo();
     void auxAddAresta(Vertice *a,  Vertice *b, int peso);
     int auxOrdenacaoTopologica(int vet[], int tam);
