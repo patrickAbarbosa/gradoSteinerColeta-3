@@ -40,6 +40,8 @@ public:
   Vertice * buscaVertice(int i);
   void auxPrim();
 
+  int algoritmoFloyd(string origem, string destino);
+  int auxFloyd(Vertice *p, Vertice* destino);
   //resolucao do problema de steiner
 
   int custoSteiner (Grafo * arvore);
