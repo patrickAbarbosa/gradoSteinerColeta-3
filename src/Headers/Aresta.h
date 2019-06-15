@@ -9,7 +9,7 @@ using namespace std;
 class Vertice;
 
 class Aresta {
-	
+
 	public:
 		Aresta() {};
 		Aresta(Vertice * a,Vertice * b, int p) { peso = p, origem = a, adjacente = b, proxima = NULL;} 

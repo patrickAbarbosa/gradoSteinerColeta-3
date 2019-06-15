@@ -29,16 +29,16 @@ public:
   void menu();
   Lista * getVertices(){ return vertices;}
 
+  void atualizaMaiorgrau();
+  Vertice * buscaVertice(int i);
   void buscaPorProfundidade(string verticeInicial);
   void buscaPorLargura(string verticeInicial);
   Vertice **ordenacaoTopologica();
-  Grafo *complementar();
+  Grafo * complementar();
 
-  void algoritmoKruskal();
   int algoritmoDijkstra(string origem, string destino);
   Grafo* algoritmoPrim();
-  Vertice * buscaVertice(int i);
-  void auxPrim();
+  Grafo * algoritmoKruskal();
 
   int algoritmoFloyd(string origem, string destino);
   int auxFloyd(Vertice *p, Vertice* destino);

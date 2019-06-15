@@ -40,9 +40,6 @@ void Lista::insereVertice (string info, int peso) {
 		
 		Vertice *novo = new Vertice (info, peso);
 		p->setProx(novo);
-		
-		if (maiorGrau->getGrau() <= novo->getGrau())
-			maiorGrau = novo;
 		quantidade ++;
 	}
 	else
@@ -77,6 +74,10 @@ void Lista::deletaVertice (string info) {
 		cout<<"ERRO: o Vertice "<<info<<" nao existe !";
 		return;
 	}
+
+	if(p == maiorGrau){
+		maiorGrau = NULL;
+	}
 	
 	if(p == primeiro)
 		primeiro = primeiro->getProx();
@@ -90,4 +91,5 @@ void Lista::deletaVertice (string info) {
 		delete p; 
 	}
 	quantidade--;
+
 }
