@@ -34,6 +34,8 @@ Grafo::Grafo()
   ehDigrafo = false;
   numeroArestas = 0;
   numeroVertices = 0;
+  quantidadeGrausZero = 0;
+  db = new Data();
 }
 
 /*
@@ -53,6 +55,7 @@ Grafo::Grafo(string in)
   ehDigrafo = false;
   numeroArestas = 0;
   numeroVertices = 0;
+  quantidadeGrausZero = 0;
   db = new Data();
   leArquivo();
 }
@@ -78,6 +81,7 @@ Grafo::Grafo(string in, string out)
   ehDigrafo = false;
   numeroArestas = 0;
   numeroVertices = 0;
+  quantidadeGrausZero = 0;
   db = new Data();
   leArquivo();
 }
@@ -254,8 +258,8 @@ void Grafo::exportaGrafo()
  */
 void Grafo::menuSelecionado(char a)
 {
-  switch (a)
-  {
+  switch (a){
+
   case '1':
   {
     string id_a, id_b;
@@ -355,6 +359,7 @@ void Grafo::menuSelecionado(char a)
     cout << "Informaçoes do Grafo" << endl;
     cout << "Numero de Vertices: " << vertices->getQuantidade() << endl;
     cout << "Numero de Arestas: " << numeroArestas << endl;
+    cout << "Numero de Vertices de Grau 0: " << quantidadeGrausZero << endl;
     cout << "Maior Grau: " << vertices->getMaiorGrau()->getGrau() << endl;
     break;
   }
@@ -363,12 +368,18 @@ void Grafo::menuSelecionado(char a)
     string inicio;
     cout << "Digite o vertice de inicial: ";
     cin >> inicio;
-    guloso(inicio);
+  
+    Grafo * aux = guloso(inicio);
+    
+    if ( aux != NULL){
+      cout << "O custo foi:"<< custoSteiner(aux) << endl;
+      aux->imprimeGrafoPNG();
+    }
     break;
   }
   case '0':
   {
-    cout << "Imprimir Grafo" << endl;
+    cout << "Imprimindo Grafo" << endl;
     imprimeGrafoPNG();
     break;
   }
@@ -383,6 +394,7 @@ void Grafo::menu()
   char menu;
   while (true)
   {
+    cout << endl;
     cout << "# Menu principal #" << endl;
     cout << "[1] - Adicionar aresta" << endl;
     cout << "[2] - Deletar aresta" << endl;
@@ -392,9 +404,10 @@ void Grafo::menu()
     cout << "[6] - Vertices adjacentes" << endl;
     cout << "[7] - Limpar Grafo" << endl;
     cout << "[8] - Informaçoes do Grafo" << endl;
-    cout << "[9] - Guloso << endl;
+    cout << "[9] - Guloso" << endl;
     cout << "[0] - Imprimir Grafo" << endl;
     cout << "[q] - Para sair" << endl;
+    cout << endl;
     do
     {
       cout << "Digite uma opcao do menu: ";
@@ -497,11 +510,14 @@ void Grafo::deletaAresta(string id_a, string id_b)
 void Grafo::atualizaMaiorgrau(){
 
   Vertice * p = vertices->getPrimeiro();
+  quantidadeGrausZero = 0;
 
   while(p != NULL){
     Vertice * maiorGrau = vertices->getMaiorGrau();
     if(maiorGrau == NULL)
       vertices->setMaiorGrau(p);
+    if(p->getGrau() == 0)
+      quantidadeGrausZero++;
     if(p->getGrau() > maiorGrau->getGrau()){
       vertices->setMaiorGrau(p);
     }
@@ -581,13 +597,13 @@ Vertice** Grafo::montaVetorVertices(int *cont, int tam){
   Vertice **infoVertice = new Vertice *[numeroVertices];
   
   int i = 0;
-  for(Vertice *aux = vertices->getPrimeiro(); aux != NULL; aux = aux->getProx())
+  for(Vertice *aux = vertices->getPrimeiro(); aux != NULL; aux = aux->getProx()) // i++ ?
     infoVertice[i] = aux;
 
   for(Vertice *aux = vertices->getPrimeiro(); aux != NULL; aux = aux->getProx())
   {
     i = 0;
-    for(Aresta *adjacente = aux->getListaAdjacencia(); i < numeroVertices && adjacente != NULL; i++)
+    for(Aresta *adjacente = aux->getListaAdjacencia(); i < numeroVertices && adjacente != NULL; i++) //adjacente = adjacente->getProx()?
       if(infoVertice[i]->getInfo() == adjacente->getAdjacente()->getInfo())
         cont[i]++;
   }
@@ -596,19 +612,15 @@ Vertice** Grafo::montaVetorVertices(int *cont, int tam){
 
 bool Grafo::ehConexo()
 {
-  if (!vertices || numeroVertices == 0)
+  if (vertices == NULL|| numeroVertices == 0)
   {
     cout << "Grafo vazio" << endl;
-    return 0;
+    return false;
   }
-
-  int cont[numeroVertices];
-  montaVetorVertices(cont, numeroVertices);
-  for(int i = 0; i < numeroVertices; i++)
-    if(cont[i] == 0)
-      return false;
-  
-  return true;
+  if(quantidadeGrausZero == 0)
+    return true;
+  else
+    return false;
 }
 
 /*
@@ -911,54 +923,67 @@ int Grafo::custoSteiner (Grafo * arvore){
 
 int Grafo::auxGuloso(Vertice * p, Grafo * resultado,int count){
 
+  cout << "count: " << count << endl;
   if(count == 420)  //condição de parada da recursão
     return custoSteiner(resultado); //calcula e retorna o custo da arvore criada
 
   Aresta * adjacentes = p->getListaAdjacencia();
+  Lista * verticesR = resultado->getVertices();
+
+  //if(verticesR->buscaVertice(adjacentes->getAdjacente()->getInfo()) != NULL)// para evitar que pegue um nó que ja está na solução
+  //  adjacentes = adjacentes->getProx();
+
   Aresta * melhor = adjacentes;
   int gasto_melhor = melhor->getAdjacente()->getPeso() - melhor->getPeso();
 
   while(adjacentes != NULL){   //procura o melhor vertice na arvore
 
-    int gasto_outro = adjacentes->getAdjacente()->getPeso() - adjacentes->getPeso();  //preenche com o "lucro" de ir para um no
+    int gasto_outro = adjacentes->getAdjacente()->getPeso() - adjacentes->getPeso(); //preenche com o "lucro" de ir para um vertice
 
-    if(gasto_melhor > gasto_outro){    
+    if(gasto_melhor > gasto_outro){
       melhor = adjacentes;
       gasto_melhor = gasto_outro;
     }
+    cout<<"flag depois do if" << endl;
     
-    adjacentes = adjacentes->getProx();              
+    adjacentes = adjacentes->getProx();
+
+    if(verticesR->buscaVertice(adjacentes->getAdjacente()->getInfo()) != NULL) // para evitar que pegue um nó que ja está na solução
+      adjacentes = adjacentes->getProx();              
   }
 
-  Lista * verticesR = resultado->getVertices();
   Vertice * melhorVertice = melhor->getAdjacente();
   Vertice * verifica = verticesR->buscaVertice(melhorVertice->getInfo());
 
-  if(verifica != NULL){ //verifica se o vertice ja está na solucao    
+/*if(verifica != NULL){ //verifica se o vertice ja está na solucao    
     //ver a melhor forma de optimizar
   }
-  else{
-    verticesR->insereVertice(melhorVertice->getInfo(),melhorVertice->getPeso());  //coloca o vertice na arvore
-    resultado->addAresta(p->getInfo(),melhorVertice->getInfo(),melhor->getPeso());  //cria aresta existente entre os vertices
-    return auxGuloso(melhorVertice,resultado,count++);       
-  }
+  else{}
+*/
+  cout<<"Estou no else"<<endl;
+  verticesR->insereVertice(melhorVertice->getInfo(),melhorVertice->getPeso());  //coloca o vertice na arvore
+  resultado->addAresta(p->getInfo(),melhorVertice->getInfo(),melhor->getPeso());  //cria aresta existente entre os vertices
+  return auxGuloso(melhorVertice,resultado,count+1);       
 }
 
 Grafo * Grafo::guloso(string vertice_inicial){
 
   Vertice * vertice_aux = vertices->buscaVertice(vertice_inicial);
+
   if(vertice_aux == NULL){
     cout<<"Erro: vertice não encontrado!"<<endl;
-    //return exit(1);
+    return NULL;
   }
-  if(!ehConexo()){
+  if(ehConexo() == false){
     cout<<"Erro: o Grafo não é conexo!"<<endl;
-    //return exit(1);
+    return NULL;
   }
 
   Grafo * resultado = new Grafo();
   int count = 0;
   auxGuloso(vertice_aux,resultado,count);
+
+  cout << "flag final"<<endl;
   return resultado;
 }
 

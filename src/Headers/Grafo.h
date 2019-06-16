@@ -43,7 +43,7 @@ public:
   //resolucao do problema de steiner
 
   int custoSteiner (Grafo * arvore);
-  int auxGuloso(Vertice * p, Grafo * resultado);
+  int auxGuloso(Vertice * p, Grafo * resultado, int count);
   Grafo * guloso(string vertice_inicial);
   Grafo * gulosoRandomizado (float alfa);
   
@@ -55,6 +55,7 @@ public:
     
     int numeroArestas;
     int numeroVertices;
+    int quantidadeGrausZero;
 
     bool ehDigrafo;
     Aresta * menorValor;
@@ -67,7 +68,7 @@ public:
     bool ehConexo();
     void auxAddAresta(Vertice *a,  Vertice *b, int peso);
     int auxOrdenacaoTopologica(int vet[], int tam);
-    Vertice **montaVetorVertices(int *cont, int tam);
+    Vertice** montaVetorVertices(int *cont, int tam);
 };
 
 #endif // GRAFO_H_INCLUDED
