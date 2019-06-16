@@ -86,6 +86,12 @@ Grafo::Grafo(string in, string out)
   leArquivo();
 }
 
+/*
+ * Grafo(arquivoIn, arquivoOut, ehDigrafo) recebe o local do 
+ * arquivo para leitura para contruir o grafo a partir
+ * dos dados nele e o local do arquivo de saída das
+ * análiizes do processamento e se é o Grafo é um digrafo.
+ */
 Grafo::Grafo(string in, string out, string ehDigrafo)
 {
   cout << "Construindo Grafo" << endl;
@@ -186,8 +192,7 @@ void Grafo::leArquivo()
  * imprimeGrafoPNG() cria o arquivo 
  * .dot, cria a imagem a partir dele 
  * e exibe a imagem do grafo.
- * */
-
+ */
 void Grafo::imprimeGrafoPNG()
 {
 
@@ -388,7 +393,7 @@ void Grafo::menuSelecionado(char a)
   }
 }
 
-/* Mennu de funcionalidades do Grafo */
+/* Menu de funcionalidades do Grafo */
 void Grafo::menu()
 {
   char menu;
@@ -428,8 +433,7 @@ void Grafo::menu()
  * addAresta() usa os ids dos vertices e o peso para criar a aresta que
  * será adicionada na lista de adjancencia dos vertices e incrementa 1 
  * no numero de arestas do grafo
- * */
-
+ */
 void Grafo::addAresta(string id_a, string id_b, int peso)
 {
 
@@ -468,8 +472,7 @@ void Grafo::auxAddAresta(Vertice *a, Vertice *b, int peso)
 /*
  * deletaAresta() usa os ids dos vertices para encontrar a aresta que
  * será apagada e diminui 1 no numero de arestas do grafo
- * */
-
+ */
 void Grafo::deletaAresta(string id_a, string id_b)
 {
 
@@ -505,8 +508,7 @@ void Grafo::deletaAresta(string id_a, string id_b)
 /*
  * atualizaMaiorgrau() compara os graus dos vertices para achar o
  * de maior grau.
- * */
-
+ */
 void Grafo::atualizaMaiorgrau(){
 
   Vertice * p = vertices->getPrimeiro();
@@ -525,6 +527,9 @@ void Grafo::atualizaMaiorgrau(){
   }
 }
 
+/*
+ *  buscarVertice(int i) 
+ */
 Vertice * Grafo::buscaVertice(int i){
 
   if(i<0 || i>=numeroVertices){ //fora do alcance dos vertices
@@ -539,6 +544,10 @@ Vertice * Grafo::buscaVertice(int i){
   return p;
 }
 
+/*
+ * isVector(vector<string> *vet, int value) verifica se o valor
+ * está dentro do vetor.
+ */
 bool isVector(vector<string> *vet, string value)
 {
   if (!vet)
@@ -553,6 +562,10 @@ bool isVector(vector<string> *vet, string value)
   return false;
 }
 
+/*
+ * auxBuscaPorProfundidade(Vertice *vertice, vector<string> *nosLidos) 
+ * recebe um vertice do grafo e um vetor dos vertices lidos.
+ */
 void Grafo::auxBuscaPorProfundidade(Vertice *vertice, vector<string> *nosLidos)
 {
   if (vertice != NULL)
@@ -573,6 +586,10 @@ void Grafo::auxBuscaPorProfundidade(Vertice *vertice, vector<string> *nosLidos)
   }
 }
 
+/*
+ * buscaPorProfundidade(string verticeInicial) recebe vertice inicial
+ * e imprime uma arvore a partir do mesmo.
+ */
 void Grafo::buscaPorProfundidade(string verticeInicial)
 {
   Vertice *p = vertices->buscaVertice(verticeInicial);
@@ -610,6 +627,9 @@ Vertice** Grafo::montaVetorVertices(int *cont, int tam){
   return infoVertice;
 }
 
+/*
+ * ehConexo() verifica se o Grafico é conexo.
+ */
 bool Grafo::ehConexo()
 {
   if (vertices == NULL|| numeroVertices == 0)
@@ -1016,4 +1036,53 @@ Grafo * Grafo::gulosoRandomizado (float alfa){
   }
 
   return melhor;
+}
+
+/*
+ * Auxilia recursivamente o algoritmo de Floyd para encontrar menor 
+ * caminho entre dois vertices, sendo 2000000000 como não tendo aresta
+ */
+int Grafo::auxFloyd(Vertice *p, Vertice *destino)
+{
+  if(p)
+  { 
+    //Verifica se chegou no vestice de destino
+    if(p == destino)
+      return 0;
+
+    Aresta *aresta = p->getListaAdjacencia();
+    if(aresta){
+      // busca o primeiro valor dos vertices adjacentes e coloca como menor valor da lista
+      int menor = auxFloyd(aresta->getAdjacente(), destino) + aresta->getPeso();
+      
+      for(aresta = aresta->getProx(); aresta != NULL; aresta = aresta->getProx())
+      {
+        int aux = auxFloyd(aresta->getAdjacente(), destino) + aresta ->getPeso();
+        if(aux < menor)
+          menor = aux;
+      }
+      return menor;
+    }
+  }
+  return 1500000000;
+}
+
+/*
+ * Algoritmo de Floyd encontra o menor caminho entre dois vertices.
+ */
+int Grafo::algoritmoFloyd(string origem, string destino){
+  // busca os vertices inicial e final
+	Vertice *inicial = vertices->buscaVertice(origem);
+  Vertice *final = vertices->buscaVertice(destino);
+
+  // verifica se os vertices estão na lista
+  if(inicial && final)
+  {
+    return auxFloyd(inicial, final);
+  }
+  else if(inicial)
+    cout << "Verice de destino inexistente no grafo" << endl;
+  else
+    cout << "Verice inicial inexistente no grafo" << endl;
+  return 2147483547;
 }

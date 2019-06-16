@@ -28,5 +28,5 @@ Patrick:
 
 (e) - ordenação topológica (para grafo orientado); (X)
 
-(g) Floyd: caminho mínimo (para grafos ou digrafos
-ponderados ou não);
+(g) Floyd: caminho mínimo (para grafos ou digrafos 
+ponderados ou não); (X)
