@@ -844,7 +844,6 @@ Grafo * Grafo::algoritmoPrim(){
 
 /*
 * algoritmoKruskal() ir pegando a menor aresta sem formar ciclo, até todos os vertices estarem na arvore.
-*
 */
 
 Grafo * Grafo::algoritmoKruskal(){
