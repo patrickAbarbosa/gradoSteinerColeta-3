@@ -843,7 +843,7 @@ Grafo * Grafo::algoritmoPrim(){
 }
 
 /*
-* algoritmoKruskal() 
+* algoritmoKruskal() ir pegando a menor aresta sem formar ciclo, até todos os vertices estarem na arvore.
 *
 */
 
@@ -947,43 +947,44 @@ int Grafo::auxGuloso(Vertice * p, Grafo * resultado,int count){
   if(count == 420)  //condição de parada da recursão
     return custoSteiner(resultado); //calcula e retorna o custo da arvore criada
 
-  Aresta * adjacentes = p->getListaAdjacencia();
-  Lista * verticesR = resultado->getVertices();
+  Aresta * adjacentes = p->getListaAdjacencia(); //pega a primeira aresta da lista de adjacencia de p
+  Aresta * melhor = NULL;
+  int gasto_melhor = 0;
+  Lista * verticesR = resultado->getVertices(); //pega os vertices da arvore vazia
 
-  //if(verticesR->buscaVertice(adjacentes->getAdjacente()->getInfo()) != NULL)// para evitar que pegue um nó que ja está na solução
-  //  adjacentes = adjacentes->getProx();
-
-  Aresta * melhor = adjacentes;
-  int gasto_melhor = melhor->getAdjacente()->getPeso() - melhor->getPeso();
-
-  while(adjacentes != NULL){   //procura o melhor vertice na arvore
-
-    int gasto_outro = adjacentes->getAdjacente()->getPeso() - adjacentes->getPeso(); //preenche com o "lucro" de ir para um vertice
-
-    if(gasto_melhor > gasto_outro){
-      melhor = adjacentes;
-      gasto_melhor = gasto_outro;
-    }
-    cout<<"flag depois do if" << endl;
-    
+  while(verticesR->buscaVertice(adjacentes->getAdjacente()->getInfo()) != NULL && adjacentes !=NULL){// para evitar que pegue um nó que ja está na solução
     adjacentes = adjacentes->getProx();
-
-    if(verticesR->buscaVertice(adjacentes->getAdjacente()->getInfo()) != NULL) // para evitar que pegue um nó que ja está na solução
-      adjacentes = adjacentes->getProx();              
   }
 
-  Vertice * melhorVertice = melhor->getAdjacente();
-  Vertice * verifica = verticesR->buscaVertice(melhorVertice->getInfo());
+  if(adjacentes !=NULL){
+    melhor = adjacentes;
+    gasto_melhor = melhor->getAdjacente()->getPeso() - melhor->getPeso();
 
-/*if(verifica != NULL){ //verifica se o vertice ja está na solucao    
-    //ver a melhor forma de optimizar
+    while(adjacentes != NULL){   //procura o melhor vertice na arvore
+      int gasto_outro = adjacentes->getAdjacente()->getPeso() - adjacentes->getPeso(); //preenche com o "lucro" de ir para um vertice
+
+      if(gasto_melhor > gasto_outro){
+        melhor = adjacentes;
+        gasto_melhor = gasto_outro;
+      }
+
+      adjacentes = adjacentes->getProx();
+      while(verticesR->buscaVertice(adjacentes->getAdjacente()->getInfo()) != NULL && adjacentes !=NULL){// para evitar que pegue um nó que ja está na solução
+        adjacentes = adjacentes->getProx();        
+      }
+    }
+    Vertice * melhorVertice = melhor->getAdjacente();
+    verticesR->insereVertice(melhorVertice->getInfo(),melhorVertice->getPeso());  //coloca o vertice na arvore
+    resultado->addAresta(p->getInfo(),melhorVertice->getInfo(),melhor->getPeso());  //cria aresta existente entre os vertices
+    return auxGuloso(melhorVertice,resultado,count+1);
   }
-  else{}
-*/
-  cout<<"Estou no else"<<endl;
-  verticesR->insereVertice(melhorVertice->getInfo(),melhorVertice->getPeso());  //coloca o vertice na arvore
-  resultado->addAresta(p->getInfo(),melhorVertice->getInfo(),melhor->getPeso());  //cria aresta existente entre os vertices
-  return auxGuloso(melhorVertice,resultado,count+1);       
+  else{//caso que o algoritimo precisa retornar para um lugar que já passou
+    Vertice * aux = verticesR->getPrimeiro();
+    while(aux->getListaAdjacencia()->getAdjacente()->getInfo() != p->getInfo()){
+      aux = aux->getProx();
+    }
+    return auxGuloso(aux,resultado,count+1);
+  }       
 }
 
 Grafo * Grafo::guloso(string vertice_inicial){
@@ -1000,6 +1001,9 @@ Grafo * Grafo::guloso(string vertice_inicial){
   }
 
   Grafo * resultado = new Grafo();
+  Lista * verticesR = resultado->getVertices();
+  verticesR->insereVertice(vertice_aux->getInfo(),vertice_aux->getPeso()); // insere o vertice inicial na arvore
+
   int count = 0;
   auxGuloso(vertice_aux,resultado,count);
 

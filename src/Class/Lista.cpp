@@ -31,6 +31,7 @@ void Lista::insereVertice (string info, int peso) {
 		primeiro = new Vertice(info, peso);
 		maiorGrau = primeiro;
 		quantidade ++;
+		return;
 	}
 	if(buscaVertice(info) == NULL){
 		Vertice *p = primeiro;
