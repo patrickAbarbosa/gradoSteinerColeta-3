@@ -43,9 +43,9 @@ void Lista::insereVertice (string info, int peso) {
 		p->setProx(novo);
 		quantidade ++;
 	}
-	else
+	else{
 		cout<<"Vertice: "<<info<<" ja existe!"<< endl;
-		
+	}
 }
 
 // Busca o vertice usando a informacao na lista e caso nao exista retorna NULL
@@ -54,13 +54,13 @@ Vertice* Lista::buscaVertice(string info) {
 	 
 	Vertice * p = primeiro;
 	
-	while( p != NULL) {
+	while(p != NULL) {
 		
 		if(p->getInfo() == info)
 			return p;
 		p = p->getProx();
 	}
-	
+
 	return NULL;
 }
 
@@ -92,5 +92,4 @@ void Lista::deletaVertice (string info) {
 		delete p; 
 	}
 	quantidade--;
-
 }

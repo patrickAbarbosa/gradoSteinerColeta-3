@@ -32,7 +32,7 @@ public:
   void atualizaMaiorgrau();
   Vertice * buscaVertice(int i);
   void buscaPorProfundidade(string verticeInicial);
-  void buscaPorLargura(string verticeInicial);
+  bool buscaPorLargura(string verticeInicial,string verticeFinal);
   Vertice **ordenacaoTopologica();
   Grafo * complementar();
 
