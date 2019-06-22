@@ -843,7 +843,76 @@ Grafo * Grafo::algoritmoPrim(){
 }
 
 /*
+ * Auxilia recursivamente o algoritmo de Floyd para encontrar menor 
+ * caminho entre dois vertices, sendo 2000000000 como não tendo aresta
+ */
+int Grafo::auxFloyd(Vertice *p, Vertice *destino)
+{
+  if(p)
+  { 
+    //Verifica se chegou no vestice de destino
+    if(p == destino)
+      return 0;
+
+    Aresta *aresta = p->getListaAdjacencia();
+    if(aresta){
+      // busca o primeiro valor dos vertices adjacentes e coloca como menor valor da lista
+      int menor = auxFloyd(aresta->getAdjacente(), destino) + aresta->getPeso();
+      
+      for(aresta = aresta->getProx(); aresta != NULL; aresta = aresta->getProx())
+      {
+        int aux = auxFloyd(aresta->getAdjacente(), destino) + aresta ->getPeso();
+        if(aux < menor)
+          menor = aux;
+      }
+      return menor;
+    }
+  }
+  return 1500000000;
+}
+
+/*
+ * Algoritmo de Floyd encontra o menor caminho entre dois vertices.
+ */
+int Grafo::algoritmoFloyd(string origem, string destino){
+  // busca os vertices inicial e final
+	Vertice *inicial = vertices->buscaVertice(origem);
+  Vertice *final = vertices->buscaVertice(destino);
+
+  // verifica se os vertices estão na lista
+  if(inicial && final)
+  {
+    return auxFloyd(inicial, final);
+  }
+  else if(inicial)
+    cout << "Verice de destino inexistente no grafo" << endl;
+  else
+    cout << "Verice inicial inexistente no grafo" << endl;
+  return 2147483547;
+}
+
+
+/*
 * algoritmoKruskal() ir pegando a menor aresta sem formar ciclo, até todos os vertices estarem na arvore.
+*/
+
+/*
+Arestas ** ordenaArestas(){
+
+  Arestas ** p = new Aresta*[numeroArestas];
+  int count = 0;
+  p[0] = menorValor;
+  count ++;
+  Vertice * q = vertices;
+
+  while(count != numeroArestas){
+    for(Aresta * aux = q->getListaAdjacencia(); aux!=NULL; aux = aux->getProx()){
+
+    }
+    q = q->getProx();
+  }
+  return p;
+}
 */
 
 Grafo * Grafo::algoritmoKruskal(){
@@ -852,11 +921,18 @@ Grafo * Grafo::algoritmoKruskal(){
   Lista * arv_vertices = arvore->getVertices();
   Vertice * p = menorValor->getOrigem();
   Vertice * q = menorValor->getAdjacente();
+  Aresta ** listaOrdena = ordenaArestas();
 
   arv_vertices->insereVertice(p->getInfo(),p->getPeso());
   arv_vertices->insereVertice(q->getInfo(),q->getPeso());
   arvore->addAresta(p->getInfo(), q->getInfo(), menorValor->getPeso());
 
+  while(arv_vertices->getQuantidade()!=numeroVertices)
+  {
+
+  }
+
+  return arvore;
 }
 
 
@@ -1039,53 +1115,4 @@ Grafo * Grafo::gulosoRandomizado (float alfa){
   }
 
   return melhor;
-}
-
-/*
- * Auxilia recursivamente o algoritmo de Floyd para encontrar menor 
- * caminho entre dois vertices, sendo 2000000000 como não tendo aresta
- */
-int Grafo::auxFloyd(Vertice *p, Vertice *destino)
-{
-  if(p)
-  { 
-    //Verifica se chegou no vestice de destino
-    if(p == destino)
-      return 0;
-
-    Aresta *aresta = p->getListaAdjacencia();
-    if(aresta){
-      // busca o primeiro valor dos vertices adjacentes e coloca como menor valor da lista
-      int menor = auxFloyd(aresta->getAdjacente(), destino) + aresta->getPeso();
-      
-      for(aresta = aresta->getProx(); aresta != NULL; aresta = aresta->getProx())
-      {
-        int aux = auxFloyd(aresta->getAdjacente(), destino) + aresta ->getPeso();
-        if(aux < menor)
-          menor = aux;
-      }
-      return menor;
-    }
-  }
-  return 1500000000;
-}
-
-/*
- * Algoritmo de Floyd encontra o menor caminho entre dois vertices.
- */
-int Grafo::algoritmoFloyd(string origem, string destino){
-  // busca os vertices inicial e final
-	Vertice *inicial = vertices->buscaVertice(origem);
-  Vertice *final = vertices->buscaVertice(destino);
-
-  // verifica se os vertices estão na lista
-  if(inicial && final)
-  {
-    return auxFloyd(inicial, final);
-  }
-  else if(inicial)
-    cout << "Verice de destino inexistente no grafo" << endl;
-  else
-    cout << "Verice inicial inexistente no grafo" << endl;
-  return 2147483547;
 }
