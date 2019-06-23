@@ -9,10 +9,6 @@
 #include "Vertice.h"
 #include "./Data.h"
 
-#include "Resultado.h"
-
-class Resultado;
-
 using namespace std;
 
 class Grafo

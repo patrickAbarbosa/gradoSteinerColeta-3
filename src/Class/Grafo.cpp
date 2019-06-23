@@ -9,7 +9,6 @@
 #include "../Headers/Data.h"
 #include "../Headers/Fila.h"
 #include "../Headers/Vertice.h"
-#include "../Headers/Resultado.h"
 
 using namespace std;
 
@@ -1154,6 +1153,7 @@ Grafo * Grafo::gulosoRandomizado (float alfa){
 //// PDF: https://bmcbioinformatics.biomedcentral.com/track/pdf/10.1186/1471-2105-10-S1-S27
 
 // GRASP Reativo
+/*
 Grafo *Grafo::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco)
 {
   int nInteracoes = 0;
@@ -1246,3 +1246,4 @@ Grafo *Grafo::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, 
 
   return NULL; 
 }
+*/
