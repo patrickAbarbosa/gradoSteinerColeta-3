@@ -64,10 +64,8 @@ Grafo::Grafo(string in)
 Grafo::Grafo(string in, string out)
 {
   vertices = new Lista();
-
   arquivoIn = new string;
   *arquivoIn = in;
-
   arquivoOut = new string;
   *arquivoOut = out;
 
@@ -380,6 +378,28 @@ void Grafo::menuSelecionado(char a)
     cout << "Imprimindo Grafo" << endl;
     imprimeGrafoPNG();
     break;
+  }
+  /*----------------------Area de teste ----------------------- */
+  case'a': 
+  {
+    cout << "O grafo é conexo ? " << ehConexo() << endl;
+  }
+  case'b': 
+  {
+    string a, b;
+    cout << "Digite o vertice inicial: ";
+    cin >> a;
+    cout << "Digite o vertice final: ";
+    cin >> b;
+    cout << "Resultado da busca: " << buscaPorLargura(a,b) << endl;
+  }
+  case'c': 
+  {
+    cout<<"custoSteiner: "<< custoSteiner(this)<<endl;
+  }
+  case'd': 
+  {
+
   }
   default:
     break;
@@ -1031,9 +1051,8 @@ int Grafo::custoSteiner (Grafo * arvore){
 
 int Grafo::auxGuloso(Vertice * p, Grafo * resultado,int count){
 
-  cout << "count: " << count << endl;
-  if(count == 420){  //condição de parada da recursão
-    cout<<"numero de vertices: "<<(resultado->getVertices())->getQuantidade()<<endl;
+  cout << "count: " << count << endl; //problema na condição de parada
+  if(count == 420){  //condição de parada da recursão 
     return custoSteiner(resultado); //calcula e retorna o custo da arvore criada
   }
   Aresta * adjacentes = p->getListaAdjacencia(); //pega a primeira aresta da lista de adjacencia de p
@@ -1074,10 +1093,10 @@ int Grafo::auxGuloso(Vertice * p, Grafo * resultado,int count){
     return auxGuloso(melhorVertice,resultado,count+1);
   }
   else{//caso que o algoritimo precisa retornar para um lugar que já passou
-    cout<<"aqui 3"<<endl;
+    cout<<"aqui 2"<<endl; 
     if(p!=NULL){
-      Vertice * aux = p->getProx();
-      return auxGuloso(aux,resultado,count+1);
+      Vertice * aux = p->getProx(); //problema aqui pois não sei oque fazer pra retomar se ele ficar sem saida
+      return auxGuloso(aux,resultado,count+1); // isso aqui que gera varias arvores
     }
   }       
 }
@@ -1097,8 +1116,7 @@ Grafo * Grafo::guloso(string vertice_inicial){
 
   int count = 0;
   int custo = auxGuloso(vertice_aux,resultado,count);
-  cout << "custo da porra toda: "<< custo << endl; 
-  cout << "flag final"<<endl;
+  cout<<"numero de vertices na arvore: "<<(resultado->getVertices())->getQuantidade()<<endl;
   return resultado;
 }
 
