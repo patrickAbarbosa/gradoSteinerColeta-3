@@ -1092,7 +1092,7 @@ Grafo * Grafo::guloso(string vertice_inicial){
   }
 
   Grafo * resultado = new Grafo();
-  Lista * verticesR = resultado->getVertices();
+  Lista * verticesR;
   verticesR->insereVertice(vertice_aux->getInfo(),vertice_aux->getPeso()); // insere o vertice inicial na arvore
 
   int count = 0;
@@ -1105,7 +1105,6 @@ Grafo * Grafo::guloso(string vertice_inicial){
 /*---------------------------------------------------------------------------
   O Algoritmo Guloso Randomizado funciona recevendo um parametro alfa
   que é utilizado para auxilar na randomização
-
 
 
 
@@ -1158,9 +1157,7 @@ Grafo *Grafo::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, 
   float custoMax = 0;
 
   for(Vertice * p = vertices->getPrimeiro(); p != NULL; p = p->getProx())
-  {
     custoMax += p->getPeso();
-  }
 
   // Maior custo da solução
   custo = custoMax;
