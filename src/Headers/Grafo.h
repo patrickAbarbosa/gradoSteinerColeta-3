@@ -9,6 +9,10 @@
 #include "Vertice.h"
 #include "./Data.h"
 
+#include "Resultado.h"
+
+class Resultado;
+
 using namespace std;
 
 class Grafo
@@ -48,6 +52,8 @@ public:
   int auxGuloso(Vertice * p, Grafo * resultado, int count);
   Grafo * guloso(string vertice_inicial);
   Grafo * gulosoRandomizado (float alfa);
+  // Método para encontrar a melhor solução do Grafo de maneira Gulosa Randomicamente Reativa
+  Grafo * gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco);
   
   private:
     Lista  *vertices; // Vetor com os vertices do Grafo

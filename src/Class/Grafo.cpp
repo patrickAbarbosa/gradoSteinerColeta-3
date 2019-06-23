@@ -9,6 +9,7 @@
 #include "../Headers/Data.h"
 #include "../Headers/Fila.h"
 #include "../Headers/Vertice.h"
+#include "../Headers/Resultado.h"
 
 using namespace std;
 
@@ -1130,4 +1131,103 @@ Grafo * Grafo::gulosoRandomizado (float alfa){
   }
 
   return melhor;
+}
+
+// https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-10-S1-S27
+//// PDF: https://bmcbioinformatics.biomedcentral.com/track/pdf/10.1186/1471-2105-10-S1-S27
+
+// GRASP Reativo
+Grafo *Grafo::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco)
+{
+  int nInteracoes = 0;
+  int  custo = -1;
+  int nVertices = 0;
+  
+  if(vertices == NULL)
+    return NULL;
+
+  if(vertices != NULL && numeroArestas == 0)
+  {
+    cout << "Alpha: 0" << endl;
+    Grafo *result = new Grafo();
+    Vertice *maiorGrau = vertices->getMaiorGrau(); 
+    result->vertices->insereVertice(maiorGrau->getInfo(), maiorGrau->getPeso());
+    return result;
+  }
+
+  float custoMax = 0;
+
+  for(Vertice * p = vertices->getPrimeiro(); p != NULL; p = p->getProx())
+  {
+    custoMax += p->getPeso();
+  }
+
+  // Maior custo da solução
+  custo = custoMax;
+
+  // Definição de variáveis para auxiliar
+  int n = 0, aleatorio = 0;
+  float probabilidade[nAlphas] = { 1/ nAlphas }; //Inicia o verot com distribuição unifome
+  float chances[nAlphas];
+  float media[nAlphas] = {0};
+  float soma[nAlphas] = {0};
+
+  float sum;
+  float sum_chances;
+  
+  Grafo *result = NULL;
+
+  for(int i = 0; i < periodos; i++)
+  {
+    aleatorio = rand() % 101;
+    sum = 0;
+    n = 0;
+
+    for(sum += probabilidade[n] * 100; n < nAlphas && sum < aleatorio; n++)
+      sum += probabilidade[n] * 100;
+    
+    cout << "Alpha: " << alpha[n] << endl;
+    cout << "Interacao: " << i + 1 << endl;
+    Grafo *grafoAux = gulosoRandomizado(alpha[n]);
+
+    int custoAux = custoSteiner(grafoAux);
+    
+    if(result && custo)
+    {
+      if(custo > custoAux)
+      {
+        custo = custoAux;
+        delete result;
+        result = grafoAux;
+      }
+      else 
+        delete grafoAux;
+    }
+    else
+    {
+      custo = custoAux;
+      result = grafoAux;
+    }
+    soma[i] = custo;
+
+    if(i % bloco == 0)
+    {
+      sum_chances = 0;
+
+      for(int j = 0; j < nAlphas; j++)
+      {
+        media[j] = soma[j] / i;
+
+        if(media > 0)
+          chances[j] = custo / media[j];
+        else
+          chances[j] = 0.000001;
+        
+        sum_chances += chances[j];
+
+      }
+    }
+  }
+
+  return NULL; 
 }
