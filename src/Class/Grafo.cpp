@@ -1048,6 +1048,59 @@ int Grafo::custoSteiner (Grafo * arvore){
   return custo_arestas + custo_nos;
 }
 
+int Grafo::auxGuloso(Vertice * p, Grafo * resultado, int *count, vector<string> *nosLidos)
+{
+  if(p == NULL || nosLidos->size() == vertices->getQuantidade())
+    return 0;
+  
+  Aresta *melhor = NULL;
+
+  int menorGasto = 0;
+  vector<string> utilizadoOrdenado;
+  int soma = 0;
+
+  //pega os vertices da arvore
+  Lista * verticesR = resultado->getVertices(); 
+
+  while(utilizadoOrdenado.size() < p->getGrau() && nosLidos->size() != vertices->getQuantidade())
+  {
+    for(Aresta *adjacente = p->getListaAdjacencia(); adjacente != NULL; adjacente = adjacente->getProx())
+    {
+      if(melhor == NULL)
+      {
+        melhor == adjacente;
+        menorGasto = adjacente->getAdjacente()->getPeso() - adjacente->getPeso();
+      }
+      else
+      {
+        int aux = adjacente->getAdjacente()->getPeso() - adjacente->getPeso();
+        
+        if(aux < menorGasto)
+        {
+          melhor == adjacente;
+          menorGasto = adjacente->getAdjacente()->getPeso() - adjacente->getPeso();
+        }
+      }
+    }
+
+    Vertice * melhorVertice = melhor->getAdjacente();
+    
+    cout << "Melhor escolha de vertice: "<< melhor->getAdjacente()->getInfo() << endl;
+    
+    // marca o vertice como lido
+    nosLidos->push_back(melhor->getAdjacente()->getInfo()); 
+    
+    //coloca o vertice na arvore
+    verticesR->insereVertice(melhorVertice->getInfo(),melhorVertice->getPeso());
+    resultado->addAresta(p->getInfo(), melhorVertice->getInfo(), melhor->getPeso());
+    soma += menorGasto;
+    *count += menorGasto;
+    
+    auxGuloso(melhorVertice, resultado, count, nosLidos);
+  }
+  return soma;
+}
+/*
 int Grafo::auxGuloso(Vertice * p, Grafo * resultado,int *count, vector<string> *nosLidos){
   cout << "# AuxGuloso" << endl;
   if(p == NULL)
@@ -1106,7 +1159,7 @@ int Grafo::auxGuloso(Vertice * p, Grafo * resultado,int *count, vector<string> *
     cout << "Adicionando vertice na aresta" << endl;
     resultado->addAresta(p->getInfo(),melhorVertice->getInfo(),melhor->getPeso()); 
     (*count)++;
-    return auxGuloso(melhorVertice,resultado,count, nosLidos);
+    auxGuloso(melhorVertice,resultado,count, nosLidos);
   }
   //caso que o algoritimo precisa retornar para um lugar que já passou
   else{
@@ -1136,7 +1189,7 @@ Grafo * Grafo::guloso(string vertice_inicial){
   int custo = auxGuloso(vertice_aux,resultado, &count, &nosLidos);
   cout<<"numero de vertices na arvore: "<<(resultado->getVertices())->getQuantidade()<<endl;
   return resultado;
-}
+}*/
 
 /*---------------------------------------------------------------------------
   O Algoritmo Guloso Randomizado funciona recevendo um parametro alfa
