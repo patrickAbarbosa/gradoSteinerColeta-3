@@ -1092,7 +1092,7 @@ int Grafo::auxGuloso(Vertice * p, Grafo * resultado, int *count, vector<string> 
     
     //coloca o vertice na arvore
     verticesR->insereVertice(melhorVertice->getInfo(),melhorVertice->getPeso());
-    resultado->addAresta(p->getInfo(), melhorVertice->getInfo(), melhor->getPeso());
+    resultado->addAresta(p->getInfo(), melhorVertice->getInfo(), melhor->getPeso()+);
     soma += menorGasto;
     *count += menorGasto;
     
