@@ -37,7 +37,7 @@ void Lista::insereVertice (string info, int peso) {
 		Vertice *p = primeiro;
 		
 		while (p->getProx() != NULL)
-			p = p->getProx();
+		    p = p->getProx();
 		
 		Vertice *novo = new Vertice (info, peso);
 		p->setProx(novo);

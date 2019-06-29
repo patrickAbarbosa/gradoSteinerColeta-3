@@ -137,9 +137,11 @@ void Grafo::leArquivo()
   if (file.is_open())
   {
     bool link = false;
+    string str;
+    getline(file, str); // para nao pegar a primeira linha
     while (!file.eof())
     {
-      string str;
+      str = ' ';
       getline(file, str);
       if (str[0] >= '0' && str[0] <= '9')
       {
@@ -179,9 +181,8 @@ void Grafo::leArquivo()
 }
 
 /*
- * imprimeGrafoPNG() cria o arquivo 
- * .dot, cria a imagem a partir dele 
- * e exibe a imagem do grafo.
+ * imprimeGrafoPNG() cria o arquivo * .dot, usando o programa graphviz cria a imagem 
+ * e depois exibe a imagem do grafo.
  */
 void Grafo::imprimeGrafoPNG()
 {
@@ -220,10 +221,10 @@ void Grafo::imprimeGrafoPNG()
 
     arquivo << "}";
     arquivo.close();
-
-    system("dot -Tpng -O GrafoPNG.dot"); // cria o png do grafo
+    
+    system("dot -Tpng -O GrafoPNG.dot >> grafo.log"); // cria o png do grafo
     cout << "Arquivo Concluido!" << endl;
-    system("display GrafoPNG.dot.png"); // mostra a imagem do grafo
+    system("display GrafoPNG.dot.png >> grafo.log"); // mostra a imagem do grafo
   }
   else
     cout << "Erro ao encontrar/criar o arquivo GrafoPNG.dot !" << endl;
@@ -379,11 +380,13 @@ void Grafo::menuSelecionado(char a)
     break;
   }
   /*----------------------Area de teste ----------------------- */
-  case'a': 
+  case 'a': 
   {
+    cout<<endl;
     cout << "O grafo é conexo ? " << ehConexo() << endl;
+    break;
   }
-  case'b': 
+  case 'b': 
   {
     string a, b;
     cout << "Digite o vertice inicial: ";
@@ -391,14 +394,19 @@ void Grafo::menuSelecionado(char a)
     cout << "Digite o vertice final: ";
     cin >> b;
     cout << "Resultado da busca: " << buscaPorLargura(a,b) << endl;
+    break;
   }
-  case'c': 
+  case 'c': 
   {
     cout<<"custoSteiner: "<< custoSteiner(this)<<endl;
+    break;
   }
-  case'd': 
+  case 'd': 
   {
-
+    float alpha[3] = {0.1,0.2,0.3};
+    Grafo * aux = gulosoRandomizadoReativo(alpha,3,5000,100);
+    cout<<"custo do guloso randomizado: "<<custoSteiner(aux)<<endl;
+    break;
   }
   default:
     break;
@@ -429,7 +437,7 @@ void Grafo::menu()
     {
       cout << "Digite uma opcao do menu: ";
       cin >> menu;
-    } while ((menu < '0' || menu > '9') && menu != 'q');
+    } while (((menu < '0' || menu > '9') && (menu < 'a' || menu > 'z')) && menu != 'q');
 
     if (menu == 'q')
     {
@@ -655,14 +663,21 @@ bool Grafo::ehConexo()
 
   Vertice * p = vertices->getPrimeiro(); 
 
+  int cont = 0;
+  int conti = 0;
   while(p != NULL){
     Vertice * q = vertices->getPrimeiro();
-    
-    while(q!=NULL){  
-      if(buscaPorLargura(p->getInfo(),q->getInfo()) == false)
+    cout << cont << endl;
+    while(q!=NULL){ 
+      cout <<conti << endl;
+      bool verif = buscaPorLargura(p->getInfo(),q->getInfo());
+      cout<< "verif "<<verif<<endl;
+      if(verif == false)
         return false;
       q = q->getProx();
+      conti++;
     }
+    cont++;
     p = p->getProx();
   }
 
@@ -753,34 +768,43 @@ Vertice** Grafo::ordenacaoTopologica()
 bool Grafo::buscaPorLargura(string verticeInicial,string verticeFinal)
 {
   Vertice *p = vertices->buscaVertice(verticeInicial);
+  Vertice *q = vertices->buscaVertice(verticeInicial);
+  cout<<"verticeInicial "<<verticeInicial<<endl;
+  cout<<"verticeFinal " <<verticeFinal<<endl;
 
-  if (p == NULL)
-  {
+  if (p == NULL || q == NULL){
     cout << "Vertice nao encontrado!" << endl;
+    return false;
   }
-  p = vertices->getPrimeiro();
-  vector<string> nosLidos;
-  Fila aux;
-  aux.insere(p);
 
-  while (!aux.vazia())
+  vector<string> nosLidos;
+  Fila * aux = new Fila;
+  aux->insere(p);
+
+  while (!aux->vazia())
   {
-    p = aux.retira();
+    p = aux->retira();
     Aresta *t = p->getListaAdjacencia();
+    cout<<"aqui 0"<<endl;
 
     if(p->getInfo() == verticeFinal){
       return true;
     }
+    cout<<"aqui 1"<<endl;
     if(!isVector(&nosLidos,p->getInfo())){
       nosLidos.push_back(p->getInfo());
     }    
 
     while(t != NULL){
-      if(t->getAdjacente()->getInfo() == verticeFinal)
+      cout<<"adjacente "<< t->getAdjacente()->getInfo()<<endl;
+      cout<<"final "<<verticeFinal<<endl;
+      if(t->getAdjacente()->getInfo() == verticeFinal){
+        cout<<"bugou aqui"<<endl;
         return true;
-      
+      }
+      cout<<"aqui 3"<<endl;
       if(!isVector(&nosLidos,t->getAdjacente()->getInfo())){
-        aux.insere(t->getAdjacente());
+        aux->insere(t->getAdjacente());
       }
       t = t->getProx();
       
@@ -925,7 +949,8 @@ int Grafo::algoritmoFloyd(string origem, string destino){
 
 
 /*
-* algoritmoKruskal() ir pegando a menor aresta sem formar ciclo, até todos os vertices estarem na arvore.
+* algoritmoKruskal() ir pegando a menor aresta sem formar ciclo, até todos os vertices
+* estarem na arvore.
 */
 
 /*
@@ -1078,26 +1103,23 @@ int Grafo::auxGuloso(Vertice * p, Grafo * resultado,int count){
       }
       cout<< "aqui"<<endl;
       adjacentes = adjacentes->getProx();
-      if(adjacentes != NULL){
-        while(adjacentes != NULL && verticesR->buscaVertice(adjacentes->getAdjacente()->getInfo()) != NULL){// para evitar que pegue um nó que ja está na solução
-          adjacentes = adjacentes->getProx();        
-        }
+      while(adjacentes != NULL && verticesR->buscaVertice(adjacentes->getAdjacente()->getInfo()) != NULL){// para evitar que pegue um nó que ja está na solução
+        adjacentes = adjacentes->getProx();              
       }
     }
     cout<< "aqui 1"<<endl;
     Vertice * melhorVertice = melhor->getAdjacente();
     verticesR->insereVertice(melhorVertice->getInfo(),melhorVertice->getPeso());  //coloca o vertice na arvore
     resultado->addAresta(p->getInfo(),melhorVertice->getInfo(),melhor->getPeso());  //cria aresta existente entre os vertices
-    cout<<"aqui 2"<<endl;
     return auxGuloso(melhorVertice,resultado,count+1);
   }
   else{//caso que o algoritimo precisa retornar para um lugar que já passou
-    cout<<"aqui 2"<<endl; 
+    cout<<"aqui 2"<<endl;
     if(p!=NULL){
       Vertice * aux = p->getProx(); //problema aqui pois não sei oque fazer pra retomar se ele ficar sem saida
       return auxGuloso(aux,resultado,count+1); // isso aqui que gera varias arvores
     }
-  }       
+  }     
 }
 
 Grafo * Grafo::guloso(string vertice_inicial){
@@ -1110,7 +1132,7 @@ Grafo * Grafo::guloso(string vertice_inicial){
   }
 
   Grafo * resultado = new Grafo();
-  Lista * verticesR;
+  Lista * verticesR = resultado->getVertices();
   verticesR->insereVertice(vertice_aux->getInfo(),vertice_aux->getPeso()); // insere o vertice inicial na arvore
 
   int count = 0;
@@ -1148,22 +1170,27 @@ Grafo * Grafo::gulosoRandomizado (float alfa){
 
   return melhor;
 }
-
-// https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-10-S1-S27
-//// PDF: https://bmcbioinformatics.biomedcentral.com/track/pdf/10.1186/1471-2105-10-S1-S27
-
-// GRASP Reativo
 /*
+  https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-10-S1-S27
+  PDF: https://bmcbioinformatics.biomedcentral.com/track/pdf/10.1186/1471-2105-10-S1-S27
+
+  GRASP Reativo
+
+  Recebe um vetor de alphas, seu tamanho, a quantidade de vezes que o algoritimo vai ser
+  rodado (periodos) e o tamanho do bloco, ... continuar explicando
+
+ */
+
 Grafo *Grafo::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco)
 {
   int nInteracoes = 0;
   int  custo = -1;
   int nVertices = 0;
   
-  if(vertices == NULL)
+  if(vertices == NULL) //caso o grafo nao tenha vertices
     return NULL;
 
-  if(vertices != NULL && numeroArestas == 0)
+  if(vertices != NULL && numeroArestas == 0)//caso grafo seja vazio
   {
     cout << "Alpha: 0" << endl;
     Grafo *result = new Grafo();
@@ -1172,9 +1199,9 @@ Grafo *Grafo::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, 
     return result;
   }
 
-  float custoMax = 0;
+  float custoMax = 0; //custo base
 
-  for(Vertice * p = vertices->getPrimeiro(); p != NULL; p = p->getProx())
+  for(Vertice * p = vertices->getPrimeiro(); p != NULL; p = p->getProx()) //somatorio custo base
     custoMax += p->getPeso();
 
   // Maior custo da solução
@@ -1182,7 +1209,7 @@ Grafo *Grafo::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, 
 
   // Definição de variáveis para auxiliar
   int n = 0, aleatorio = 0;
-  float probabilidade[nAlphas] = { 1/ nAlphas }; //Inicia o verot com distribuição unifome
+  float probabilidade[nAlphas] = { float(1/ nAlphas) }; //Inicia o verot com distribuição unifome
   float chances[nAlphas];
   float media[nAlphas] = {0};
   float soma[nAlphas] = {0};
@@ -1225,7 +1252,7 @@ Grafo *Grafo::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, 
     }
     soma[i] = custo;
 
-    if(i % bloco == 0)
+    if(i % bloco == 0) //quando o indice chega no tamanho do bloco atualiza as chances e media
     {
       sum_chances = 0;
 
@@ -1243,7 +1270,5 @@ Grafo *Grafo::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, 
       }
     }
   }
-
   return NULL; 
 }
-*/
