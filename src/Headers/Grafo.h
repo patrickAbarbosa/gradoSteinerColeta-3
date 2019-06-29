@@ -45,7 +45,7 @@ public:
   //resolucao do problema de steiner
 
   int custoSteiner (Grafo * arvore);
-  int auxGuloso(Vertice * p, Grafo * resultado, int count);
+  int auxGuloso(Vertice * p, Grafo * resultado, int *count, vector<string> *nosLidos);
   Grafo * guloso(string vertice_inicial);
   Grafo * gulosoRandomizado (float alfa);
   // Método para encontrar a melhor solução do Grafo de maneira Gulosa Randomicamente Reativa

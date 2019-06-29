@@ -1073,41 +1073,104 @@ int Grafo::custoSteiner (Grafo * arvore){
   return custo_arestas + custo_nos;
 }
 
-int Grafo::auxGuloso(Vertice * p, Grafo * resultado,int count){
+int Grafo::auxGuloso(Vertice * p, Grafo * resultado, int *count, vector<string> *nosLidos)
+{
+  if(p == NULL || nosLidos->size() == vertices->getQuantidade())
+    return 0;
+  
+  Aresta *melhor = NULL;
 
-  cout << "count: " << count << endl; //problema na condição de parada
-  if(count == 420){  //condição de parada da recursão 
-    return custoSteiner(resultado); //calcula e retorna o custo da arvore criada
+  int menorGasto = 0;
+  vector<string> utilizadoOrdenado;
+  int soma = 0;
+
+  //pega os vertices da arvore
+  Lista * verticesR = resultado->getVertices(); 
+
+  while(utilizadoOrdenado.size() < p->getGrau() && nosLidos->size() != vertices->getQuantidade())
+  {
+    for(Aresta *adjacente = p->getListaAdjacencia(); adjacente != NULL; adjacente = adjacente->getProx())
+    {
+      if(melhor == NULL)
+      {
+        melhor == adjacente;
+        menorGasto = adjacente->getAdjacente()->getPeso() - adjacente->getPeso();
+      }
+      else
+      {
+        int aux = adjacente->getAdjacente()->getPeso() - adjacente->getPeso();
+        
+        if(aux < menorGasto)
+        {
+          melhor == adjacente;
+          menorGasto = adjacente->getAdjacente()->getPeso() - adjacente->getPeso();
+        }
+      }
+    }
+
+    Vertice * melhorVertice = melhor->getAdjacente();
+    
+    cout << "Melhor escolha de vertice: "<< melhor->getAdjacente()->getInfo() << endl;
+    
+    // marca o vertice como lido
+    nosLidos->push_back(melhor->getAdjacente()->getInfo()); 
+    
+    //coloca o vertice na arvore
+    verticesR->insereVertice(melhorVertice->getInfo(),melhorVertice->getPeso());
+    resultado->addAresta(p->getInfo(), melhorVertice->getInfo(), melhor->getPeso());
+    soma += menorGasto;
+    *count += menorGasto;
+    
+    auxGuloso(melhorVertice, resultado, count, nosLidos);
   }
+  return soma;
+}
+/*
+int Grafo::auxGuloso(Vertice * p, Grafo * resultado,int *count, vector<string> *nosLidos){
+  cout << "# AuxGuloso" << endl;
+  if(p == NULL)
+    return 0;
+
+  cout << "Valor de p: " << p->getInfo();
+  cout << "count: " << *count << endl; //problema na condição de parada
+  
+  if(*count == vertices->getQuantidade()){  //condição de parada da recursão 
+    return 0; //calcula e retorna o custo da arvore criada
+  }
+
   Aresta * adjacentes = p->getListaAdjacencia(); //pega a primeira aresta da lista de adjacencia de p
+
   Aresta * melhor = NULL;
   int gasto_melhor = 0;
   Lista * verticesR = resultado->getVertices(); //pega os vertices da arvore vazia
-  
-  cout<<"aqui 0"<<endl;
 
-  while(adjacentes !=NULL && verticesR->buscaVertice(adjacentes->getAdjacente()->getInfo()) != NULL){// para evitar que pegue um nó que ja está na solução
+  while(adjacentes != NULL && verticesR->buscaVertice(adjacentes->getAdjacente()->getInfo()) != NULL){// para evitar que pegue um nó que ja está na solução
+    cout << "Buscando adjacente que nao lido" << endl;
     adjacentes = adjacentes->getProx();
   }
-
+  cout << "Verificando Adjacente"<< endl;
   if(adjacentes !=NULL){
     melhor = adjacentes;
     gasto_melhor = melhor->getAdjacente()->getPeso() - melhor->getPeso();
+    cout << "Adjacente nao nulo" << endl;
 
-    while(adjacentes != NULL){   //procura o melhor vertice na arvore
+    //procura o melhor vertice na arvore
+    while(adjacentes != NULL){
+      cout << "Buscando o melhor adjacente" << endl;  
       int gasto_outro = adjacentes->getAdjacente()->getPeso() - adjacentes->getPeso(); //preenche com o "lucro" de ir para um vertice
 
       if(gasto_melhor > gasto_outro){
+        cout << "menor gasto: " << gasto_melhor << ", " << gasto_outro << endl;
         melhor = adjacentes;
         gasto_melhor = gasto_outro;
       }
-      cout<< "aqui"<<endl;
+      
       adjacentes = adjacentes->getProx();
       while(adjacentes != NULL && verticesR->buscaVertice(adjacentes->getAdjacente()->getInfo()) != NULL){// para evitar que pegue um nó que ja está na solução
         adjacentes = adjacentes->getProx();              
       }
     }
-    cout<< "aqui 1"<<endl;
+    
     Vertice * melhorVertice = melhor->getAdjacente();
     verticesR->insereVertice(melhorVertice->getInfo(),melhorVertice->getPeso());  //coloca o vertice na arvore
     resultado->addAresta(p->getInfo(),melhorVertice->getInfo(),melhor->getPeso());  //cria aresta existente entre os vertices
@@ -1135,11 +1198,13 @@ Grafo * Grafo::guloso(string vertice_inicial){
   Lista * verticesR = resultado->getVertices();
   verticesR->insereVertice(vertice_aux->getInfo(),vertice_aux->getPeso()); // insere o vertice inicial na arvore
 
-  int count = 0;
-  int custo = auxGuloso(vertice_aux,resultado,count);
+  int count = 1;
+  vector<string> nosLidos;
+  nosLidos.push_back(vertice_aux->getInfo());
+  int custo = auxGuloso(vertice_aux,resultado, &count, &nosLidos);
   cout<<"numero de vertices na arvore: "<<(resultado->getVertices())->getQuantidade()<<endl;
   return resultado;
-}
+}*/
 
 /*---------------------------------------------------------------------------
   O Algoritmo Guloso Randomizado funciona recevendo um parametro alfa
