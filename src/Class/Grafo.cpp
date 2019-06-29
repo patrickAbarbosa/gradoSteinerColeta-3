@@ -181,8 +181,8 @@ void Grafo::leArquivo()
 }
 
 /*
- * imprimeGrafoPNG() cria o arquivo * .dot, usando o programa graphviz cria a imagem 
- * e depois exibe a imagem do grafo.
+ * imprimeGrafoPNG() cria o arquivo * .dot, usando o programa Graphviz cria e depois 
+ * exibe a imagem do grafo.
  */
 void Grafo::imprimeGrafoPNG()
 {
@@ -231,10 +231,9 @@ void Grafo::imprimeGrafoPNG()
 }
 
 /*
- * ExportaGrafo() Exporta os dados 
- * analizados durante a execução do
- * programa com determinada entrada
- */
+ * ExportaGrafo() Exporta os dados analizados durante a execução do
+ * programa com determinada entrada para um arquivo do tipo "".csv"
+ *
 /*
 void Grafo::exportaGrafo()
 {
@@ -248,6 +247,8 @@ void Grafo::exportaGrafo()
     cout << "Erro ao exportar! Grafo não encontrado." << endl;  
 }
 */
+
+
 /* MenuSelecionado  recebe um caracter que identifica
  * qual opção selecionada e requisita determinado
  * parametro caso precise.
@@ -663,21 +664,19 @@ bool Grafo::ehConexo()
 
   Vertice * p = vertices->getPrimeiro(); 
 
-  int cont = 0;
-  int conti = 0;
+  int contp = 0;
+  int contq = 0;
   while(p != NULL){
     Vertice * q = vertices->getPrimeiro();
-    cout << cont << endl;
+
     while(q!=NULL){ 
-      cout <<conti << endl;
       bool verif = buscaPorLargura(p->getInfo(),q->getInfo());
-      cout<< "verif "<<verif<<endl;
       if(verif == false)
         return false;
       q = q->getProx();
-      conti++;
+      contq++;
     }
-    cont++;
+    contp++;
     p = p->getProx();
   }
 
@@ -953,7 +952,7 @@ int Grafo::algoritmoFloyd(string origem, string destino){
 * estarem na arvore.
 */
 
-/*
+
 Arestas ** ordenaArestas(){
 
   Arestas ** p = new Aresta*[numeroArestas];
@@ -970,7 +969,7 @@ Arestas ** ordenaArestas(){
   }
   return p;
 }
-*/
+
 
 Grafo * Grafo::algoritmoKruskal(){
 
@@ -990,87 +989,6 @@ Grafo * Grafo::algoritmoKruskal(){
   }
 
   return arvore;
-}
-
-
-/*----------------------Algoritmo Guloso--------------------------
-  
-  O Algoritmo Guloso funciona usando ...
-  
-
-
-
-
-  Também temos uma função auxiliar custoSteiner(Grafo * arvore),
-  que é utilizada para encontrar o custo da arvore passada em 
-  relacao ao original.
-
- --------------------------Pseudocódigo--------------------------
-
-  Guloso(Vertice * p, Grafo * arvore):
-
-    se condição de parada então
-      retorne custoSteiner(resultado); //calcula e retorna o custo da arvore criada
-    fim-se
-
-    adjacentes <- p->getListaAdjacencia();
-    melhor <- adjacentes;
-    gasto_melhor <- melhor->getAdjacente()->getPeso() - melhor->getPeso();
-
-    enquanto adjacentes != NULL faça
-
-      gasto_outro <- adjacentes->getAdjacente()->getPeso() - adjacentes->getPeso();
-
-      se gasto_melhor > gasto_outro então    
-        melhor <- adjacentes;
-        gasto_melhor <- gasto_outro;
-      fim-se
-      
-      adjacentes <- adjacentes->getProx();              
-    fim-enquanto
-
-    listaVertices <- resultado->getVertices();
-    melhorVertice <- melhor->getAdjacente();
-
-    se o melhorVertice encontrado ja está na solucao então  
-      //ver a melhor forma de optimizar
-    fim-se
-    senão
-      insere o melhor vertice na arvore;
-      cria aresta existente entre os vertices;
-      retorne Guloso(melhorVertice, arvore);       
-    fim-se
-  fim
-
----------------------------------------------------------------------------*/
-
-int Grafo::custoSteiner (Grafo * arvore){
-  
-  int custo_arestas = 0;
-  int custo_nos = 0;
-  Lista * verticesA = arvore->getVertices();
-  Vertice * p = verticesA->getPrimeiro();
-
-  while(p != NULL){
-    
-    Aresta * t;
-
-    for(t = p->getListaAdjacencia(); t != NULL; t = t->getProx()){
-      custo_arestas+= t->getPeso();
-    }
-    p = p->getProx();
-  }
-  custo_arestas= custo_arestas/2;
-
-  p = vertices->getPrimeiro();
-
-  while(p != NULL){
-    if(vertices->buscaVertice(p->getInfo()) != NULL)
-      custo_nos+= p->getPeso();  
-    p = p->getProx();
-  }
-  cout<<"quantidade de vertices na arvore: "<<verticesA->getQuantidade()<<endl;
-  return custo_arestas + custo_nos;
 }
 
 Grafo * Grafo::gulosoRandomizado (float alfa){
