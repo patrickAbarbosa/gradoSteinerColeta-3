@@ -10,6 +10,8 @@
 
 #include <iostream>
 #include "src/Headers/Grafo.h"
+#include "src/Headers/Guloso.h"
+
 using namespace std;
 
 int main(int argc, char *argv[])
@@ -36,6 +38,12 @@ int main(int argc, char *argv[])
     break;
   }
 
+  Guloso guloso(a);
+
+  Grafo * agm = guloso.calculaGuloso("5");
+  agm->imprimeGrafoPNG();
+  delete agm;
+  return 0;  
   if (a)
   {
     a->menu();
