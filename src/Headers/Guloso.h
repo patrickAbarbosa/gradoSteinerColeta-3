@@ -4,7 +4,6 @@
 #include <iostream>
 #include "Vertice.h"
 #include "Grafo.h"
-#include "NoGuloso.h"
 
 using namespace std;
 
@@ -33,7 +32,7 @@ private:
 	// Guarda a informação dos vertices lidos
 	Vertice **vetInfoVertice;
 	// Guarda o vertor de aresta e vertice de partida
-	NoGuloso *vetArestaIncidente;
+	Aresta **vetArestaIncidente;
 
 	Grafo *grafo;
 

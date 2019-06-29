@@ -9,6 +9,7 @@
 #include "../Headers/Data.h"
 #include "../Headers/Fila.h"
 #include "../Headers/Vertice.h"
+#include "../Headers/Guloso.h"
 
 using namespace std;
 
@@ -153,6 +154,8 @@ void Grafo::leArquivo()
           line >> verticeA >> verticeB >> peso;
 
           addAresta(verticeA, verticeB, peso);
+          //if(!ehDigrafo)
+            //addAresta(verticeB, verticeA, peso);
         }
         else
         {
@@ -363,12 +366,16 @@ void Grafo::menuSelecionado(char a)
     string inicio;
     cout << "Digite o vertice de inicial: ";
     cin >> inicio;
-  
-    Grafo * aux = guloso(inicio);
+    Grafo *aux = new Grafo();
+    aux->vertices = vertices;
+    Guloso guloso(aux);
+    cout << "criou instancia do guloso"<< endl;
     
-    if (aux != NULL){
-      cout << "O custo foi:"<< custoSteiner(aux) << endl;
-      aux->imprimeGrafoPNG();
+    Grafo * auxG = guloso.calculaGuloso(inicio);
+    break;
+    if (auxG != NULL){
+      cout << "O custo foi:"<< custoSteiner(auxG) << endl;
+      auxG->imprimeGrafoPNG();
     }
     break;
   }
@@ -1050,6 +1057,7 @@ int Grafo::custoSteiner (Grafo * arvore){
 
 int Grafo::auxGuloso(Vertice * p, Grafo * resultado, int *count, vector<string> *nosLidos)
 {
+  /*
   if(p == NULL || nosLidos->size() == vertices->getQuantidade())
     return 0;
   
@@ -1099,6 +1107,8 @@ int Grafo::auxGuloso(Vertice * p, Grafo * resultado, int *count, vector<string> 
     auxGuloso(melhorVertice, resultado, count, nosLidos);
   }
   return soma;
+  */
+  return 0;
 }
 /*
 int Grafo::auxGuloso(Vertice * p, Grafo * resultado,int *count, vector<string> *nosLidos){
@@ -1200,7 +1210,7 @@ Grafo * Grafo::guloso(string vertice_inicial){
 ---------------------------------------------------------------------------*/
 
 Grafo * Grafo::gulosoRandomizado (float alfa){
-
+/*
   srand(time(NULL));
   int numeroInterecoes = 1000;  //quantidade de vezes que o algoritmo sera rodado
   Grafo * melhor = guloso(vertices->getPrimeiro()->getInfo());
@@ -1219,6 +1229,8 @@ Grafo * Grafo::gulosoRandomizado (float alfa){
   }
 
   return melhor;
+  */
+ return NULL;
 }
 
 // https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-10-S1-S27
