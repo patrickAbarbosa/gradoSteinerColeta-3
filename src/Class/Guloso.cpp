@@ -107,8 +107,8 @@ Grafo* Guloso::geraGrafo()
     cout << "Origem: " << vetArestaIncidente[i]->getOrigem()->getInfo();
     cout << " Destino: " << vetArestaIncidente[i]->getAdjacente()->getInfo() << endl;
     aux->addAresta(vetArestaIncidente[i]->getOrigem()->getInfo(), 
-                   vetArestaIncidente[i]->getAdjacente()->getInfo(),
-                   vetArestaIncidente[i]->getPeso());
+    vetArestaIncidente[i]->getAdjacente()->getInfo(),
+    vetArestaIncidente[i]->getPeso());
   }
     
   // Retorna Grafo gerado 

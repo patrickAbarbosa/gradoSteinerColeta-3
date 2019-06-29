@@ -42,14 +42,7 @@ public:
 
   int algoritmoFloyd(string origem, string destino);
   int auxFloyd(Vertice *p, Vertice* destino);
-  //resolucao do problema de steiner
 
-  int custoSteiner (Grafo * arvore);
-  int auxGuloso(Vertice * p, Grafo * resultado, int *count, vector<string> *nosLidos);
-  Grafo * guloso(string vertice_inicial);
-  Grafo * gulosoRandomizado (float alfa);
-  // Método para encontrar a melhor solução do Grafo de maneira Gulosa Randomicamente Reativa
-  Grafo * gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco);
   
   private:
     Lista  *vertices; // Vetor com os vertices do Grafo

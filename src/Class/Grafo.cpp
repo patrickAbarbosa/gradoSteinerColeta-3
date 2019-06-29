@@ -364,7 +364,7 @@ void Grafo::menuSelecionado(char a)
     break;
   }
   case '9':
-  {
+  {/*
     string inicio;
     cout << "Digite o vertice de inicial: ";
     cin >> inicio;
@@ -376,9 +376,8 @@ void Grafo::menuSelecionado(char a)
     Grafo * auxG = guloso.calculaGuloso(inicio);
     break;
     if (auxG != NULL){
-      cout << "O custo foi:"<< custoSteiner(auxG) << endl;
       auxG->imprimeGrafoPNG();
-    }
+    }*/
     break;
   }
   case '0':
@@ -406,14 +405,14 @@ void Grafo::menuSelecionado(char a)
   }
   case 'c': 
   {
-    cout<<"custoSteiner: "<< custoSteiner(this)<<endl;
+    //cout<<"custoSteiner: "<< custoSteiner(this)<<endl;
     break;
   }
   case 'd': 
   {
     float alpha[3] = {0.1,0.2,0.3};
-    Grafo * aux = gulosoRandomizadoReativo(alpha,3,5000,100);
-    cout<<"custo do guloso randomizado: "<<custoSteiner(aux)<<endl;
+    //Grafo * aux = gulosoRandomizadoReativo(alpha,3,5000,100);
+    //cout<<"custo do guloso randomizado: "<<custoSteiner(aux)<<endl;
     break;
   }
   default:
@@ -958,8 +957,7 @@ int Grafo::algoritmoFloyd(string origem, string destino){
 * algoritmoKruskal() ir pegando a menor aresta sem formar ciclo, até todos os vertices
 * estarem na arvore.
 */
-
-
+/*
 Arestas ** ordenaArestas(){
 
   Arestas ** p = new Aresta*[numeroArestas];
@@ -975,7 +973,7 @@ Arestas ** ordenaArestas(){
     q = q->getProx();
   }
   return p;
-}
+}*/
 
 
 Grafo * Grafo::algoritmoKruskal(){
@@ -996,130 +994,4 @@ Grafo * Grafo::algoritmoKruskal(){
   }
 
   return arvore;
-}
-
-Grafo * Grafo::gulosoRandomizado (float alfa){
-/*
-  srand(time(NULL));
-  int numeroInterecoes = 1000;  //quantidade de vezes que o algoritmo sera rodado
-  Grafo * melhor = guloso(vertices->getPrimeiro()->getInfo());
-  int vertice_randomizado = (rand()%numeroVertices)*alfa; 
-  Vertice * p = buscaVertice(vertice_randomizado);
-
-  for(int i = 0; i<numeroInterecoes;i++){
-    
-    Grafo * aux = guloso(p->getInfo());
-
-    if(custoSteiner(aux) < custoSteiner(melhor))
-      melhor = aux;
-
-    vertice_randomizado = (rand()%numeroVertices) * alfa;
-    p = buscaVertice(vertice_randomizado);
-  }
-
-  return melhor;
-  */
- return NULL;
-}
-/*
-  https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-10-S1-S27
-  PDF: https://bmcbioinformatics.biomedcentral.com/track/pdf/10.1186/1471-2105-10-S1-S27
-
-  GRASP Reativo
-
-  Recebe um vetor de alphas, seu tamanho, a quantidade de vezes que o algoritimo vai ser
-  rodado (periodos) e o tamanho do bloco, ... continuar explicando
-
- */
-
-Grafo *Grafo::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco)
-{
-  int nInteracoes = 0;
-  int  custo = -1;
-  int nVertices = 0;
-  
-  if(vertices == NULL) //caso o grafo nao tenha vertices
-    return NULL;
-
-  if(vertices != NULL && numeroArestas == 0)//caso grafo seja vazio
-  {
-    cout << "Alpha: 0" << endl;
-    Grafo *result = new Grafo();
-    Vertice *maiorGrau = vertices->getMaiorGrau(); 
-    result->vertices->insereVertice(maiorGrau->getInfo(), maiorGrau->getPeso());
-    return result;
-  }
-
-  float custoMax = 0; //custo base
-
-  for(Vertice * p = vertices->getPrimeiro(); p != NULL; p = p->getProx()) //somatorio custo base
-    custoMax += p->getPeso();
-
-  // Maior custo da solução
-  custo = custoMax;
-
-  // Definição de variáveis para auxiliar
-  int n = 0, aleatorio = 0;
-  float probabilidade[nAlphas] = { float(1/ nAlphas) }; //Inicia o verot com distribuição unifome
-  float chances[nAlphas];
-  float media[nAlphas] = {0};
-  float soma[nAlphas] = {0};
-
-  float sum;
-  float sum_chances;
-  
-  Grafo *result = NULL;
-
-  for(int i = 0; i < periodos; i++)
-  {
-    aleatorio = rand() % 101;
-    sum = 0;
-    n = 0;
-
-    for(sum += probabilidade[n] * 100; n < nAlphas && sum < aleatorio; n++)
-      sum += probabilidade[n] * 100;
-    
-    cout << "Alpha: " << alpha[n] << endl;
-    cout << "Interacao: " << i + 1 << endl;
-    Grafo *grafoAux = gulosoRandomizado(alpha[n]);
-
-    int custoAux = custoSteiner(grafoAux);
-    
-    if(result && custo)
-    {
-      if(custo > custoAux)
-      {
-        custo = custoAux;
-        delete result;
-        result = grafoAux;
-      }
-      else 
-        delete grafoAux;
-    }
-    else
-    {
-      custo = custoAux;
-      result = grafoAux;
-    }
-    soma[i] = custo;
-
-    if(i % bloco == 0) //quando o indice chega no tamanho do bloco atualiza as chances e media
-    {
-      sum_chances = 0;
-
-      for(int j = 0; j < nAlphas; j++)
-      {
-        media[j] = soma[j] / i;
-
-        if(media > 0)
-          chances[j] = custo / media[j];
-        else
-          chances[j] = 0.000001;
-        
-        sum_chances += chances[j];
-
-      }
-    }
-  }
-  return NULL; 
 }
