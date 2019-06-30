@@ -8,6 +8,7 @@
 #include "../Headers/Lista.h"
 #include "../Headers/Data.h"
 #include "../Headers/Fila.h"
+#include "../Headers/Aresta.h"
 #include "../Headers/Vertice.h"
 #include "../Headers/Guloso.h"
 
@@ -660,8 +661,7 @@ Vertice** Grafo::montaVetorVertices(int *cont, int tam){
  */
 bool Grafo::ehConexo()
 {
-  if (vertices == NULL|| numeroVertices == 0)
-  {
+  if(vertices == NULL|| numeroVertices == 0){
     cout << "Grafo vazio" << endl;
     return false;
   }
@@ -770,12 +770,10 @@ Vertice** Grafo::ordenacaoTopologica()
  * */
 ///melhorar esse comenntário
 
-bool Grafo::buscaPorLargura(string verticeInicial,string verticeFinal)
-{
+bool Grafo::buscaPorLargura(string verticeInicial,string verticeFinal){
+
   Vertice *p = vertices->buscaVertice(verticeInicial);
   Vertice *q = vertices->buscaVertice(verticeInicial);
-  cout<<"verticeInicial "<<verticeInicial<<endl;
-  cout<<"verticeFinal " <<verticeFinal<<endl;
 
   if (p == NULL || q == NULL){
     cout << "Vertice nao encontrado!" << endl;
@@ -790,29 +788,23 @@ bool Grafo::buscaPorLargura(string verticeInicial,string verticeFinal)
   {
     p = aux->retira();
     Aresta *t = p->getListaAdjacencia();
-    cout<<"aqui 0"<<endl;
 
     if(p->getInfo() == verticeFinal){
       return true;
     }
-    cout<<"aqui 1"<<endl;
+
     if(!isVector(&nosLidos,p->getInfo())){
       nosLidos.push_back(p->getInfo());
     }    
 
     while(t != NULL){
-      cout<<"adjacente "<< t->getAdjacente()->getInfo()<<endl;
-      cout<<"final "<<verticeFinal<<endl;
       if(t->getAdjacente()->getInfo() == verticeFinal){
-        cout<<"bugou aqui"<<endl;
         return true;
       }
-      cout<<"aqui 3"<<endl;
       if(!isVector(&nosLidos,t->getAdjacente()->getInfo())){
         aux->insere(t->getAdjacente());
       }
       t = t->getProx();
-      
     }
   }
   return false;
@@ -957,24 +949,44 @@ int Grafo::algoritmoFloyd(string origem, string destino){
 * algoritmoKruskal() ir pegando a menor aresta sem formar ciclo, até todos os vertices
 * estarem na arvore.
 */
-/*
-Arestas ** ordenaArestas(){
 
-  Arestas ** p = new Aresta*[numeroArestas];
+Aresta ** Grafo::ordenaArestas(){
+
+  Aresta ** p = new Aresta*[numeroArestas];
   int count = 0;
   p[0] = menorValor;
   count ++;
-  Vertice * q = vertices;
+  Vertice * q = vertices->getPrimeiro();
 
   while(count != numeroArestas){
     for(Aresta * aux = q->getListaAdjacencia(); aux!=NULL; aux = aux->getProx()){
-
+      if(aux->getAdjacente()->getInfo() > to_string(count))//if necessario para a forma que as arestas sao feitas nao ficar duplicadas
+        p[count] = aux;
     }
     q = q->getProx();
+    count ++;
+  }
+  for(int i = 0;i < numeroArestas;i++){
+    for(int j = 0; j<numeroArestas;j++){
+      if(p[j]->getPeso() < p[j+1]->getPeso()){
+        Aresta * aux = p[j];
+        p[j] = p[j+1];
+        p[j+1] = aux;
+      }
+    }
   }
   return p;
-}*/
+}
 
+bool Grafo::loop(string p, string q){
+
+  if(vertices->buscaVertice(p) == NULL|| vertices->buscaVertice(q) == NULL)
+    return false;
+  if(buscaPorLargura(p,q))
+    return true;
+  else 
+    return false;
+}
 
 Grafo * Grafo::algoritmoKruskal(){
 
@@ -982,16 +994,25 @@ Grafo * Grafo::algoritmoKruskal(){
   Lista * arv_vertices = arvore->getVertices();
   Vertice * p = menorValor->getOrigem();
   Vertice * q = menorValor->getAdjacente();
-  //Aresta ** listaOrdena = ordenaArestas();
+  Aresta ** listaOrdena = ordenaArestas();
 
   arv_vertices->insereVertice(p->getInfo(),p->getPeso());
   arv_vertices->insereVertice(q->getInfo(),q->getPeso());
   arvore->addAresta(p->getInfo(), q->getInfo(), menorValor->getPeso());
 
-  while(arv_vertices->getQuantidade()!=numeroVertices)
-  {
+  for(int i = 1;arv_vertices->getQuantidade()!=numeroVertices;i++){
+    p = listaOrdena[i]->getOrigem();   
+    q = listaOrdena[i]->getAdjacente();
 
+    if(vertices->buscaVertice(p->getInfo()) == NULL){
+      arv_vertices->insereVertice(p->getInfo(),p->getPeso());
+    }
+    if(vertices->buscaVertice(q->getInfo()) == NULL){
+      arv_vertices->insereVertice(q->getInfo(),q->getPeso());
+    }
+    if(loop(p->getInfo(),q->getInfo()) == false){
+      arvore->addAresta(p->getInfo(), q->getInfo(), menorValor->getPeso());
+    }
   }
-
   return arvore;
 }

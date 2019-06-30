@@ -39,6 +39,8 @@ public:
   int algoritmoDijkstra(string origem, string destino);
   Grafo* algoritmoPrim();
   Grafo * algoritmoKruskal();
+  Aresta ** ordenaArestas(){};
+  bool loop(string p, string q){};
 
   int algoritmoFloyd(string origem, string destino);
   int auxFloyd(Vertice *p, Vertice* destino);
