@@ -978,7 +978,7 @@ Aresta ** Grafo::ordenaArestas(){
   return p;
 }
 
-bool Grafo::loop(string p, string q){
+bool Grafo::ciclo(string p, string q){
 
   if(vertices->buscaVertice(p) == NULL|| vertices->buscaVertice(q) == NULL)
     return false;
@@ -1010,7 +1010,7 @@ Grafo * Grafo::algoritmoKruskal(){
     if(vertices->buscaVertice(q->getInfo()) == NULL){
       arv_vertices->insereVertice(q->getInfo(),q->getPeso());
     }
-    if(loop(p->getInfo(),q->getInfo()) == false){
+    if(ciclo(p->getInfo(),q->getInfo()) == false){
       arvore->addAresta(p->getInfo(), q->getInfo(), menorValor->getPeso());
     }
   }
