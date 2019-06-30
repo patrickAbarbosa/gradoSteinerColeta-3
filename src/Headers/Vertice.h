@@ -35,8 +35,8 @@ class Vertice{
 		int tamCaminho;
 		string info;
 		Vertice * proximo;
-    	Aresta * listaAdjacencia;
-     
+    Aresta * listaAdjacencia;
+ 
 };
 
 #endif //VERTICE_H_INCLUDED

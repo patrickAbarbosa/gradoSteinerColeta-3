@@ -38,8 +38,9 @@ private:
 
 	// verifica se o vertice foi lido e retorna sua posição
 	int lido(string val);
-	void auxCalculaGuloso(Vertice *atual);
+	void auxCalculaGuloso(Vertice *atual, int *n);
 	//Gera a AGM a partir do Grafo
 	Grafo *geraGrafo();
+	
 };
 #endif // GULOSO_H

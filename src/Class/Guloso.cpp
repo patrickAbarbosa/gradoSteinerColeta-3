@@ -12,8 +12,8 @@ Guloso::Guloso(Grafo *g)
 {
   grafo = g;
   tam = grafo->getVertices()->getQuantidade();
-  ultimo = -1;
-  ultimoNoGuloso = -1;
+  ultimo = 0;
+  ultimoNoGuloso = 0;
   //Inicia o vetor de vertices lidos
   vetInfoVertice = new Vertice*[tam];
   //Inicia o vetor de aresta no grafo
@@ -34,7 +34,7 @@ Guloso::~Guloso()
 
 int Guloso::lido(string val)
 {
-  if(ultimo != -1)
+  if(ultimo != 0)
     for(int i = 0; i < ultimo; i++)
       if(vetInfoVertice[i]->getInfo() == val)
         return i;
@@ -43,7 +43,7 @@ int Guloso::lido(string val)
   return -1;
 }
 
-void Guloso::auxCalculaGuloso(Vertice *atual)
+void Guloso::auxCalculaGuloso(Vertice *atual, int *n)
 {
   if(atual == NULL)
     return;
@@ -51,31 +51,41 @@ void Guloso::auxCalculaGuloso(Vertice *atual)
   // else
   for(Aresta *aresta = atual->getListaAdjacencia(); aresta != NULL; aresta = aresta->getProx())
   {
+    (*n)++;
     // Guarda o endereço do vertice adjacente;
     Vertice *adjacente = aresta->getAdjacente();
-    
-    if(aresta->getPeso() < adjacente->getPeso())
+    if(adjacente == NULL)
+      cout << "Merda" << endl;
+    if(aresta->getPeso() < adjacente->getPeso() || custoSolucao < custoPagar)
     {
+      cout << "IF" << endl;
+      cout << "Aresta com: " << aresta->getAdjacente()->getInfo() << endl;
       int aux = lido(adjacente->getInfo());
-
+      cout << "Voutou" << endl;
+      cout << "n: " << *n << endl; 
       if(aux == -1)
       {
+        cout << "ADD: " << adjacente->getInfo() << endl;
+        
         // Atualiza o custo da solução
         custoSolucao +=  aresta->getPeso();
+        custoPagar -= adjacente->getPeso();
         // Ultimo passa ser ultimo + 1
-        ultimo++;
         // Atualiza o ultimo valor da lusta com a informação do vertice
         vetInfoVertice[ultimo] = adjacente;
+        ultimo++;
         
         // UltimoNoGuloso de aresta passa ser ultimoNoGuloso + 1
-        ultimoNoGuloso++;
         vetArestaIncidente[ultimoNoGuloso] = aresta;
-        auxCalculaGuloso(adjacente);
+        ultimoNoGuloso++;
+        auxCalculaGuloso(adjacente, n);
       }
       else
       {
-        if(adjacente->getInfo() != vetInfoVertice[0]->getInfo() && aresta->getPeso() < vetArestaIncidente[aux]->getPeso())
+        cout << "Está no vetor" << endl;
+        if(aux != 0 && vetArestaIncidente[aux] != NULL && aresta != NULL && aresta->getPeso() < vetArestaIncidente[aux]->getPeso())
         {
+          cout << "Troca Aresta: " << adjacente->getInfo() << endl;
           // Atualiza o custo da solução
           custoSolucao -=  vetArestaIncidente[aux]->getAdjacente()->getPeso() - aresta->getPeso();
           vetArestaIncidente[aux] = aresta;
@@ -94,26 +104,18 @@ Grafo* Guloso::geraGrafo()
 
   // adiciona todos os vertices na solução
   for(int i = 0; i < ultimo; i++)
-  {
-    cout << "Vertice: " << vetInfoVertice[i]->getInfo();
-    cout << " Peso: " << vetInfoVertice[i]->getPeso() << endl;
     lista->insereVertice(vetInfoVertice[i]->getInfo(), vetInfoVertice[i]->getPeso());
-  }
-    
   
   // Adiciona as arestas na solução AGM
   for(int i = 1; i < ultimoNoGuloso; i++)
-  {
-    cout << "Origem: " << vetArestaIncidente[i]->getOrigem()->getInfo();
-    cout << " Destino: " << vetArestaIncidente[i]->getAdjacente()->getInfo() << endl;
     aux->addAresta(vetArestaIncidente[i]->getOrigem()->getInfo(), 
                    vetArestaIncidente[i]->getAdjacente()->getInfo(),
                    vetArestaIncidente[i]->getPeso());
-  }
-    
+
   // Retorna Grafo gerado 
   return aux;
 }
+
 
 Grafo* Guloso::calculaGuloso(string verticeInicial)
 {
@@ -122,21 +124,24 @@ Grafo* Guloso::calculaGuloso(string verticeInicial)
   if(grafo == NULL)
     return NULL;
 
-  cout << "Busca o no inicial" << endl;
   // Busca o vertice inicial desejado
   Vertice *inicio = grafo->getVertices()->buscaVertice(verticeInicial);
-  cout << "Oi" << endl;
+
   // Verifica se o vertice inicial foi encontrado, caso não seja, o calculo da AGM começa
   // a partir do primeiro vertice
   if(inicio == NULL)
     inicio = grafo->getVertices()->getPrimeiro();
 
-  cout << "Oi1" << endl;
+  // adiciona o inicio da AGM
+  vetInfoVertice[0] = inicio;
+  ultimo = 1;
+  ultimo = 1;
   // Calcula AMG
-    auxCalculaGuloso(inicio);
-  for(Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
-    auxCalculaGuloso(aux);
-  cout << "Oi2" << endl;
+  int n = 0;
+  auxCalculaGuloso(inicio, &n);
+  cout << "# 139" <<endl;
+  //for(Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
+    //auxCalculaGuloso(aux);
   // Recebe o grafo gerado a partir dos calculos do Guloso
   Grafo *agm = geraGrafo();
   

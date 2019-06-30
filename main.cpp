@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
   switch (argc)
   {
   case 1:
-    a = new Grafo();
+    a = new Grafo("K400.3.con.red");
     break;
   case 2:
     a = new Grafo(argv[1]);
