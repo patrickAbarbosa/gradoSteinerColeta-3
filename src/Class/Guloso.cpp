@@ -120,15 +120,15 @@ Grafo* Guloso::geraGrafo()
     lista->insereVertice(vetInfoVertice[i]->getInfo(), vetInfoVertice[i]->getPeso());
   
   // Adiciona as arestas na solução AGM
-  for(int i = 1; i < ultimoNoGuloso; i++)
+  for(int i = 1; i < ultimoNoGuloso; i++){
     aux->addAresta(vetArestaIncidente[i]->getOrigem()->getInfo(), 
-                   vetArestaIncidente[i]->getAdjacente()->getInfo(),
-                   vetArestaIncidente[i]->getPeso());
+    vetArestaIncidente[i]->getAdjacente()->getInfo(),
+    vetArestaIncidente[i]->getPeso());
+  }
 
   // Retorna Grafo gerado 
   return aux;
 }
-
 
 Grafo* Guloso::calculaGuloso(string verticeInicial)
 {
