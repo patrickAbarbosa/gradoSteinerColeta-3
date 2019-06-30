@@ -43,13 +43,17 @@ public:
   int algoritmoFloyd(string origem, string destino);
   int auxFloyd(Vertice *p, Vertice* destino);
 
-  
+  void setCusto(int i){ custo = i;} 
+  int getCusto(){ return custo;}
+  int getNumeroVertices(){ return numeroVertices; }
+
   private:
     Lista  *vertices; // Vetor com os vertices do Grafo
  
     string *arquivoIn; // Estacia de entrada
     string *arquivoOut; // Dados pra saida
-    
+
+    int custo;
     int numeroArestas;
     int numeroVertices;
     int quantidadeGrausZero;

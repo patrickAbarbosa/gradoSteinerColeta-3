@@ -34,10 +34,14 @@ Guloso::~Guloso()
 
 int Guloso::lido(string val)
 {
-  if(ultimo != -1)
-    for(int i = 0; i < ultimo; i++)
-      if(vetInfoVertice[i]->getInfo() == val)
+  if(ultimo != -1){
+    for(int i = 0; i < ultimo; i++){
+      if(vetInfoVertice[i]->getInfo() == val){
         return i;
+      }
+    }
+  }
+    
   
   // else
   return -1;
@@ -95,8 +99,6 @@ Grafo* Guloso::geraGrafo()
   // adiciona todos os vertices na solução
   for(int i = 0; i < ultimo; i++)
   {
-    cout << "Vertice: " << vetInfoVertice[i]->getInfo();
-    cout << " Peso: " << vetInfoVertice[i]->getPeso() << endl;
     lista->insereVertice(vetInfoVertice[i]->getInfo(), vetInfoVertice[i]->getPeso());
   }
     
@@ -176,21 +178,132 @@ Grafo* Guloso::calculaGuloso(string verticeInicial)
   cout << "Busca o no inicial" << endl;
   // Busca o vertice inicial desejado
   Vertice *inicio = grafo->getVertices()->buscaVertice(verticeInicial);
-  cout << "Oi" << endl;
   // Verifica se o vertice inicial foi encontrado, caso não seja, o calculo da AGM começa
   // a partir do primeiro vertice
   if(inicio == NULL)
     inicio = grafo->getVertices()->getPrimeiro();
 
-  cout << "Oi1" << endl;
   // Calcula AMG
-    auxCalculaGuloso(inicio);
+  
+  auxCalculaGuloso(inicio);
   for(Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
     auxCalculaGuloso(aux);
-  cout << "Oi2" << endl;
   // Recebe o grafo gerado a partir dos calculos do Guloso
   Grafo *agm = geraGrafo();
   
   // Retorna a agm do Grafo
-  return agm;
+  agm->setCusto(custoSolucao);
+  return agm; 
 }
+
+/*---------------------------------------------------------------------------
+  O Algoritmo Guloso Randomizado funciona recevendo um parametro alfa
+  que é utilizado para auxilar na randomização
+---------------------------------------------------------------------------*/
+
+Grafo * Guloso::gulosoRandomizado (float alfa){
+
+  srand(time(NULL));
+  int numeroInterecoes = 1000;  //quantidade de vezes que o algoritmo sera rodado
+  Grafo * melhor = calculaGuloso(grafo->getVertices()->getPrimeiro()->getInfo());
+  int vertice_randomizado = (rand()%grafo->getNumeroVertices())*alfa; 
+  Vertice * p = grafo->buscaVertice(vertice_randomizado);
+
+  for(int i = 0; i<numeroInterecoes;i++){
+    
+    Grafo * aux = calculaGuloso(p->getInfo());
+
+    if(aux->getCusto() < melhor->getCusto())
+      melhor = aux;
+
+    vertice_randomizado = (rand()%grafo->getNumeroVertices()) * alfa;
+    p = grafo->buscaVertice(vertice_randomizado);
+  }
+
+  return melhor;
+}
+
+// https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-10-S1-S27
+//// PDF: https://bmcbioinformatics.biomedcentral.com/track/pdf/10.1186/1471-2105-10-S1-S27
+
+// GRASP Reativo
+/*
+Grafo *Grafo::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco)
+{
+  int nInteracoes = 0;
+  int  custo = -1;
+  int nVertices = 0;
+  
+  if(vertices == NULL)
+    return NULL;
+  if(vertices != NULL && numeroArestas == 0)
+  {
+    cout << "Alpha: 0" << endl;
+    Grafo *result = new Grafo();
+    Vertice *maiorGrau = vertices->getMaiorGrau(); 
+    result->vertices->insereVertice(maiorGrau->getInfo(), maiorGrau->getPeso());
+    return result;
+  }
+  float custoMax = 0;
+  for(Vertice * p = vertices->getPrimeiro(); p != NULL; p = p->getProx())
+    custoMax += p->getPeso();
+  // Maior custo da solução
+  custo = custoMax;
+  // Definição de variáveis para auxiliar
+  int n = 0, aleatorio = 0;
+  float probabilidade[nAlphas] = { 1/ nAlphas }; //Inicia o verot com distribuição unifome
+  float chances[nAlphas];
+  float media[nAlphas] = {0};
+  float soma[nAlphas] = {0};
+  float sum;
+  float sum_chances;
+  
+  Grafo *result = NULL;
+  for(int i = 0; i < periodos; i++)
+  {
+    aleatorio = rand() % 101;
+    sum = 0;
+    n = 0;
+    for(sum += probabilidade[n] * 100; n < nAlphas && sum < aleatorio; n++)
+      sum += probabilidade[n] * 100;
+    
+    cout << "Alpha: " << alpha[n] << endl;
+    cout << "Interacao: " << i + 1 << endl;
+    Grafo *grafoAux = gulosoRandomizado(alpha[n]);
+    int custoAux = custoSteiner(grafoAux);
+    
+    if(result && custo)
+    {
+      if(custo > custoAux)
+      {
+        custo = custoAux;
+        delete result;
+        result = grafoAux;
+      }
+      else 
+        delete grafoAux;
+    }
+    else
+    {
+      custo = custoAux;
+      result = grafoAux;
+    }
+    soma[i] = custo;
+    if(i % bloco == 0)
+    {
+      sum_chances = 0;
+      for(int j = 0; j < nAlphas; j++)
+      {
+        media[j] = soma[j] / i;
+        if(media > 0)
+          chances[j] = custo / media[j];
+        else
+          chances[j] = 0.000001;
+        
+        sum_chances += chances[j];
+      }
+    }
+  }
+  return NULL; 
+}
+*/

@@ -16,6 +16,7 @@ public:
 	int calculaCustoGrafo(Grafo *g);
 
 	Grafo *calculaGuloso(string verticeInicial);
+	Grafo * gulosoRandomizado (float alfa);
 
 private: 
 	// Guarda o custo total da solução
