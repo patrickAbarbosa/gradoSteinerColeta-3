@@ -878,21 +878,32 @@ Grafo * Grafo::algoritmoPrim(){
     cout<<"quantidade de vertices: "<<arv_vertices->getQuantidade()<<endl;
     Vertice * t = arv_vertices->getPrimeiro();
     Aresta * aux_aresta;
+    cout<<"aqui"<<endl;
+    while(t != NULL){
+      Vertice * w = vertices->buscaVertice(t->getInfo());
+      aux_aresta = w->getListaAdjacencia();
 
-    while(t!=NULL){
+      while(aux_aresta != NULL && arv_vertices->buscaVertice(aux_aresta->getAdjacente()->getInfo()) != NULL)
+        aux_aresta = aux_aresta->getProx(); 
 
-      aux_aresta = t->getListaAdjacencia();
-      for(Aresta * aux = aux_aresta->getProx(); aux!= NULL; aux = aux->getProx()){
-        if(aux_aresta->getPeso() > aux->getPeso()){
-          if(arv_vertices->buscaVertice(aux->getAdjacente()->getInfo()) == NULL)
-            aux_aresta = aux;
+      if(aux_aresta != NULL){
+        for(Aresta * aux = aux_aresta->getProx(); aux!= NULL; aux = aux->getProx()){
+          if(aux_aresta->getPeso() > aux->getPeso()){
+            if(arv_vertices->buscaVertice(aux->getAdjacente()->getInfo()) == NULL)
+              aux_aresta = aux;
+          }
         }
       }
       t = t->getProx();
     }
-    Vertice * vertice_auxiliar = aux_aresta->getAdjacente();
-    arv_vertices->insereVertice(vertice_auxiliar->getInfo(),vertice_auxiliar->getPeso());
-    arvore->addAresta(aux_aresta->getOrigem()->getInfo(),aux_aresta->getAdjacente()->getInfo(),aux_aresta->getPeso());
+    if(aux_aresta != NULL){
+      cout<<"aqui 4"<<endl;
+      Vertice * vertice_auxiliar = aux_aresta->getAdjacente();
+      arv_vertices->insereVertice(vertice_auxiliar->getInfo(),vertice_auxiliar->getPeso());
+      arvore->addAresta(aux_aresta->getOrigem()->getInfo(),aux_aresta->getAdjacente()->getInfo(),aux_aresta->getPeso());
+      cout<<"aqui 5"<<endl;
+      //arvore->imprimeGrafoPNG();
+    }
   }
   return arvore; 
 }
