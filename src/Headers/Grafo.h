@@ -28,6 +28,7 @@ public:
   void menuSelecionado(char a);
   void menu();
   Lista * getVertices(){ return vertices;}
+  Aresta * getMenorValor(){ return menorValor;}
 
   void atualizaMaiorgrau();
   Vertice * buscaVertice(int i);

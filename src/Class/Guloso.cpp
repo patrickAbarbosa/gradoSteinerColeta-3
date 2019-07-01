@@ -111,139 +111,65 @@ bool Guloso::arestaLida(Aresta * a){
 
 }
 
-void Guloso::auxCalculaGuloso(Vertice *atual){
-  if(atual == NULL)
-    return;
-  cout << "Atual: " << atual->getInfo() << endl;
-  // else
-  for(Aresta * aresta = atual->getListaAdjacencia(); aresta != NULL; aresta = aresta->getProx()){
-    
-    while(arestaLida(aresta) && aresta !=NULL)
-      aresta = aresta->getProx();
-    if(aresta == NULL){
-      auxCalculaGuloso(atual->getProx());
-    }
-    // Guarda o endereço do vertice adjacente;
-    Vertice *adjacente = aresta->getAdjacente();
-    cout<<"adjacente: "<<adjacente->getInfo()<<endl;
-    if(aresta->getPeso() < adjacente->getPeso()){
+Grafo * Guloso::algoritmoPrim(Vertice * inicial){
 
-      int aux = lido(adjacente->getInfo());
+  Grafo * arvore = new Grafo ();
+  Lista * arv_vertices = arvore->getVertices();
 
-      if(aux == -1){
+  arv_vertices->insereVertice(inicial->getInfo(),inicial->getPeso());
 
-        cout << "ADD: " << adjacente->getInfo() << endl;
-        // Atualiza o custo da solução
-        custoSolucao +=  aresta->getPeso();
-        custoPagar -= adjacente->getPeso();
-        // Ultimo passa ser ultimo + 1
-        // Atualiza o ultimo valor da lusta com a informação do vertice
-        vetInfoVertice[ultimo] = adjacente;
-        ultimo++;
+  while(custoPagar > custoSolucao){
+    Vertice * t = arv_vertices->getPrimeiro();
+    Aresta * aux_aresta = NULL;
 
-        // UltimoNoGuloso de aresta passa ser ultimoNoGuloso + 1
-        vetArestaIncidente[ultimaAresta] = aresta;
+    while(t != NULL){
+      Vertice * w = grafo->getVertices()->buscaVertice(t->getInfo());
+      if(aux_aresta == NULL)
+        aux_aresta = w->getListaAdjacencia();
 
-        cout<<"aresta: "<< vetArestaIncidente[ultimaAresta]->getOrigem()->getInfo()<<" "
-                        << vetArestaIncidente[ultimaAresta]->getAdjacente()->getInfo()<<" "
-                        << vetArestaIncidente[ultimaAresta]->getPeso()<<endl;
-        cout<<"ultima Aresta: "<<ultimaAresta<< endl;
+      while(aux_aresta != NULL && arv_vertices->buscaVertice(aux_aresta->getAdjacente()->getInfo()) != NULL)
+        aux_aresta = aux_aresta->getProx(); 
 
-        ultimaAresta++;
-        
-        Grafo * isso = geraGrafo();
-        isso->imprimeGrafoPNG();
-        if(custoSolucao < custoPagar)
-          auxCalculaGuloso(adjacente);
-      }
-      else{
-        if(aresta->getPeso() < vetArestaIncidente[ultimaAresta]->getPeso()){
-          cout << "Troca Aresta: " << adjacente->getInfo() << endl;
-          // Atualiza o custo da solução
-          custoSolucao -= vetArestaIncidente[aux]->getAdjacente()->getPeso() - aresta->getPeso();
-
-          int m = lido(atual->getInfo());
-          int count = 0;
-          int arestas [2] = {0,0};
-          
-          for(int i = 0, j = 0; i < ultimaAresta;i++){
-            if(atual == vetArestaIncidente[i]->getOrigem() || atual == vetArestaIncidente[i]->getAdjacente()){
-              count++;
-              arestas [j] = i;
-              j++;
-            }
+      if(aux_aresta != NULL){
+        for(Aresta * aux = aux_aresta->getProx(); aux!= NULL; aux = aux->getProx()){
+          if(aux_aresta->getPeso() > aux->getPeso() && custoPagar > custoSolucao){
+            if(arv_vertices->buscaVertice(aux->getAdjacente()->getInfo()) == NULL)
+              aux_aresta = aux;
           }
-          if( count == 2){
-            ultimo--;
-            for(int i = m; i<ultimo; i++){ //retira o vertice do vetor
-              vetInfoVertice[i] = vetInfoVertice[i+1];
-            }
-          }
-          ultimaAresta = ultimaAresta-2;
-          for(int i = arestas[0]; i < ultimaAresta; i++){
-              vetArestaIncidente[i] = vetArestaIncidente[i+1];
-          }
-
-          vetArestaIncidente[ultimaAresta] = aresta;
-          ultimaAresta++;
-          Grafo * isso = geraGrafo();
-          isso->imprimeGrafoPNG();
-          if(custoSolucao < custoPagar)
-            auxCalculaGuloso(aresta->getAdjacente());
         }
-      }      
+      }
+      t = t->getProx();
+    }
+    if(aux_aresta != NULL){
+      Vertice * vertice_auxiliar = aux_aresta->getAdjacente();
+      arv_vertices->insereVertice(vertice_auxiliar->getInfo(),vertice_auxiliar->getPeso());
+      //atualiza custo
+      custoSolucao +=aux_aresta->getPeso();
+      custoPagar -= vertice_auxiliar->getPeso();
+      arvore->addAresta(aux_aresta->getOrigem()->getInfo(),aux_aresta->getAdjacente()->getInfo(),aux_aresta->getPeso());
     }
   }
+  return arvore; 
 }
 
-// Gera o grafo a partir da AGM
-Grafo* Guloso::geraGrafo(){
-
-  Grafo *aux = new Grafo();
-  // Lista de vertice
-  Lista *lista = aux->getVertices();
-
-  // adiciona todos os vertices na solução
-  for(int i = 0; i < ultimo; i++)
-    lista->insereVertice(vetInfoVertice[i]->getInfo(),vetInfoVertice[i]->getPeso());
-
-  // Adiciona as arestas na solução Arvore Minima
-  for(int i = 0; i < ultimaAresta; i++){
-    aux->addAresta(vetArestaIncidente[i]->getOrigem()->getInfo(), 
-    vetArestaIncidente[i]->getAdjacente()->getInfo(),
-    vetArestaIncidente[i]->getPeso());
-  }
-
-  return aux;
-}
-
-Grafo* Guloso::calculaGuloso(string verticeInicial)
-{
+Grafo* Guloso::calculaGuloso(string verticeInicial){
 
   // Verifica se o grafo não possui vertice
   if(grafo == NULL)
     return NULL;
 
-  cout << "Busca o no inicial" << endl;
   // Busca o vertice inicial desejado
   Vertice *inicio = grafo->getVertices()->buscaVertice(verticeInicial);
   // Verifica se o vertice inicial foi encontrado, caso não seja, o calculo da AGM começa
   // a partir do primeiro vertice
-  if(inicio == NULL)
+  if(inicio == NULL){
+    cout<<"ERRO!!! Vertice nao encontrando, será utilizado o primerio vertice da lista"<<endl;
     inicio = grafo->getVertices()->getPrimeiro();
-
-  vetInfoVertice[ultimo] = inicio;
-  ultimo ++;
+  }
   // Calcula Arvore Minima
-  auxCalculaGuloso(inicio);
-  for(Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
-    auxCalculaGuloso(aux);
-  // Recebe o grafo gerado a partir dos calculos do Guloso
-  Grafo *am = geraGrafo();
-  
+  Grafo * aux = algoritmoPrim(inicio);
   // Retorna a arvore minima do Grafo
-  am->setCusto(custoSolucao);
-  return am; 
+  return aux; 
 }
 
 /*---------------------------------------------------------------------------
