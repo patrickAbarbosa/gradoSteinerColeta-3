@@ -38,6 +38,21 @@ int main(int argc, char *argv[])
     break;
   }
 
+  /*
+  Vertice * p  = a->getVertices()->getPrimeiro();
+  while(p!=NULL){
+    cout<<"p: "<<p->getInfo()<<endl;
+    for(Aresta * aux = p->getListaAdjacencia(); aux != NULL ; aux= aux->getProx()){
+      cout<<"aresta: "<<aux->getOrigem()->getInfo()<<" "
+                      <<aux->getAdjacente()->getInfo()<<" "
+                      <<aux->getPeso()<<endl;
+    }
+    p = p->getProx();
+  }*/
+  Grafo * teste = a->algoritmoPrim();
+  teste->imprimeGrafoPNG();
+
+  /*
   Guloso guloso(a);
 
   Grafo * agm = guloso.calculaGuloso("5");
@@ -48,6 +63,6 @@ int main(int argc, char *argv[])
   {
     a->menu();
     delete a;  
-  }
+  }*/
   return 0;
 }

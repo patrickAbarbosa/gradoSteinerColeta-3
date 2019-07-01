@@ -875,15 +875,14 @@ Grafo * Grafo::algoritmoPrim(){
   arvore->addAresta(p->getInfo(), q->getInfo(), menorValor->getPeso());
 
   while(arv_vertices->getQuantidade() != numeroVertices){
-
+    cout<<"quantidade de vertices: "<<arv_vertices->getQuantidade()<<endl;
     Vertice * t = arv_vertices->getPrimeiro();
     Aresta * aux_aresta;
 
     while(t!=NULL){
 
-      Aresta * aux = vertices->buscaVertice(t->getInfo())->getListaAdjacencia();
-
-      for(; aux!= NULL; aux = aux->getProx()){
+      aux_aresta = t->getListaAdjacencia();
+      for(Aresta * aux = aux_aresta->getProx(); aux!= NULL; aux = aux->getProx()){
         if(aux_aresta->getPeso() > aux->getPeso()){
           if(arv_vertices->buscaVertice(aux->getAdjacente()->getInfo()) == NULL)
             aux_aresta = aux;
