@@ -15,7 +15,7 @@ public:
 	// Calcula custo do grafo
 	int calculaCustoGrafo(Grafo *g);
 
-	Grafo *calculaGuloso(string verticeInicial);
+	Grafo * calculaGuloso(string verticeInicial);
 	Grafo * gulosoRandomizado (float alfa);
 
 private: 
@@ -28,17 +28,18 @@ private:
 	int tam;
 	// Guarda o indice do ultimo vertice
 	int ultimo;
-	// Guarda o indice do ultimo no Guloso
-	int ultimoNoGuloso;
+	//guarda o indice da ultima aresta
+	int ultimaAresta;
 	// Guarda a informação dos vertices lidos
 	Vertice **vetInfoVertice;
-	// Guarda o vertor de aresta e vertice de partida
-	Aresta **vetArestaIncidente;
+	// Guarda as arestas utilizadas
+	Aresta ** vetArestaIncidente;
 
 	Grafo *grafo;
 
 	// verifica se o vertice foi lido e retorna sua posição
 	int lido(string val);
+	bool arestaLida(Aresta * a);
 	void auxCalculaGuloso(Vertice *atual);
 	//Gera a AGM a partir do Grafo
 	Grafo *geraGrafo();

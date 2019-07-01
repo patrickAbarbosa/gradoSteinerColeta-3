@@ -11,6 +11,7 @@ class Aresta;
 class Vertice{
 
 	public:
+		Vertice(){};
 		Vertice(string id, int peso);
 		~Vertice();
 		

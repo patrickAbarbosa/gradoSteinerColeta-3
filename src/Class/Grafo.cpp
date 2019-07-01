@@ -541,8 +541,10 @@ void Grafo::atualizaMaiorgrau(){
 
   Vertice * p = vertices->getPrimeiro();
   quantidadeGrausZero = 0;
+  int quantidadeArestas = 0;
 
   while(p != NULL){
+    quantidadeArestas = quantidadeArestas + p->getGrau();
     Vertice * maiorGrau = vertices->getMaiorGrau();
     if(maiorGrau == NULL)
       vertices->setMaiorGrau(p);
@@ -553,6 +555,7 @@ void Grafo::atualizaMaiorgrau(){
     }
     p = p->getProx();
   }
+  numeroArestas = quantidadeArestas;
 }
 
 /*

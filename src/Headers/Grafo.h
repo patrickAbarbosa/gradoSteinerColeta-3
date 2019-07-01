@@ -39,8 +39,8 @@ public:
   int algoritmoDijkstra(string origem, string destino);
   Grafo* algoritmoPrim();
   Grafo * algoritmoKruskal();
-  Aresta ** ordenaArestas(){};
-  bool ciclo(string p, string q){};
+  Aresta ** ordenaArestas();
+  bool ciclo(string p, string q);
 
   int algoritmoFloyd(string origem, string destino);
   int auxFloyd(Vertice *p, Vertice* destino);
@@ -48,7 +48,7 @@ public:
   void setCusto(int i){ custo = i;} 
   int getCusto(){ return custo;}
   int getNumeroVertices(){ return numeroVertices; }
-
+  int getNumeroArestas(){ return numeroArestas; }
   private:
     Lista  *vertices; // Vetor com os vertices do Grafo
  
