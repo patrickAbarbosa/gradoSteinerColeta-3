@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <stack>
 
 #include "../Headers/Guloso.h"
 #include "../Headers/Vertice.h"
@@ -8,6 +9,8 @@
 #include "../Headers/Grafo.h"
 #include "../Headers/Lista.h"
 #include "../Headers/Fila.h"
+
+#include "../Headers/Fila2.h"
 
 using namespace std;
 
@@ -92,7 +95,8 @@ bool estaNoVetor(vector<string> *vet, string value)
 
 Grafo *Guloso::algoritmoPrim(Vertice *inicial)
 {
-
+  if(inicial == NULL)
+    return grafo;
   Grafo *arvore = new Grafo();
   Lista *arv_vertices = arvore->getVertices();
   // custo da solucao
@@ -106,14 +110,15 @@ Grafo *Guloso::algoritmoPrim(Vertice *inicial)
   arv_vertices->insereVertice(inicial->getInfo(), inicial->getPeso());
   Vertice *vAtual = inicial;
   Aresta *aresta = inicial->getListaAdjacencia();
-  queue<Vertice *> fila;
+  cout<<"Mas que merda"<<endl;
+  //queue<Vertice*>fila;
+  Fila2 fila;
+  cout<<"oi 8"<<endl;
   vector<string> lidos;
   lidos.push_back(vAtual->getInfo());
-
+  cout << "passou" << endl;
   while (aresta != NULL)
   {
-    if(aresta == NULL)
-      break;
     int cAtual = c + aresta->getPeso();
     int pAtual = p - aresta->getAdjacente()->getPeso();
     if ((cAtual + pAtual) < (c + p) && !estaNoVetor(&lidos, aresta->getAdjacente()->getInfo()))
@@ -122,24 +127,26 @@ Grafo *Guloso::algoritmoPrim(Vertice *inicial)
       p = pAtual;
       arv_vertices->insereVertice(aresta->getAdjacente()->getInfo(), aresta->getAdjacente()->getPeso());
       arvore->addAresta(aresta->getOrigem()->getInfo(), aresta->getAdjacente()->getInfo(), aresta->getPeso());
-      fila.push(aresta->getAdjacente());
+      fila.insere(aresta->getAdjacente());
+      lidos.push_back(aresta->getAdjacente()->getInfo());
     }
-
+    cout << "passou 2" << endl;
     aresta = aresta->getProx();
     
-    if (aresta == NULL && !fila.empty())
+    if (aresta == NULL && !fila.vazia())
     {
-      Vertice *aux = fila.front();
-      fila.pop();
+      Vertice *aux = fila.retira();
+//      fila.pop();
       aresta = aux->getListaAdjacencia();
-      lidos.push_back(aux->getInfo());
+      cout << "passou 3" << endl;
     }
   }
   //arvore->imprimeGrafoPNG();
   custoSolucao = c;
   custoPagar = p;
-  cout << "saiu" << endl;
   //arvore->imprimeGrafoPNG();
+  arvore->setCusto(custoSolucao + custoPagar);
+  cout << "saiu" << endl;
   return arvore;
 }
 
@@ -167,10 +174,16 @@ Grafo *Guloso::calculaGuloso(Vertice *partida ){
   for (Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
     custoPagar += aux->getPeso();
   // Calcula Arvore Minima
+  return algoritmoPrim(partida);
+  /*
   Grafo *aux = algoritmoPrim(partida);
+  if(aux == NULL)  
+    cout << "Bosta de Nulo" << endl;
   aux->setCusto(custoSolucao + custoPagar);
+  cout << "Merda" << endl;
   // Retorna a arvore minima do Grafo
   return aux;
+  */
 }
 
 /*---------------------------------------------------------------------------
@@ -193,9 +206,15 @@ Grafo *Guloso::gulosoRandomizado(float alfa, int numeroInteracoes)
       vertice_randomizado = (vertice_randomizado * (-1)) + 1;
     Vertice *p = grafo->buscaVertice(vertice_randomizado);
     Grafo *aux = calculaGuloso(p);
+    cout<<"oi 3"<<endl;
 
     if (aux->getCusto() < melhor->getCusto())
+    {
+      Grafo *lixo = melhor;
       melhor = aux;
+      delete lixo;
+    }
+      
   }
   cout<<"custo melhor"<<melhor->getCusto()<<endl;
   return melhor;

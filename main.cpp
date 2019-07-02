@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
   Grafo * teste = guloso.gulosoRandomizadoReativo(vet,4,200,5);//guloso.gulosoRandomizado(0.25, 2000);
   teste->imprimeGrafoPNG();
 
-  /*
+  
 
   //Grafo * agm = guloso.calculaGuloso("5");
   //agm->imprimeGrafoPNG();
@@ -59,6 +59,6 @@ int main(int argc, char *argv[])
   {
     a->menu();
     delete a;  
-  }*/
+  }
   return 0;
 }
