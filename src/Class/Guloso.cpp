@@ -119,36 +119,23 @@ Grafo *Guloso::algoritmoPrim(Vertice *inicial)
       break;
     int cAtual = c + aresta->getPeso();
     int pAtual = p - aresta->getAdjacente()->getPeso();
-    cout << "c: " << c << ", p: " << p << endl;
-    cout << "cA: " << cAtual << ", pA: " << pAtual << endl;
     if ((cAtual + pAtual) < (c + p) && !estaNoVetor(&lidos, aresta->getAdjacente()->getInfo()))
     {
-      cout << "Nao Esta no vetor" << endl;
       c = cAtual;
       p = pAtual;
       arv_vertices->insereVertice(aresta->getAdjacente()->getInfo(), aresta->getAdjacente()->getPeso());
       arvore->addAresta(aresta->getOrigem()->getInfo(), aresta->getAdjacente()->getInfo(), aresta->getPeso());
-      cout << "tam: " << fila.size() << endl;
       fila.push(aresta->getAdjacente());
-      cout << "tam2: " << fila.size() << endl;
     }
 
     aresta = aresta->getProx();
     
     if (aresta == NULL && !fila.empty())
     {
-      cout << "Trocando aresta" << endl;
       Vertice *aux = fila.front();
-      cout << "Aqui 1" << endl;
       fila.pop();
-      cout << "Aqui 2" << endl;
-      cout << "Fila: " << aux->getInfo() << endl;
-      cout << "Aqui 3" << endl;
       aresta = aux->getListaAdjacencia();
-      cout << "Aqui4" << endl;
       lidos.push_back(aux->getInfo());
-      cout << "Aqui 5" << endl;
-      cout << "size: " << fila.size() << endl;
     }
   }
   //arvore->imprimeGrafoPNG();
@@ -159,51 +146,7 @@ Grafo *Guloso::algoritmoPrim(Vertice *inicial)
   return arvore;
 }
 
-/*
-Grafo * Guloso::algoritmoPrim(Vertice *inicial){
-
-  Grafo * arvore = new Grafo ();
-  Lista * arv_vertices = arvore->getVertices();
-
-  arv_vertices->insereVertice(inicial->getInfo(),inicial->getPeso());
-  
-  while(custoPagar > custoSolucao){
-    Vertice * t = arv_vertices->getPrimeiro();
-    Aresta * aux_aresta = NULL;
-
-    while(t != NULL){
-      Vertice * w = grafo->getVertices()->buscaVertice(t->getInfo());
-      if(aux_aresta == NULL)
-        aux_aresta = w->getListaAdjacencia();
-
-      while(aux_aresta != NULL && arv_vertices->buscaVertice(aux_aresta->getAdjacente()->getInfo()) != NULL)
-        aux_aresta = aux_aresta->getProx(); 
-
-      if(aux_aresta != NULL){
-        for(Aresta * aux = aux_aresta->getProx(); aux!= NULL; aux = aux->getProx()){
-          int somaA = aux_aresta->getPeso() + custoSolucao + custoPagar - aux_aresta->getAdjacente()->getPeso();
-          int somaB = aux->getPeso() + custoSolucao + custoPagar - aux->getAdjacente()->getPeso();
-          if(somaA > somaB){
-            if(arv_vertices->buscaVertice(aux->getAdjacente()->getInfo()) == NULL)
-              aux_aresta = aux;
-          }
-        }
-      }
-      t = t->getProx();
-    }
-    if(aux_aresta != NULL){
-      Vertice * vertice_auxiliar = aux_aresta->getAdjacente();
-      arv_vertices->insereVertice(vertice_auxiliar->getInfo(),vertice_auxiliar->getPeso());
-      //atualiza custo
-      custoSolucao +=aux_aresta->getPeso();
-      custoPagar -= vertice_auxiliar->getPeso();
-      arvore->addAresta(aux_aresta->getOrigem()->getInfo(),aux_aresementesta->getAdjacente()->getInfo(),aux_aresta->getPeso());
-    }
-  }
-  return arvore; 
-}*/
-Grafo *Guloso::calculaGuloso(Vertice *partida )
-{
+Grafo *Guloso::calculaGuloso(Vertice *partida ){
 
   // Verifica se o grafo não possui vertice
   if (grafo == NULL)
@@ -212,7 +155,6 @@ Grafo *Guloso::calculaGuloso(Vertice *partida )
   // Busca o vertice inicial desejado
   //Vertice *inicio = grafo->getVertices()->buscaVertice(verticeInicial);
 
-  cout << "Vertice x: " << partida->getInfo() << endl;
   // Verifica se o vertice inicial foi encontrado, caso não seja, o calculo da AGM começa
   // a partir do primeiro vertice
   if (partida == NULL)
@@ -233,39 +175,7 @@ Grafo *Guloso::calculaGuloso(Vertice *partida )
   // Retorna a arvore minima do Grafo
   return aux;
 }
-/*
-Grafo *Guloso::calculaGuloso(string verticeInicial)
-{
 
-  // Verifica se o grafo não possui vertice
-  if (grafo == NULL)
-    return NULL;
-
-  // Busca o vertice inicial desejado
-  Vertice *inicio = grafo->getVertices()->buscaVertice(verticeInicial);
-
-  cout << "Vertice x: " << inicio->getInfo() << endl;
-  // Verifica se o vertice inicial foi encontrado, caso não seja, o calculo da AGM começa
-  // a partir do primeiro vertice
-  if (inicio == NULL)
-  {
-    cout << "ERRO!!! Vertice nao encontrando, será utilizado o primerio vertice da lista" << endl;
-    inicio = grafo->getVertices()->getPrimeiro();
-    exit(1);
-  }
-  return NULL;
-  //Arruma o custo incial
-  custoSolucao = 0;
-  custoPagar = 0;
-  for (Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
-    custoPagar += aux->getPeso();
-  // Calcula Arvore Minima
-  Grafo *aux = algoritmoPrim(inicio);
-  aux->setCusto(custoSolucao + custoPagar);
-  // Retorna a arvore minima do Grafo
-  return aux;
-}
-*/
 /*---------------------------------------------------------------------------
   O Algoritmo Guloso Randomizado funciona recevendo um parametro alfa
   que é utilizado para auxilar na randomização
@@ -282,19 +192,10 @@ Grafo *Guloso::gulosoRandomizado(float alfa, int numeroInteracoes)
   for (int i = 0; i < numeroInteracoes; i++)
   {
     int vertice_randomizado = (int)(alfa * (rand() % nVertices));
-    cout << "vertice: {"
-         << "\t i: " << i << "," << endl;
-    cout << "val: " << vertice_randomizado << endl
-         << "}" << endl;
     if (vertice_randomizado <= 0)
       vertice_randomizado = (vertice_randomizado * (-1)) + 1;
     Vertice *p = grafo->buscaVertice(vertice_randomizado);
-    cout << "valor do vertice a buscar" << p->getInfo() << endl;
-    system("pause");
     Grafo *aux = calculaGuloso(p);
-
-    cout << "aux: " << aux->getCusto() << endl;
-    cout << "melhor: " << melhor->getCusto() << endl;
 
     if (aux->getCusto() < melhor->getCusto())
       melhor = aux;
@@ -308,8 +209,7 @@ Grafo *Guloso::gulosoRandomizado(float alfa, int numeroInteracoes)
 
 // GRASP Reativo
 
-Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco)
-{
+Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco){
 
   int nInteracoes = 0;
   int custo = -1;
