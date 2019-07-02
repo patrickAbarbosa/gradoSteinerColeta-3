@@ -570,16 +570,16 @@ void Grafo::atualizaMaiorgrau(){
  */
 Vertice * Grafo::buscaVertice(int i){
 
-  if(i<0 || i >=numeroVertices){ //fora do alcance dos vertices
-    return NULL;
-  }
   Vertice * p = vertices->getPrimeiro();
 
-  for(int j = i; j > 0; j--){
-    p->getProx();
+  while(p != NULL){
+    cout << "p: " << p->getInfo() << ", i: " << to_string(i) << endl;
+    if(p->getInfo() == to_string(i))
+      return p;
+    p = p->getProx();
   }
 
-  return p;
+  return NULL;
 }
 
 /*
