@@ -38,6 +38,8 @@ private:
 
 	// verifica se o vertice foi lido e retorna sua posição
 	int lido(string val);
+	// verifica se o vertice possui outra aresta pra AGM
+	bool possuiAresta(Vertice *vertice, int diferente);
 	void auxCalculaGuloso(Vertice *atual, int *n);
 	//Gera a AGM a partir do Grafo
 	Grafo *geraGrafo();

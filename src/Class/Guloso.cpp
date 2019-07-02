@@ -43,32 +43,37 @@ int Guloso::lido(string val)
   return -1;
 }
 
+// verifica se o vertice possui aresta no vetor de aresta
+bool Guloso::possuiAresta(Vertice *vertice, int diferente)
+{
+  for(int i = 0; i < ultimoNoGuloso -1; i++)
+    if(i != diferente && vetArestaIncidente[i] != NULL &&
+      (vetArestaIncidente[i]->getOrigem() == vertice ||
+      vetArestaIncidente[i]->getAdjacente() == vertice))
+      return true;
+  
+  return false;
+}
+
 void Guloso::auxCalculaGuloso(Vertice *atual, int *n)
 {
   if(atual == NULL)
     return;
   cout << "Atual: " << atual->getInfo() << endl;
   // else
+  Grafo *a = geraGrafo();
+  a->imprimeGrafoPNG();
   for(Aresta *aresta = atual->getListaAdjacencia(); aresta != NULL; aresta = aresta->getProx())
   {
     (*n)++;
     // Guarda o endereço do vertice adjacente;
     Vertice *adjacente = aresta->getAdjacente();
-    if(adjacente == NULL)
-      cout << "Adjacente = NULL" << endl;
-      cout << "Peso da aresta: " << aresta->getPeso() << endl;
     if(aresta->getPeso() < adjacente->getPeso() || custoSolucao < custoPagar)
     {
-      cout << "# if: "<< adjacente->getInfo() << endl;
       int aux = lido(adjacente->getInfo());
-      cout << "Está no vetor ? aux: " << aux;
-      if(aux >= 0)
-        cout << ", info: " << vetInfoVertice[aux]->getInfo();
-      cout << endl;
+
       if(aux == -1)
       {
-        cout << "ADD: " << adjacente->getInfo() << endl;
-        
         // Atualiza o custo da solução
         custoSolucao +=  aresta->getPeso();
         custoPagar -= adjacente->getPeso();
@@ -82,26 +87,19 @@ void Guloso::auxCalculaGuloso(Vertice *atual, int *n)
         ultimoNoGuloso++;
         auxCalculaGuloso(adjacente, n);
       }
-      else if(aux > 0)
+      else
       {
-        cout << "Está no vetor" << endl;
-        cout << "Informações da aresta: {" << endl;
-        cout << "\torigem: " << aresta->getOrigem() << ", info: " << aresta->getOrigem()->getInfo() << "," << endl;
-        cout << "\tdestino: " << aresta->getAdjacente() << ", info: " << aresta->getAdjacente()->getInfo() << "," << endl;
-        cout << "\tpeso: " << aresta->getPeso() << endl;
-        cout << "}" << endl;
-        cout << "Vetor de aresta: {" << endl;
-        cout << "\tendereco: " << vetArestaIncidente[aux]<< endl;
-        cout << "\tdestino: " << vetArestaIncidente[aux]->getAdjacente() << endl;
-        cout << "\tdestino: " << vetArestaIncidente[aux]->getAdjacente() << ", info: " << vetArestaIncidente[aux]->getAdjacente()->getInfo() << "," << endl;
-        cout << "\tpeso: " << vetArestaIncidente[aux]->getPeso() << endl;
-        cout << "}" << endl;
         if(aresta->getPeso() < vetArestaIncidente[aux]->getPeso())
         {
-          cout << "Troca Aresta: " << adjacente->getInfo() << endl;
-          // Atualiza o custo da solução
-          custoSolucao -=  vetArestaIncidente[aux]->getAdjacente()->getPeso() - aresta->getPeso();
-          vetArestaIncidente[aux] = aresta;
+          Aresta *ant = vetArestaIncidente[aux];
+          cout << "Aqui" << endl;
+          
+          if(possuiAresta(ant->getOrigem(), aux))
+          {
+            // Atualiza o custo da solução
+            custoSolucao -=  vetArestaIncidente[aux]->getAdjacente()->getPeso() - aresta->getPeso();
+            vetArestaIncidente[aux] = aresta;  
+          }
         }
       }      
     }

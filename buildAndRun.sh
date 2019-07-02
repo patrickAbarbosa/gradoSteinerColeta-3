@@ -3,7 +3,7 @@ echo "Criando Build..."
 g++ main.cpp src/Class/* src/Headers/* -o grafosGrupo3
 
 echo "--- Run Build ---"
-./grafosGrupo3 K400.3.con.red
+./grafosGrupo3 K400.3.con.red teste
 
 echo "--- End Build ---"
 

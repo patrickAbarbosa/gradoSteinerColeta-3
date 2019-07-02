@@ -73,3 +73,4 @@ Informações da aresta: {
 ./buildAndRun.sh, linha 6:  3849 Falha de segmentação  (imagem do núcleo gravada) ./grafosGrupo3 K400.3.con.red
 --- End Build ---
 remove file executavel
+3

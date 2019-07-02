@@ -11,6 +11,7 @@
 #include <iostream>
 #include "src/Headers/Grafo.h"
 #include "src/Headers/Guloso.h"
+#include "src/Headers/GeraCsv.h"
 
 using namespace std;
 
@@ -19,7 +20,7 @@ int main(int argc, char *argv[])
   cout << "Grupo 03 - Steiner com Coleta de Prêmios" << endl;
 
   Grafo *a = NULL;
-
+  GeraCsv *geradorDeArquivo = NULL;
   switch (argc)
   {
   case 1:
@@ -29,21 +30,21 @@ int main(int argc, char *argv[])
     a = new Grafo(argv[1]);
     break;
   case 3:
-    a = new Grafo(argv[1], argv[2]);
+    geradorDeArquivo = new GeraCsv(argv[2]);
+    a = new Grafo(argv[1], geradorDeArquivo);
     break;
   case 4:
-    a = new Grafo(argv[1], argv[2], argv[3]);
+    geradorDeArquivo = new GeraCsv(argv[2]);
+    a = new Grafo(argv[1], geradorDeArquivo, argv[3]);
     break;
   default:
     break;
   }
 
-  Guloso guloso(a);
+  //Guloso guloso(a);
 
-  Grafo * agm = guloso.calculaGuloso("5");
-  agm->imprimeGrafoPNG();
-  delete agm;
-  return 0;  
+  //Grafo * agm = guloso.calculaGuloso("5");
+  //agm->imprimeGrafoPNG();
   if (a)
   {
     a->menu();
