@@ -143,6 +143,7 @@ Grafo * Guloso::algoritmoPrim(Vertice *inicial){
   custoSolucao = c;
   custoPagar = p;
   cout << "saiu" << endl;
+  delete [] fila;
   //arvore->imprimeGrafoPNG();
   return arvore; 
 }
@@ -224,17 +225,15 @@ Grafo* Guloso::calculaGuloso(string verticeInicial){
   que é utilizado para auxilar na randomização
 ---------------------------------------------------------------------------*/
 
-Grafo * Guloso::gulosoRandomizado (float alfa, int numeroInteracoes){
-
+Grafo *Guloso::gulosoRandomizado (float alfa, int numeroInteracoes){
   int semente = 0; //semente utilizada
-  srand(semente);
+  srand(time(NULL));
 
   int nVertices = grafo->getVertices()->getQuantidade();
   Grafo * melhor = calculaGuloso(grafo->getVertices()->getPrimeiro()->getInfo());
 
   for(int i = 0; i< numeroInteracoes;i++){
-
-    int vertice_randomizado = (int)(alfa * (rand()% nVertices));
+    int vertice_randomizado = (int)(rand()% nVertices + 1);
     if(vertice_randomizado <= 0)
       vertice_randomizado = (vertice_randomizado * (-1))+1;
     Vertice * p = grafo->buscaVertice(vertice_randomizado);
