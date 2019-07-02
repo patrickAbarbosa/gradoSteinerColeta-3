@@ -95,19 +95,26 @@ bool estaNoVetor(vector<string> *vet, string value)
 
 Grafo *Guloso::algoritmoPrim(Vertice *inicial)
 {
+  cout << "PRIM" << endl;
   if(inicial == NULL)
     return grafo;
+  cout << "Nao Nulo" << endl;
   Grafo *arvore = new Grafo();
+  if(!arvore)
+    cout << "grafo nulo" << endl;
   Lista *arv_vertices = arvore->getVertices();
-  // custo da solucao
+  if(!arv_vertices)
+    cout << "lista nula" << endl;
+  // custo da solucacriadoo
   int c = 0;
   // custo a pagar
   int p = 0;
-
+  cout << "Ta no for cassete" << endl;
   for (Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
     p += aux->getPeso();
-  
+  cout << "Mas passou desse caralho" << endl;
   arv_vertices->insereVertice(inicial->getInfo(), inicial->getPeso());
+  cout << "ARV: " << arv_vertices->getQuantidade() << endl; 
   Vertice *vAtual = inicial;
   Aresta *aresta = inicial->getListaAdjacencia();
   cout<<"Mas que merda"<<endl;
@@ -167,12 +174,13 @@ Grafo *Guloso::calculaGuloso(Vertice *partida ){
     partida = grafo->getVertices()->getPrimeiro();
     exit(1);
   }
-
+  cout << "Cal 1" << endl;
   //Arruma o custo incial
   custoSolucao = 0;
   custoPagar = 0;
   for (Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
     custoPagar += aux->getPeso();
+  cout << "Cal 2" << endl;
   // Calcula Arvore Minima
   return algoritmoPrim(partida);
   /*
@@ -204,7 +212,9 @@ Grafo *Guloso::gulosoRandomizado(float alfa, int numeroInteracoes)
     int vertice_randomizado = (int)(alfa * (rand() % nVertices));
     if (vertice_randomizado <= 0)
       vertice_randomizado = (vertice_randomizado * (-1)) + 1;
-    Vertice *p = grafo->buscaVertice(vertice_randomizado);
+    Vertice *p = grafo->getVertices()->buscaVertice(to_string(vertice_randomizado));
+    if(p != NULL)
+      cout << "oi 3->" << p->getInfo() << endl;
     Grafo *aux = calculaGuloso(p);
     cout<<"oi 3"<<endl;
 
@@ -213,9 +223,11 @@ Grafo *Guloso::gulosoRandomizado(float alfa, int numeroInteracoes)
       Grafo *lixo = melhor;
       melhor = aux;
       delete lixo;
+      cout << "deletou lizo" << endl;
     }
-      
+    cout << "oi 3.1" << endl;
   }
+  cout << "3.2" << endl;
   cout<<"custo melhor"<<melhor->getCusto()<<endl;
   return melhor;
 }

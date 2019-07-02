@@ -22,6 +22,8 @@
                 "${fileDirname}/src/Headers/Grafo.h",
                 "${fileDirname}/src/Headers/Lista.h",
                 "${fileDirname}/src/Headers/Vertice.h",
+                "${fileDirname}/src/Headers/Fila2.h",
+                "${fileDirname}/src/Class/Fila2.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
                 //g++ main.cpp src/Class/* src/Headers/* -o grafosGrupo3

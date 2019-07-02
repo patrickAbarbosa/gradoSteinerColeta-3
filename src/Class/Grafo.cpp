@@ -109,10 +109,13 @@ Grafo::Grafo(string in, GeraCsv *out, string ehDigrafo)
 Grafo::~Grafo()
 {
   cout << "Destruindo Grafo" << endl;
-  delete vertices;
+  if(vertices)
+    delete vertices;
 
   if (arquivoIn)
     delete arquivoIn;
+  if(menorValor)
+    delete menorValor;
 }
 //
 //
@@ -798,6 +801,7 @@ bool Grafo::buscaPorLargura(string verticeInicial,string verticeFinal){
     Aresta *t = p->getListaAdjacencia();
 
     if(p->getInfo() == verticeFinal){
+      delete aux;
       return true;
     }
 
@@ -807,6 +811,7 @@ bool Grafo::buscaPorLargura(string verticeInicial,string verticeFinal){
 
     while(t != NULL){
       if(t->getAdjacente()->getInfo() == verticeFinal){
+        delete aux;
         return true;
       }
       if(!isVector(&nosLidos,t->getAdjacente()->getInfo())){
@@ -815,6 +820,7 @@ bool Grafo::buscaPorLargura(string verticeInicial,string verticeFinal){
       t = t->getProx();
     }
   }
+  delete aux;
   return false;
 }
 

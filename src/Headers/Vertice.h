@@ -11,10 +11,11 @@ class Aresta;
 class Vertice{
 
 	public:
-		Vertice(){};
+		Vertice();
 		Vertice(string id, int peso);
 		~Vertice();
-		
+		void setInfo(string info){this->info = info;};
+		void setPeso(int peso){this->peso = peso;};
 		string getInfo () { return info; }
 		int getGrau () { return grau; }
 		int getPeso () { return peso; }

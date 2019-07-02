@@ -28,12 +28,14 @@ Lista::~Lista()
 void Lista::insereVertice (string info, int peso) {
 	
 	if (primeiro == NULL) {
-		primeiro = new Vertice(info, peso);
+		primeiro = new Vertice();
+		primeiro->setInfo(info);
+		primeiro->setPeso(peso);
+		cout << "criando" << endl;
 		maiorGrau = primeiro;
 		quantidade ++;
-		return;
 	}
-	if(buscaVertice(info) == NULL){
+	else if(buscaVertice(info) == NULL){
 		Vertice *p = primeiro;
 		
 		while (p->getProx() != NULL)
@@ -84,7 +86,7 @@ Vertice* Lista::buscaVertice(string info) {
 			return p;
 		p = p->getProx();
 	}
-
+	cout << "Nulo" << endl;
 	return NULL;
 }
 
