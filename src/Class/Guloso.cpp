@@ -79,8 +79,9 @@ Grafo * Guloso::algoritmoPrim(Vertice *inicial){
   Lista * arv_vertices = arvore->getVertices();
 
   arv_vertices->insereVertice(inicial->getInfo(),inicial->getPeso());
-
-  while(custoPagar > custoSolucao){
+  int count = 0;
+  while(custoPagar > custoSolucao && count !=420){
+    count++;
     Vertice * t = arv_vertices->getPrimeiro();
     Aresta * aux_aresta = NULL;
 
@@ -134,6 +135,7 @@ Grafo* Guloso::calculaGuloso(string verticeInicial){
   }
   //Arruma o custo incial
   custoSolucao = 0;
+  custoPagar = 0;
   for(Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
     custoPagar += aux->getPeso();
   // Calcula Arvore Minima
@@ -157,12 +159,10 @@ Grafo * Guloso::gulosoRandomizado (float alfa, int numeroInteracoes){
   Grafo * melhor = calculaGuloso(grafo->getVertices()->getPrimeiro()->getInfo());
 
   for(int i = 0; i< numeroInteracoes;i++){
-    cout<<"i: "<<i<<endl;
 
     int vertice_randomizado = (int)(alfa * (rand()% nVertices));
     if(vertice_randomizado <= 0)
       vertice_randomizado = (vertice_randomizado * (-1))+1;
-    cout<<"vertice randomizado: "<<vertice_randomizado<<endl;
     Vertice * p = grafo->buscaVertice(vertice_randomizado);
     Grafo * aux = calculaGuloso(p->getInfo());
 
@@ -188,15 +188,8 @@ Grafo * Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos
   int nVertices = 0;
   Lista * aux = grafo->getVertices();
   
-  if(grafo == NULL)
+  if(grafo->getVertices() == NULL)
     return NULL;
-  if(grafo->getVertices() != NULL && grafo->getNumeroArestas() == 0){
-    cout << "Alpha: 0" << endl;
-    Grafo *result = new Grafo();
-    Vertice *maiorGrau = aux->getMaiorGrau(); 
-    result->getVertices()->insereVertice(maiorGrau->getInfo(), maiorGrau->getPeso());
-    return result;
-  }
   float custoMax = 0;
   for(Vertice * p = aux->getPrimeiro(); p != NULL; p = p->getProx())
     custoMax += p->getPeso();
@@ -225,7 +218,7 @@ Grafo * Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos
     
     cout << "Alpha: " << alpha[n] << endl;
     cout << "Interacao: " << i + 1 << endl;
-    Grafo *grafoAux = gulosoRandomizado(alpha[n],500);//numero de interações do randomizado
+    Grafo *grafoAux = gulosoRandomizado(alpha[n],100);//numero de interações do randomizado
     int custoAux = grafoAux->getCusto();
     
     if(result && custo)
