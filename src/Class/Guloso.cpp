@@ -102,7 +102,7 @@ Grafo *Guloso::algoritmoPrim(Vertice *inicial)
 
   for (Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
     p += aux->getPeso();
-
+  
   arv_vertices->insereVertice(inicial->getInfo(), inicial->getPeso());
   Vertice *vAtual = inicial;
   Aresta *aresta = inicial->getListaAdjacencia();
