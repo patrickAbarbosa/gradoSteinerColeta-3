@@ -9,19 +9,21 @@ using namespace std;
 class Vertice;
 
 class Aresta {
-	
+
 	public:
 		Aresta() {};
-		Aresta(Vertice * a, int p) { peso = p, adjacente = a, proxima = NULL;} 
+		Aresta(Vertice * a,Vertice * b, int p) { peso = p, origem = a, adjacente = b, proxima = NULL;} 
 		~Aresta() {};
 		int getPeso () { return peso; }
 		Vertice * getAdjacente () { return adjacente; }
+		Vertice * getOrigem() { return origem; }
 		void setProx (Aresta * prox) { proxima = prox; }  
 		Aresta * getProx () { return proxima; }
 		
 	private:
 		int peso;
 		Vertice * adjacente;
+		Vertice * origem;
 		Aresta * proxima;
 		
 };

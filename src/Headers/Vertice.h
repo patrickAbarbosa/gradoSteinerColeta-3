@@ -11,12 +11,15 @@ class Aresta;
 class Vertice{
 
 	public:
+		Vertice(){};
 		Vertice(string id, int peso);
 		~Vertice();
 		
 		string getInfo () { return info; }
 		int getGrau () { return grau; }
 		int getPeso () { return peso; }
+		int getTamCaminho(){ return tamCaminho; }
+		void setTamCaminho(int tamanho) { tamCaminho = tamanho; }
 		
 		void setProx (Vertice * prox) { proximo = prox; } 
 		Vertice * getProx () { return proximo; }
@@ -30,9 +33,10 @@ class Vertice{
 	private:
 		int grau;
 		int peso;
+		int tamCaminho;
 		string info;
 		Vertice * proximo;
-    Aresta * listaAdjacencia;
+    	Aresta * listaAdjacencia;
      
 };
 
