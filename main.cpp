@@ -43,16 +43,10 @@ int main(int argc, char *argv[])
 
   //Guloso guloso(a);
   Guloso guloso(a);
-<<<<<<< HEAD
   float vet [10]={0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50};
   //guloso.calcularRandomizadoReativo(grafo, solucao, alphaReativo, nAlphas, bloco, maxIte);
   Grafo * teste = guloso.gulosoRandomizado(0.25); //guloso.gulosoRandomizadoReativo(vet,10,2000,100);
   //teste->imprimeGrafoPNG();
-=======
-  float vet [4]={0.15, 0.1, 0.2, 0.3};
-  Grafo * teste = guloso.gulosoRandomizadoReativo(vet,4,1000,200);
-  teste->imprimeGrafoPNG();
->>>>>>> 82584e0708ba57b2b8a21aa502b2123e778bce2c
 
   /*
 
