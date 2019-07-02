@@ -16,7 +16,7 @@ public:
 	int calculaCustoGrafo(Grafo *g);
 
 //	Grafo * calculaGuloso(string verticeInicial);
-	Grafo * calculaGuloso(Vertice *partida);
+	Grafo * calculaGuloso(Vertice *inicial);
 	Grafo * gulosoRandomizado (float alfa, int numeroInteracoes);
 	Grafo * algoritmoPrim(Vertice * inicial);
 	Grafo * gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco);

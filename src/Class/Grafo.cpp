@@ -109,10 +109,13 @@ Grafo::Grafo(string in, GeraCsv *out, string ehDigrafo)
 Grafo::~Grafo()
 {
   cout << "Destruindo Grafo" << endl;
-  delete vertices;
+  if(vertices)
+    delete vertices;
 
   if (arquivoIn)
     delete arquivoIn;
+  if(menorValor)
+    delete menorValor;
 }
 //
 //
@@ -143,7 +146,8 @@ void Grafo::leArquivo()
   {
     bool link = false;
     string str;
-    getline(file, str); // para nao pegar a primeira linha
+    getline(file, str);
+    getline(file, str); // para nao pegar sa primeiras linhas
     while (!file.eof())
     {
       linha.interacao++;
@@ -161,7 +165,7 @@ void Grafo::leArquivo()
           line >> verticeA >> verticeB >> peso;
 
           addAresta(verticeA, verticeB, peso);
-//          addAresta(verticeB, verticeA, peso);
+//        addAresta(verticeB, verticeA, peso);
         }
         else
         {
@@ -573,12 +577,10 @@ Vertice * Grafo::buscaVertice(int i){
   Vertice * p = vertices->getPrimeiro();
 
   while(p != NULL){
-    cout << "p: " << p->getInfo() << ", i: " << to_string(i) << endl;
     if(p->getInfo() == to_string(i))
       return p;
     p = p->getProx();
   }
-
   return NULL;
 }
 
@@ -800,6 +802,7 @@ bool Grafo::buscaPorLargura(string verticeInicial,string verticeFinal){
     Aresta *t = p->getListaAdjacencia();
 
     if(p->getInfo() == verticeFinal){
+      delete aux;
       return true;
     }
 
@@ -809,6 +812,7 @@ bool Grafo::buscaPorLargura(string verticeInicial,string verticeFinal){
 
     while(t != NULL){
       if(t->getAdjacente()->getInfo() == verticeFinal){
+        delete aux;
         return true;
       }
       if(!isVector(&nosLidos,t->getAdjacente()->getInfo())){
@@ -817,6 +821,7 @@ bool Grafo::buscaPorLargura(string verticeInicial,string verticeFinal){
       t = t->getProx();
     }
   }
+  delete aux;
   return false;
 }
 

@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "args": ["K400.3.con.red"],
+            "args": ["K400.3.con.red","teste"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

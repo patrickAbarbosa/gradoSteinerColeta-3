@@ -9,6 +9,7 @@ echo "--- End Build ---"
 
 echo "remove file executavel"
 rm grafosGrupo3
+rm teste.csv
 
 echo "remove files" 
 rm GrafoPNG.dot

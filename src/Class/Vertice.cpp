@@ -1,5 +1,7 @@
+#include <iostream>
 #include "../Headers/Vertice.h"
 
+using namespace std;
 //Contrutor padrao de vertices utilizando um id e um peso_vertice
 
 Vertice::Vertice(string id, int peso_vertice)
@@ -17,7 +19,7 @@ Vertice::~Vertice()
 	while(listaAdjacencia != NULL){
 		Aresta * p = listaAdjacencia->getProx();
 		delete p;
-		listaAdjacencia = NULL;
+		listaAdjacencia = p;
 	}
 	//deletar lista de arestas
 	
