@@ -18,6 +18,7 @@ public:
 	Grafo * calculaGuloso(string verticeInicial);
 	Grafo * gulosoRandomizado (float alfa);
 	Grafo * algoritmoPrim(Vertice * inicial);
+	Grafo * gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco);
 
 private: 
 	// Guarda o custo total da solução
