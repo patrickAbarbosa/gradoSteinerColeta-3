@@ -211,7 +211,7 @@ Grafo * Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos
   int n = 0, aleatorio = 0;
   double probabilidade[nAlphas]; //Inicia o verot com distribuição unifome
   for(int i = 0; i<nAlphas; i++)
-    probabilidade[i] =1/ nAlphas;
+    probabilidade[i] = 1/ nAlphas;
 
   float chances[nAlphas];
   float media[nAlphas] = {0};
