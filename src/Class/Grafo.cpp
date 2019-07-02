@@ -573,12 +573,10 @@ Vertice * Grafo::buscaVertice(int i){
   Vertice * p = vertices->getPrimeiro();
 
   while(p != NULL){
-    cout << "p: " << p->getInfo() << ", i: " << to_string(i) << endl;
     if(p->getInfo() == to_string(i))
       return p;
     p = p->getProx();
   }
-
   return NULL;
 }
 
