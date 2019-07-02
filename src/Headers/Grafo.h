@@ -28,6 +28,7 @@ public:
   void menuSelecionado(char a);
   void menu();
   Lista * getVertices(){ return vertices;}
+  Aresta * getMenorValor(){ return menorValor;}
 
   void atualizaMaiorgrau();
   Vertice * buscaVertice(int i);
@@ -39,24 +40,23 @@ public:
   int algoritmoDijkstra(string origem, string destino);
   Grafo* algoritmoPrim();
   Grafo * algoritmoKruskal();
+  Aresta ** ordenaArestas();
+  bool ciclo(string p, string q);
 
   int algoritmoFloyd(string origem, string destino);
   int auxFloyd(Vertice *p, Vertice* destino);
-  //resolucao do problema de steiner
 
-  int custoSteiner (Grafo * arvore);
-  int auxGuloso(Vertice * p, Grafo * resultado, int *count, vector<string> *nosLidos);
-  Grafo * guloso(string vertice_inicial);
-  Grafo * gulosoRandomizado (float alfa);
-  // Método para encontrar a melhor solução do Grafo de maneira Gulosa Randomicamente Reativa
-  Grafo * gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco);
-  
+  void setCusto(int i){ custo = i;} 
+  int getCusto(){ return custo;}
+  int getNumeroVertices(){ return numeroVertices; }
+  int getNumeroArestas(){ return numeroArestas; }
   private:
     Lista  *vertices; // Vetor com os vertices do Grafo
  
     string *arquivoIn; // Estacia de entrada
     string *arquivoOut; // Dados pra saida
-    
+
+    int custo;
     int numeroArestas;
     int numeroVertices;
     int quantidadeGrausZero;

@@ -39,6 +39,11 @@ int main(int argc, char *argv[])
   }
 
   Guloso guloso(a);
+  float vet [4]={3.1, 0.1, 0.2, 0.3};
+  Grafo * teste = guloso.gulosoRandomizadoReativo(vet,4,1000,200);
+  teste->imprimeGrafoPNG();
+
+  /*
 
   Grafo * agm = guloso.calculaGuloso("5");
   agm->imprimeGrafoPNG();
@@ -48,6 +53,6 @@ int main(int argc, char *argv[])
   {
     a->menu();
     delete a;  
-  }
+  }*/
   return 0;
 }
