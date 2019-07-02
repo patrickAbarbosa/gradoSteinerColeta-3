@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
   }
 
   Guloso guloso(a);
-  Grafo * teste = guloso.calculaGuloso("5");
+  Grafo * teste = guloso.gulosoRandomizado(1417.943);
   teste->imprimeGrafoPNG();
 
   /*

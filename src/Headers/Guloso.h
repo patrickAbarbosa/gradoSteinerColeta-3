@@ -27,14 +27,6 @@ private:
 
 	// Guarda o número de vertices do grafo
 	int tam;
-	// Guarda o indice do ultimo vertice
-	int ultimo;
-	//guarda o indice da ultima aresta
-	int ultimaAresta;
-	// Guarda a informação dos vertices lidos
-	Vertice **vetInfoVertice;
-	// Guarda as arestas utilizadas
-	Aresta ** vetArestaIncidente;
 
 	Grafo *grafo;
 
