@@ -9,7 +9,11 @@ Fila::Fila(){
 
 Fila::~Fila(){
 
-	while(retira() != NULL); 
+	Vertice * p;
+	do{
+		p = retira();
+	}
+	while(p != NULL);
 }
 
 bool Fila::vazia(){
@@ -24,12 +28,12 @@ bool Fila::vazia(){
 void Fila::insere(Vertice * p){ //entra no final da fila
 
 	if(ultimo == NULL){ //fila vazia
-		*ultimo = * p;
+		ultimo = p;
 		primeiro = ultimo;
 	}
 	else{
 		Vertice * aux;
-		*aux = *p;
+		aux = p;
 		ultimo->setProx(aux);
 		ultimo = aux;
 	}
