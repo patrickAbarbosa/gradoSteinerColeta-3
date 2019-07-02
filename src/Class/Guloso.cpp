@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 
 #include "../Headers/Guloso.h"
 #include "../Headers/Vertice.h"
@@ -7,7 +8,6 @@
 #include "../Headers/Grafo.h"
 #include "../Headers/Lista.h"
 #include "../Headers/Fila.h"
-
 
 using namespace std;
 
@@ -70,11 +70,11 @@ Guloso::Guloso(Grafo *g)
   custoSolucao = 0;
   // Iniciamos o custo a ser pago em 0
   custoPagar = 0;
-  for(Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
+  for (Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
     custoPagar += aux->getPeso();
 }
 
-Guloso::~Guloso(){}
+Guloso::~Guloso() {}
 
 bool estaNoVetor(vector<string> *vet, string value)
 {
@@ -90,62 +90,73 @@ bool estaNoVetor(vector<string> *vet, string value)
   return false;
 }
 
-Grafo * Guloso::algoritmoPrim(Vertice *inicial){
+Grafo *Guloso::algoritmoPrim(Vertice *inicial)
+{
 
-  Grafo * arvore = new Grafo ();
-  Lista * arv_vertices = arvore->getVertices();
+  Grafo *arvore = new Grafo();
+  Lista *arv_vertices = arvore->getVertices();
 
   // custo da solucao
   int c = 0;
   // custo a pagar
   int p = 0;
 
-  for(Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
+  for (Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
     p += aux->getPeso();
 
-  arv_vertices->insereVertice(inicial->getInfo(),inicial->getPeso());
+  arv_vertices->insereVertice(inicial->getInfo(), inicial->getPeso());
   Vertice *vAtual = inicial;
   Aresta *aresta = inicial->getListaAdjacencia();
-  Vertice **fila = new Vertice*[grafo->getNumeroVertices()];
-  int inicio = 0;
-  int fim = 0;
-  vector<string>lidos;
+
+  queue<Vertice *> fila;
+
+  vector<string> lidos;
   lidos.push_back(vAtual->getInfo());
-  cout << "c: " << c << ", p: " << p << endl;
-  while(aresta != NULL)
+
+  while (aresta != NULL)
   {
+    if(aresta == NULL)
+      break;
     int cAtual = c + aresta->getPeso();
     int pAtual = p - aresta->getAdjacente()->getPeso();
+    cout << "c: " << c << ", p: " << p << endl;
     cout << "cA: " << cAtual << ", pA: " << pAtual << endl;
-    if((cAtual + pAtual) < (c + p) && !estaNoVetor(&lidos, aresta->getAdjacente()->getInfo()))
+    if ((cAtual + pAtual) < (c + p) && !estaNoVetor(&lidos, aresta->getAdjacente()->getInfo()))
     {
       cout << "Nao Esta no vetor" << endl;
       c = cAtual;
       p = pAtual;
-      arv_vertices->insereVertice(aresta->getAdjacente()->getInfo(),aresta->getAdjacente()->getPeso());
+      arv_vertices->insereVertice(aresta->getAdjacente()->getInfo(), aresta->getAdjacente()->getPeso());
       arvore->addAresta(aresta->getOrigem()->getInfo(), aresta->getAdjacente()->getInfo(), aresta->getPeso());
-      if(fim < grafo->getNumeroVertices())
-      {
-        fila[fim] = aresta->getAdjacente();
-        fim++;
-      }
+      cout << "tam: " << fila.size() << endl;
+      fila.push(aresta->getAdjacente());
+      cout << "tam2: " << fila.size() << endl;
     }
+
     aresta = aresta->getProx();
-    if(aresta == NULL && inicio != fim){
+    
+    if (aresta == NULL && !fila.empty())
+    {
       cout << "Trocando aresta" << endl;
-      cout << "Fila: " << fila[inicio]->getInfo() << endl;
-      aresta = fila[inicio]->getListaAdjacencia();
-      lidos.push_back(fila[inicio]->getInfo());
-      inicio ++;
+      Vertice *aux = fila.front();
+      cout << "Aqui 1" << endl;
+      fila.pop();
+      cout << "Aqui 2" << endl;
+      cout << "Fila: " << aux->getInfo() << endl;
+      cout << "Aqui 3" << endl;
+      aresta = aux->getListaAdjacencia();
+      cout << "Aqui4" << endl;
+      lidos.push_back(aux->getInfo());
+      cout << "Aqui 5" << endl;
+      cout << "size: " << fila.size() << endl;
     }
   }
-  //arvore->imprimeGrafoPNG(); 
+  //arvore->imprimeGrafoPNG();
   custoSolucao = c;
   custoPagar = p;
   cout << "saiu" << endl;
-  delete [] fila;
   //arvore->imprimeGrafoPNG();
-  return arvore; 
+  return arvore;
 }
 
 /*
@@ -186,64 +197,106 @@ Grafo * Guloso::algoritmoPrim(Vertice *inicial){
       //atualiza custo
       custoSolucao +=aux_aresta->getPeso();
       custoPagar -= vertice_auxiliar->getPeso();
-      arvore->addAresta(aux_aresta->getOrigem()->getInfo(),aux_aresta->getAdjacente()->getInfo(),aux_aresta->getPeso());
+      arvore->addAresta(aux_aresta->getOrigem()->getInfo(),aux_aresementesta->getAdjacente()->getInfo(),aux_aresta->getPeso());
     }
   }
   return arvore; 
 }*/
-
-Grafo* Guloso::calculaGuloso(string verticeInicial){
+Grafo *Guloso::calculaGuloso(Vertice *partida )
+{
 
   // Verifica se o grafo não possui vertice
-  if(grafo == NULL)
+  if (grafo == NULL)
+    return NULL;
+
+  // Busca o vertice inicial desejado
+  //Vertice *inicio = grafo->getVertices()->buscaVertice(verticeInicial);
+
+  cout << "Vertice x: " << partida->getInfo() << endl;
+  // Verifica se o vertice inicial foi encontrado, caso não seja, o calculo da AGM começa
+  // a partir do primeiro vertice
+  if (partida == NULL)
+  {
+    cout << "ERRO!!! Vertice nao encontrando, será utilizado o primerio vertice da lista" << endl;
+    partida = grafo->getVertices()->getPrimeiro();
+    exit(1);
+  }
+
+  //Arruma o custo incial
+  custoSolucao = 0;
+  custoPagar = 0;
+  for (Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
+    custoPagar += aux->getPeso();
+  // Calcula Arvore Minima
+  Grafo *aux = algoritmoPrim(partida);
+  aux->setCusto(custoSolucao + custoPagar);
+  // Retorna a arvore minima do Grafo
+  return aux;
+}
+/*
+Grafo *Guloso::calculaGuloso(string verticeInicial)
+{
+
+  // Verifica se o grafo não possui vertice
+  if (grafo == NULL)
     return NULL;
 
   // Busca o vertice inicial desejado
   Vertice *inicio = grafo->getVertices()->buscaVertice(verticeInicial);
 
+  cout << "Vertice x: " << inicio->getInfo() << endl;
   // Verifica se o vertice inicial foi encontrado, caso não seja, o calculo da AGM começa
   // a partir do primeiro vertice
-  if(inicio == NULL){
-    cout<<"ERRO!!! Vertice nao encontrando, será utilizado o primerio vertice da lista"<<endl;
+  if (inicio == NULL)
+  {
+    cout << "ERRO!!! Vertice nao encontrando, será utilizado o primerio vertice da lista" << endl;
     inicio = grafo->getVertices()->getPrimeiro();
     exit(1);
   }
-  //Arruma o custo inicial
+  return NULL;
+  //Arruma o custo incial
   custoSolucao = 0;
   custoPagar = 0;
-  for(Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
+  for (Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
     custoPagar += aux->getPeso();
   // Calcula Arvore Minima
-  Grafo * aux = algoritmoPrim(inicio);
+  Grafo *aux = algoritmoPrim(inicio);
   aux->setCusto(custoSolucao + custoPagar);
   // Retorna a arvore minima do Grafo
-  return aux; 
+  return aux;
 }
-
+*/
 /*---------------------------------------------------------------------------
   O Algoritmo Guloso Randomizado funciona recevendo um parametro alfa
   que é utilizado para auxilar na randomização
 ---------------------------------------------------------------------------*/
 
-Grafo *Guloso::gulosoRandomizado (float alfa, int numeroInteracoes){
+Grafo *Guloso::gulosoRandomizado(float alfa, int numeroInteracoes)
+{
   int semente = 0; //semente utilizada
-  srand(time(NULL));
+  srand(semente);
 
   int nVertices = grafo->getVertices()->getQuantidade();
-  Grafo * melhor = calculaGuloso(grafo->getVertices()->getPrimeiro()->getInfo());
+  Grafo *melhor = calculaGuloso(grafo->getVertices()->getPrimeiro());
 
-  for(int i = 0; i< numeroInteracoes;i++){
-    int vertice_randomizado = (int)(rand()% nVertices + 1);
-    if(vertice_randomizado <= 0)
-      vertice_randomizado = (vertice_randomizado * (-1))+1;
-      
-    Vertice * p = grafo->getVertices()->buscaVertice(to_string(vertice_randomizado));
-    Grafo * aux = calculaGuloso(p->getInfo());
+  for (int i = 0; i < numeroInteracoes; i++)
+  {
+    int vertice_randomizado = (int)(alfa * (rand() % nVertices));
+    cout << "vertice: {"
+         << "\t i: " << i << "," << endl;
+    cout << "val: " << vertice_randomizado << endl
+         << "}" << endl;
+    if (vertice_randomizado <= 0)
+      vertice_randomizado = (vertice_randomizado * (-1)) + 1;
+    Vertice *p = grafo->buscaVertice(vertice_randomizado);
+    cout << "valor do vertice a buscar" << p->getInfo() << endl;
+    system("pause");
+    Grafo *aux = calculaGuloso(p);
 
-    cout<<"aux: "<<aux->getCusto()<<endl;
-    cout<<"melhor: "<<melhor->getCusto()<<endl;
+    cout << "aux: " << aux->getCusto() << endl;
+    cout << "melhor: " << melhor->getCusto() << endl;
 
-    if(aux->getCusto() < melhor->getCusto())
+    if (aux->getCusto() < melhor->getCusto())
       melhor = aux;
   }
   cout<<"custo melhor"<<melhor->getCusto()<<endl;
@@ -255,55 +308,56 @@ Grafo *Guloso::gulosoRandomizado (float alfa, int numeroInteracoes){
 
 // GRASP Reativo
 
-Grafo * Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco){
+Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco)
+{
 
   int nInteracoes = 0;
-  int  custo = -1;
+  int custo = -1;
   int nVertices = 0;
-  Lista * aux = grafo->getVertices();
-  
-  if(grafo->getVertices() == NULL)
+  Lista *aux = grafo->getVertices();
+
+  if (grafo->getVertices() == NULL)
     return NULL;
   float custoMax = 0;
-  for(Vertice * p = aux->getPrimeiro(); p != NULL; p = p->getProx())
+  for (Vertice *p = aux->getPrimeiro(); p != NULL; p = p->getProx())
     custoMax += p->getPeso();
   // Maior custo da solução
   custo = custoMax;
   // Definição de variáveis para auxiliar
   int n = 0, aleatorio = 0;
   double probabilidade[nAlphas]; //Inicia o verot com distribuição unifome
-  for(int i = 0; i<nAlphas; i++)
-    probabilidade[i] = 1/ nAlphas;
+  for (int i = 0; i < nAlphas; i++)
+    probabilidade[i] = 1 / nAlphas;
 
   float chances[nAlphas];
   float media[nAlphas] = {0};
   float soma[nAlphas] = {0};
   float sum;
   float sum_chances;
-  
+
   Grafo *result = NULL;
-  for(int i = 0; i < periodos; i++)
+  for (int i = 0; i < periodos; i++)
   {
     aleatorio = rand() % 101;
     sum = 0;
     n = 0;
-    for(sum += probabilidade[n] * 100; n < nAlphas && sum < aleatorio; n++)
+    for (sum += probabilidade[n] * 100; n < nAlphas && sum < aleatorio; n++)
       sum += probabilidade[n] * 100;
-    
+
     cout << "Alpha: " << alpha[n] << endl;
     cout << "Interacao: " << i + 1 << endl;
-    Grafo *grafoAux = gulosoRandomizado(alpha[n],100);//numero de interações do randomizado
+    Grafo *grafoAux = gulosoRandomizado(alpha[n], 100); //numero de interações do randomizado
     int custoAux = grafoAux->getCusto();
-    
-    if(result && custo)
+
+    if (result && custo)
     {
-      if(custo > custoAux)
+      if (custo > custoAux)
       {
         custo = custoAux;
         delete result;
         result = grafoAux;
       }
-      else 
+      else
         delete grafoAux;
     }
     else
@@ -312,20 +366,20 @@ Grafo * Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos
       result = grafoAux;
     }
     soma[i] = custo;
-    if(i % bloco == 0)
+    if (i % bloco == 0)
     {
       sum_chances = 0;
-      for(int j = 0; j < nAlphas; j++)
+      for (int j = 0; j < nAlphas; j++)
       {
         media[j] = soma[j] / i;
-        if(media > 0)
+        if (media > 0)
           chances[j] = custo / media[j];
         else
           chances[j] = 0.000001;
-        
+
         sum_chances += chances[j];
       }
     }
   }
-  return NULL; 
+  return NULL;
 }
