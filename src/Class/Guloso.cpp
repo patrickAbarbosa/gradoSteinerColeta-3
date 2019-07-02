@@ -179,31 +179,34 @@ Grafo * Guloso::gulosoRandomizado (float alfa){
 //// PDF: https://bmcbioinformatics.biomedcentral.com/track/pdf/10.1186/1471-2105-10-S1-S27
 
 // GRASP Reativo
-/*
-Grafo *Grafo::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco)
-{
+
+Grafo * Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco){
+
   int nInteracoes = 0;
   int  custo = -1;
   int nVertices = 0;
+  Lista * aux = grafo->getVertices();
   
-  if(vertices == NULL)
+  if(grafo == NULL)
     return NULL;
-  if(vertices != NULL && numeroArestas == 0)
-  {
+  if(grafo->getVertices() != NULL && grafo->getNumeroArestas() == 0){
     cout << "Alpha: 0" << endl;
     Grafo *result = new Grafo();
-    Vertice *maiorGrau = vertices->getMaiorGrau(); 
-    result->vertices->insereVertice(maiorGrau->getInfo(), maiorGrau->getPeso());
+    Vertice *maiorGrau = aux->getMaiorGrau(); 
+    result->getVertices()->insereVertice(maiorGrau->getInfo(), maiorGrau->getPeso());
     return result;
   }
   float custoMax = 0;
-  for(Vertice * p = vertices->getPrimeiro(); p != NULL; p = p->getProx())
+  for(Vertice * p = aux->getPrimeiro(); p != NULL; p = p->getProx())
     custoMax += p->getPeso();
   // Maior custo da solução
   custo = custoMax;
   // Definição de variáveis para auxiliar
   int n = 0, aleatorio = 0;
-  float probabilidade[nAlphas] = { 1/ nAlphas }; //Inicia o verot com distribuição unifome
+  double probabilidade[nAlphas]; //Inicia o verot com distribuição unifome
+  for(int i = 0; i<nAlphas; i++)
+    probabilidade[i] =1/ nAlphas;
+
   float chances[nAlphas];
   float media[nAlphas] = {0};
   float soma[nAlphas] = {0};
@@ -222,7 +225,7 @@ Grafo *Grafo::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, 
     cout << "Alpha: " << alpha[n] << endl;
     cout << "Interacao: " << i + 1 << endl;
     Grafo *grafoAux = gulosoRandomizado(alpha[n]);
-    int custoAux = custoSteiner(grafoAux);
+    int custoAux = grafoAux->getCusto();
     
     if(result && custo)
     {
@@ -258,4 +261,3 @@ Grafo *Grafo::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, 
   }
   return NULL; 
 }
-*/
