@@ -104,7 +104,6 @@ Grafo * Guloso::algoritmoPrim(Vertice *inicial){
     p += aux->getPeso();
 
   arv_vertices->insereVertice(inicial->getInfo(),inicial->getPeso());
-<<<<<<< HEAD
   Vertice *vAtual = inicial;
   Aresta *aresta = inicial->getListaAdjacencia();
   Vertice **fila = new Vertice*[grafo->getNumeroVertices()];
@@ -157,11 +156,6 @@ Grafo * Guloso::algoritmoPrim(Vertice *inicial){
   arv_vertices->insereVertice(inicial->getInfo(),inicial->getPeso());
   
   while(custoPagar > custoSolucao){
-=======
-  int count = 0;
-  while(custoPagar > custoSolucao && count !=420){
-    count++;
->>>>>>> a23f7ac24c66cc7e1781c147f5ec9387c208ab37
     Vertice * t = arv_vertices->getPrimeiro();
     Aresta * aux_aresta = NULL;
 
@@ -221,11 +215,7 @@ Grafo* Guloso::calculaGuloso(string verticeInicial){
   // Calcula Arvore Minima
   Grafo * aux = algoritmoPrim(inicio);
   aux->setCusto(custoSolucao + custoPagar);
-<<<<<<< HEAD
   // Retorna a arvore minima do Grafo
-=======
-  // Retorna a Arvore Minima do Grafo
->>>>>>> a23f7ac24c66cc7e1781c147f5ec9387c208ab37
   return aux; 
 }
 
@@ -241,15 +231,8 @@ Grafo * Guloso::gulosoRandomizado (float alfa, int numeroInteracoes){
 
   int nVertices = grafo->getVertices()->getQuantidade();
   Grafo * melhor = calculaGuloso(grafo->getVertices()->getPrimeiro()->getInfo());
-<<<<<<< HEAD
-  int vertice_randomizado = (int)(alfa * (rand()% nVertices));
-  melhor->imprimeGrafoPNG();
-  while(vertice_randomizado < 0)
-    vertice_randomizado = (int)(alfa * (rand()% nVertices));
-=======
 
   for(int i = 0; i< numeroInteracoes;i++){
->>>>>>> a23f7ac24c66cc7e1781c147f5ec9387c208ab37
 
     int vertice_randomizado = (int)(alfa * (rand()% nVertices));
     if(vertice_randomizado <= 0)

@@ -1,6 +1,2 @@
 instancia, numero_vertices, numero_aresta, classe, algoritimo, parametro, interacao, tempo_execucao, melhor_solucao
-<<<<<<< HEAD
-K400.3.con.red, 116, 0, Grafo.h, leArquivo, , 1017, 40.085000ms, 
-=======
-K400.3.con.red, 0, 0, Grafo.h, leArquivo, , 1017, 15.111000ms, 
->>>>>>> a23f7ac24c66cc7e1781c147f5ec9387c208ab37
+K400.3.con.red, -1390939368, 21996, Grafo.h, leArquivo, , 1017, 30.073000ms, 
