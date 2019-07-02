@@ -97,7 +97,7 @@ Grafo * Guloso::algoritmoPrim(Vertice *inicial){
         for(Aresta * aux = aux_aresta->getProx(); aux!= NULL; aux = aux->getProx()){
           int somaA = aux_aresta->getPeso() + custoSolucao + custoPagar - aux_aresta->getAdjacente()->getPeso();
           int somaB = aux->getPeso() + custoSolucao + custoPagar - aux->getAdjacente()->getPeso();
-          if(somaA < somaB){
+          if(somaA > somaB){
             if(arv_vertices->buscaVertice(aux->getAdjacente()->getInfo()) == NULL)
               aux_aresta = aux;
           }
@@ -133,7 +133,7 @@ Grafo* Guloso::calculaGuloso(string verticeInicial){
     inicio = grafo->getVertices()->getPrimeiro();
     exit(1);
   }
-  //Arruma o custo incial
+  //Arruma o custo inicial
   custoSolucao = 0;
   custoPagar = 0;
   for(Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
@@ -159,11 +159,11 @@ Grafo * Guloso::gulosoRandomizado (float alfa, int numeroInteracoes){
   Grafo * melhor = calculaGuloso(grafo->getVertices()->getPrimeiro()->getInfo());
 
   for(int i = 0; i< numeroInteracoes;i++){
-
     int vertice_randomizado = (int)(alfa * (rand()% nVertices));
     if(vertice_randomizado <= 0)
       vertice_randomizado = (vertice_randomizado * (-1))+1;
-    Vertice * p = grafo->buscaVertice(vertice_randomizado);
+      
+    Vertice * p = grafo->getVertices()->buscaVertice(to_string(vertice_randomizado));
     Grafo * aux = calculaGuloso(p->getInfo());
 
     cout<<"aux: "<<aux->getCusto()<<endl;
@@ -172,7 +172,7 @@ Grafo * Guloso::gulosoRandomizado (float alfa, int numeroInteracoes){
     if(aux->getCusto() < melhor->getCusto())
       melhor = aux;
   }
-
+  cout<<"custo melhor"<<melhor->getCusto()<<endl;
   return melhor;
 }
 

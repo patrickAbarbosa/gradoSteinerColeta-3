@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
   float vet [10]={0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50};
   //guloso.calcularRandomizadoReativo(grafo, solucao, alphaReativo, nAlphas, bloco, maxIte);
   //guloso.gulosoRandomizadoReativo(vet,10,2000,100);
-  Grafo * teste = guloso.gulosoRandomizado(0.25,200);
+  Grafo * teste = guloso.gulosoRandomizado(0.25,2000);
   teste->imprimeGrafoPNG();
 
   /*
