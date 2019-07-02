@@ -233,7 +233,7 @@ Grafo *Guloso::gulosoRandomizado (float alfa, int numeroInteracoes){
   Grafo * melhor = calculaGuloso(grafo->getVertices()->getPrimeiro()->getInfo());
 
   for(int i = 0; i< numeroInteracoes;i++){
-    int vertice_randomizado = (int)(rand()% nVertices + 1);
+    int vertice_randomizado = (int)(alfa * (rand()% nVertices + 1));
     if(vertice_randomizado <= 0)
       vertice_randomizado = (vertice_randomizado * (-1))+1;
     Vertice * p = grafo->buscaVertice(vertice_randomizado);
