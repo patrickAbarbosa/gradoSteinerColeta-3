@@ -1,10 +1,13 @@
 #include <iostream>
+#include <vector>
 
 #include "../Headers/Guloso.h"
 #include "../Headers/Vertice.h"
 #include "../Headers/Aresta.h"
 #include "../Headers/Grafo.h"
 #include "../Headers/Lista.h"
+#include "../Headers/Fila.h"
+
 
 using namespace std;
 
@@ -73,15 +76,87 @@ Guloso::Guloso(Grafo *g)
 
 Guloso::~Guloso(){}
 
+bool estaNoVetor(vector<string> *vet, string value)
+{
+  if (!vet)
+  {
+    cout << "Vetor nao alocado!" << endl;
+    exit(1);
+  }
+
+  for (vector<string>::iterator it = vet->begin(); it != vet->end(); ++it)
+    if (*it == value)
+      return true;
+  return false;
+}
+
+Grafo * Guloso::algoritmoPrim(Vertice *inicial){
+
+  Grafo * arvore = new Grafo ();
+  Lista * arv_vertices = arvore->getVertices();
+
+  // custo da solucao
+  int c = 0;
+  // custo a pagar
+  int p = 0;
+
+  for(Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
+    p += aux->getPeso();
+
+  arv_vertices->insereVertice(inicial->getInfo(),inicial->getPeso());
+  Vertice *vAtual = inicial;
+  Aresta *aresta = inicial->getListaAdjacencia();
+  Vertice **fila = new Vertice*[grafo->getNumeroVertices()];
+  int inicio = 0;
+  int fim = 0;
+  vector<string>lidos;
+  lidos.push_back(vAtual->getInfo());
+  cout << "c: " << c << ", p: " << p << endl;
+  while(aresta != NULL)
+  {
+    int cAtual = c + aresta->getPeso();
+    int pAtual = p - aresta->getAdjacente()->getPeso();
+    cout << "cA: " << cAtual << ", pA: " << pAtual << endl;
+    if((cAtual + pAtual) < (c + p) && !estaNoVetor(&lidos, aresta->getAdjacente()->getInfo()))
+    {
+      cout << "Nao Esta no vetor" << endl;
+      c = cAtual;
+      p = pAtual;
+      arv_vertices->insereVertice(aresta->getAdjacente()->getInfo(),aresta->getAdjacente()->getPeso());
+      arvore->addAresta(aresta->getOrigem()->getInfo(), aresta->getAdjacente()->getInfo(), aresta->getPeso());
+      if(fim < grafo->getNumeroVertices())
+      {
+        fila[fim] = aresta->getAdjacente();
+        fim++;
+      }
+    }
+    aresta = aresta->getProx();
+    if(aresta == NULL && inicio != fim){
+      cout << "Trocando aresta" << endl;
+      cout << "Fila: " << fila[inicio]->getInfo() << endl;
+      aresta = fila[inicio]->getListaAdjacencia();
+      lidos.push_back(fila[inicio]->getInfo());
+      inicio ++;
+    }
+  }
+  //arvore->imprimeGrafoPNG(); 
+  custoSolucao = c;
+  custoPagar = p;
+  cout << "saiu" << endl;
+  delete [] fila;
+  //arvore->imprimeGrafoPNG();
+  return arvore; 
+}
+
+/*
 Grafo * Guloso::algoritmoPrim(Vertice *inicial){
 
   Grafo * arvore = new Grafo ();
   Lista * arv_vertices = arvore->getVertices();
 
   arv_vertices->insereVertice(inicial->getInfo(),inicial->getPeso());
-  int count = 0;
-  while(custoPagar > custoSolucao && count !=420){
-    count++;
+  
+  while(custoPagar > custoSolucao){
     Vertice * t = arv_vertices->getPrimeiro();
     Aresta * aux_aresta = NULL;
 
@@ -115,7 +190,7 @@ Grafo * Guloso::algoritmoPrim(Vertice *inicial){
     }
   }
   return arvore; 
-}
+}*/
 
 Grafo* Guloso::calculaGuloso(string verticeInicial){
 
@@ -141,7 +216,7 @@ Grafo* Guloso::calculaGuloso(string verticeInicial){
   // Calcula Arvore Minima
   Grafo * aux = algoritmoPrim(inicio);
   aux->setCusto(custoSolucao + custoPagar);
-  // Retorna a Arvore Minima do Grafo
+  // Retorna a arvore minima do Grafo
   return aux; 
 }
 
@@ -150,16 +225,15 @@ Grafo* Guloso::calculaGuloso(string verticeInicial){
   que é utilizado para auxilar na randomização
 ---------------------------------------------------------------------------*/
 
-Grafo * Guloso::gulosoRandomizado (float alfa, int numeroInteracoes){
-
+Grafo *Guloso::gulosoRandomizado (float alfa, int numeroInteracoes){
   int semente = 0; //semente utilizada
-  srand(semente);
+  srand(time(NULL));
 
   int nVertices = grafo->getVertices()->getQuantidade();
   Grafo * melhor = calculaGuloso(grafo->getVertices()->getPrimeiro()->getInfo());
 
   for(int i = 0; i< numeroInteracoes;i++){
-    int vertice_randomizado = (int)(alfa * (rand()% nVertices));
+    int vertice_randomizado = (int)(rand()% nVertices + 1);
     if(vertice_randomizado <= 0)
       vertice_randomizado = (vertice_randomizado * (-1))+1;
       
