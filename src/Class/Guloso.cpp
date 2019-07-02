@@ -106,9 +106,7 @@ Grafo *Guloso::algoritmoPrim(Vertice *inicial)
   arv_vertices->insereVertice(inicial->getInfo(), inicial->getPeso());
   Vertice *vAtual = inicial;
   Aresta *aresta = inicial->getListaAdjacencia();
-  cout<<"oi 7"<<endl;
   queue<Vertice *> fila;
-  cout<<"oi 8"<<endl;
   vector<string> lidos;
   lidos.push_back(vAtual->getInfo());
 
@@ -186,9 +184,8 @@ Grafo *Guloso::gulosoRandomizado(float alfa, int numeroInteracoes)
   srand(semente);
 
   int nVertices = grafo->getVertices()->getQuantidade();
-  cout<<"oi 1"<<endl;
   Grafo *melhor = calculaGuloso(grafo->getVertices()->getPrimeiro());
-  cout<<"oi 2"<<endl;
+
   for (int i = 0; i < numeroInteracoes; i++)
   {
     int vertice_randomizado = (int)(alfa * (rand() % nVertices));
@@ -196,11 +193,10 @@ Grafo *Guloso::gulosoRandomizado(float alfa, int numeroInteracoes)
       vertice_randomizado = (vertice_randomizado * (-1)) + 1;
     Vertice *p = grafo->buscaVertice(vertice_randomizado);
     Grafo *aux = calculaGuloso(p);
-    cout<<"oi 3"<<endl;
+
     if (aux->getCusto() < melhor->getCusto())
       melhor = aux;
   }
-    cout<<"oi 4"<<endl;
   cout<<"custo melhor"<<melhor->getCusto()<<endl;
   return melhor;
 }
