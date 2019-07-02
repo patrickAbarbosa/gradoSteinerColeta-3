@@ -33,6 +33,10 @@ private:
 
 	// verifica se o vertice foi lido e retorna sua posição
 	int lido(string val);
+	void auxCalculaGuloso(Vertice *atual, int *n);
+	//Gera a AGM a partir do Grafo
+	Grafo *geraGrafo();
+	
 	bool arestaLida(Aresta * a);
 };
 #endif // GULOSO_H

@@ -1,0 +1,76 @@
+Está no vetor ?45, info: 28
+Está no vetor
+# if: 28
+Está no vetor ?45, info: 28
+Está no vetor
+# if: 8
+Está no vetor ?-1
+ADD: 8
+Atual: 8
+# if: 1
+Está no vetor ?1, info: 1
+Está no vetor
+# if: 7
+Está no vetor ?-1
+ADD: 7
+Atual: 7
+# if: 1
+Está no vetor ?1, info: 1
+Está no vetor
+Troca Aresta: 1
+# if: 208
+Está no vetor ?-1
+ADD: 208
+Atual: 208
+# if: 208
+Está no vetor ?52, info: 208
+Está no vetor
+./buildAndRun.sh, linha 6:  3365 Falha de segmentação  (imagem do núcleo gravada) ./grafosGrupo3 K400.3.con.red
+--- End Build ---
+
+
+
+Peso da aresta: 2326
+Peso da aresta: 7027
+Peso da aresta: 7704
+Peso da aresta: 7397
+Peso da aresta: 1943
+Peso da aresta: 7449
+Peso da aresta: 2041
+Peso da aresta: 1051
+Peso da aresta: 6770
+Peso da aresta: 5064
+Peso da aresta: 6301
+Peso da aresta: 5154
+Peso da aresta: 7017
+Peso da aresta: 3547
+Peso da aresta: 4027
+Peso da aresta: 3590
+# if: 208
+Está no vetor ? aux: -1
+ADD: 208
+Atual: 208
+Peso da aresta: 3590
+Peso da aresta: 4485
+Peso da aresta: 7073
+Peso da aresta: 7588
+Peso da aresta: 7780
+Peso da aresta: 5542
+Peso da aresta: 1696
+Peso da aresta: 7040
+Peso da aresta: 6315
+Peso da aresta: 6833
+Peso da aresta: 2882
+Peso da aresta: 2910
+Peso da aresta: 4485
+# if: 208
+Está no vetor ? aux: 52, info: 208
+Está no vetor
+Informações da aresta: {
+	origem: 0x55f0bc756620, info: 207,
+	destino: 0x55f0bc756670, info: 208,
+}
+./buildAndRun.sh, linha 6:  3849 Falha de segmentação  (imagem do núcleo gravada) ./grafosGrupo3 K400.3.con.red
+--- End Build ---
+remove file executavel
+3

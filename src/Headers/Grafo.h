@@ -7,7 +7,7 @@
 
 #include "Lista.h"
 #include "Vertice.h"
-#include "./Data.h"
+#include "GeraCsv.h"
 
 using namespace std;
 
@@ -16,8 +16,8 @@ class Grafo
 public:
   Grafo();
   Grafo(string in);
-  Grafo(string in, string out);
-  Grafo(string in, string out, string ehDigrafo);
+  Grafo(string in, GeraCsv *out);
+  Grafo(string in, GeraCsv *out, string ehDigrafo);
   ~Grafo();
 
   //Public functions
@@ -54,21 +54,26 @@ public:
     Lista  *vertices; // Vetor com os vertices do Grafo
  
     string *arquivoIn; // Estacia de entrada
-    string *arquivoOut; // Dados pra saida
+
 
     int custo;
     int numeroArestas;
     int numeroVertices;
     int quantidadeGrausZero;
 
-    bool ehDigrafo; // Se verdadeiro é um digrafo
-    Aresta *menorValor; // Aresta de menor valor
-
-    Data *db;
+    //Se verdadeiro é um digrafo
+    bool ehDigrafo;
+    //Aresta de menor valor
+    Aresta *menorValor; 
+    // exporta pra csv
+    GeraCsv *out;
 
     //private functions
-    void leArquivo(); // Lê a instância e insere as informaçõe no grafo
-    void exportGrafo(); // exporta as informações do grafo para um arquivo .txt
+    // Lê a instância e insere as informaçõe no grafo
+    void leArquivo();
+    // exporta as informações do grafo para um arquivo .txt 
+    void exportGrafo();
+    // auxilia a busca por profundidade, recebe o vertice atual e um vetor dos nós já visitados 
     void auxBuscaPorProfundidade(Vertice *vertice, vector <string> *nosLidos); 
     bool ehConexo();
     void auxAddAresta(Vertice *a,  Vertice *b, int peso);

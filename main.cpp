@@ -11,6 +11,7 @@
 #include <iostream>
 #include "src/Headers/Grafo.h"
 #include "src/Headers/Guloso.h"
+#include "src/Headers/GeraCsv.h"
 
 using namespace std;
 
@@ -19,36 +20,44 @@ int main(int argc, char *argv[])
   cout << "Grupo 03 - Steiner com Coleta de Prêmios" << endl;
 
   Grafo *a = NULL;
-
+  GeraCsv *geradorDeArquivo = NULL;
   switch (argc)
   {
   case 1:
-    a = new Grafo();
+    a = new Grafo("K400.3.con.red");
     break;
   case 2:
     a = new Grafo(argv[1]);
     break;
   case 3:
-    a = new Grafo(argv[1], argv[2]);
+    geradorDeArquivo = new GeraCsv(argv[2]);
+    a = new Grafo(argv[1], geradorDeArquivo);
     break;
   case 4:
-    a = new Grafo(argv[1], argv[2], argv[3]);
+    geradorDeArquivo = new GeraCsv(argv[2]);
+    a = new Grafo(argv[1], geradorDeArquivo, argv[3]);
     break;
   default:
     break;
   }
 
+  //Guloso guloso(a);
   Guloso guloso(a);
+<<<<<<< HEAD
+  float vet [10]={0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50};
+  //guloso.calcularRandomizadoReativo(grafo, solucao, alphaReativo, nAlphas, bloco, maxIte);
+  Grafo * teste = guloso.gulosoRandomizado(0.25); //guloso.gulosoRandomizadoReativo(vet,10,2000,100);
+  //teste->imprimeGrafoPNG();
+=======
   float vet [4]={0.15, 0.1, 0.2, 0.3};
   Grafo * teste = guloso.gulosoRandomizadoReativo(vet,4,1000,200);
   teste->imprimeGrafoPNG();
+>>>>>>> 82584e0708ba57b2b8a21aa502b2123e778bce2c
 
   /*
 
-  Grafo * agm = guloso.calculaGuloso("5");
-  agm->imprimeGrafoPNG();
-  delete agm;
-  return 0;  
+  //Grafo * agm = guloso.calculaGuloso("5");
+  //agm->imprimeGrafoPNG();
   if (a)
   {
     a->menu();

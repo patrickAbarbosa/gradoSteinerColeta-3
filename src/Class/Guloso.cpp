@@ -73,7 +73,7 @@ Guloso::Guloso(Grafo *g)
 
 Guloso::~Guloso(){}
 
-Grafo * Guloso::algoritmoPrim(Vertice * inicial){
+Grafo * Guloso::algoritmoPrim(Vertice *inicial){
 
   Grafo * arvore = new Grafo ();
   Lista * arv_vertices = arvore->getVertices();
@@ -122,11 +122,13 @@ Grafo* Guloso::calculaGuloso(string verticeInicial){
 
   // Busca o vertice inicial desejado
   Vertice *inicio = grafo->getVertices()->buscaVertice(verticeInicial);
+
   // Verifica se o vertice inicial foi encontrado, caso não seja, o calculo da AGM começa
   // a partir do primeiro vertice
   if(inicio == NULL){
     cout<<"ERRO!!! Vertice nao encontrando, será utilizado o primerio vertice da lista"<<endl;
     inicio = grafo->getVertices()->getPrimeiro();
+    exit(1);
   }
   // Calcula Arvore Minima
   Grafo * aux = algoritmoPrim(inicio);
@@ -141,21 +143,25 @@ Grafo* Guloso::calculaGuloso(string verticeInicial){
 ---------------------------------------------------------------------------*/
 
 Grafo * Guloso::gulosoRandomizado (float alfa){
-
   // Iniciamos o custo da solução em 0
   custoSolucao = 0;
+
   // Iniciamos o custo a ser pago em 0
   custoPagar = 0;
+
   for(Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
     custoPagar += aux->getPeso();
+  
   int semente = 0;
   srand(0);
   int numeroInterecoes = 1000;  //quantidade de vezes que o algoritmo sera rodado
+  
+  int nVertices = grafo->getVertices()->getQuantidade();
   Grafo * melhor = calculaGuloso(grafo->getVertices()->getPrimeiro()->getInfo());
-  int vertice_randomizado = int(alfa*rand())%grafo->getNumeroVertices();
+  int vertice_randomizado = (int)(alfa * (rand()% nVertices));
 
   while(vertice_randomizado < 0)
-    vertice_randomizado = int(alfa*rand())%grafo->getNumeroVertices();
+    vertice_randomizado = (int)(alfa * (rand()% nVertices));
 
   Vertice * p = grafo->buscaVertice(vertice_randomizado);
   for(int i = 0; i<numeroInterecoes;i++){
@@ -168,7 +174,7 @@ Grafo * Guloso::gulosoRandomizado (float alfa){
       melhor = aux;
 
     while(vertice_randomizado < 0)
-      vertice_randomizado = int(alfa*rand())%grafo->getNumeroVertices();
+      vertice_randomizado = (int)(alfa * (rand() % nVertices));
     p = grafo->buscaVertice(vertice_randomizado);
   }
 
