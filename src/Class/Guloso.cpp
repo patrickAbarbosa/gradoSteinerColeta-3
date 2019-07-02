@@ -185,10 +185,10 @@ Grafo *Guloso::gulosoRandomizado(float alfa, int numeroInteracoes)
 {
   int semente = 0; //semente utilizada
   srand(semente);
-
+  cout<<"oi 1"<<endl;
   int nVertices = grafo->getVertices()->getQuantidade();
   Grafo *melhor = calculaGuloso(grafo->getVertices()->getPrimeiro());
-
+  cout<<"oi 2"<<endl;
   for (int i = 0; i < numeroInteracoes; i++)
   {
     int vertice_randomizado = (int)(alfa * (rand() % nVertices));
@@ -196,10 +196,11 @@ Grafo *Guloso::gulosoRandomizado(float alfa, int numeroInteracoes)
       vertice_randomizado = (vertice_randomizado * (-1)) + 1;
     Vertice *p = grafo->buscaVertice(vertice_randomizado);
     Grafo *aux = calculaGuloso(p);
-
+    cout<<"oi 3"<<endl;
     if (aux->getCusto() < melhor->getCusto())
       melhor = aux;
   }
+    cout<<"oi 4"<<endl;
   cout<<"custo melhor"<<melhor->getCusto()<<endl;
   return melhor;
 }
@@ -228,7 +229,7 @@ Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos,
   double probabilidade[nAlphas]; //Inicia o verot com distribuição unifome
   for (int i = 0; i < nAlphas; i++)
     probabilidade[i] = 1 / nAlphas;
-
+  cout<<"aqui 0"<<endl;
   float chances[nAlphas];
   float media[nAlphas] = {0};
   float soma[nAlphas] = {0};
@@ -236,8 +237,8 @@ Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos,
   float sum_chances;
 
   Grafo *result = NULL;
-  for (int i = 0; i < periodos; i++)
-  {
+  for (int i = 0; i < periodos; i++){
+
     aleatorio = rand() % 101;
     sum = 0;
     n = 0;
@@ -247,6 +248,7 @@ Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos,
     cout << "Alpha: " << alpha[n] << endl;
     cout << "Interacao: " << i + 1 << endl;
     Grafo *grafoAux = gulosoRandomizado(alpha[n], 100); //numero de interações do randomizado
+    cout<<"saiu aqui"<<endl;
     int custoAux = grafoAux->getCusto();
 
     if (result && custo)
@@ -271,6 +273,7 @@ Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos,
       sum_chances = 0;
       for (int j = 0; j < nAlphas; j++)
       {
+        cout<<"aqui 5"<<endl;
         media[j] = soma[j] / i;
         if (media > 0)
           chances[j] = custo / media[j];
