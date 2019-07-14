@@ -12,12 +12,35 @@
 #include "src/Headers/Grafo.h"
 #include "src/Headers/Guloso.h"
 #include "src/Headers/GeraCsv.h"
+#include <thread>
+
+#include <sys/resource.h>
+#include <sys/time.h>
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
-  cout << "Grupo 03 - Steiner com Coleta de Prêmios" << endl;
+  struct rlimit rl;
+
+  // First get the time limit on CPU
+  getrlimit(RLIMIT_CPU, &rl);
+
+  printf("\n Default value is : %lld\n", (long long int)rl.rlim_cur);
+
+  // Change the time limit
+  rl.rlim_cur = 1;
+
+  // Now call setrlimit() to set the
+  // changed value.
+  setrlimit(RLIMIT_CPU, &rl);
+
+  // Again get the limit and check
+  getrlimit(RLIMIT_CPU, &rl);
+
+  printf("\n Default value now is : %lld\n", (long long int)rl.rlim_cur);
+
+  printf("Grupo 03 - Steiner com Coleta de Prêmios\n");
 
   Grafo *a = NULL;
   GeraCsv *geradorDeArquivo = NULL;
@@ -44,21 +67,18 @@ int main(int argc, char *argv[])
   //Guloso guloso(a);
   Guloso guloso(a);
 
-
-  float vet [10]={0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50};
+  float vet[10] = {0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50};
   //guloso.gulosoRandomizadoReativo(vet,10,2000,100);
-  
-  Grafo * teste = guloso.gulosoRandomizadoReativo(vet,4,200,5);//guloso.gulosoRandomizado(0.25, 2000);
-  teste->imprimeGrafoPNG();
 
-  
+  Grafo *teste = guloso.gulosoRandomizadoReativo(vet, 4, 200, 5); //guloso.gulosoRandomizado(0.25, 2000);
+  teste->imprimeGrafoPNG();
 
   //Grafo * agm = guloso.calculaGuloso("5");
   //agm->imprimeGrafoPNG();
   if (a)
   {
     a->menu();
-    delete a;  
+    delete a;
   }
   return 0;
 }

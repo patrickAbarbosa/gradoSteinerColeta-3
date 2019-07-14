@@ -4,11 +4,12 @@
 #include <sstream>
 #include <vector>
 #include <time.h>
+#include <queue>
 
 #include "../Headers/Grafo.h"
-#include "../Headers/Lista.h"
+//#include "../Headers/Lista.h"
 #include "../Headers/GeraCsv.h"
-#include "../Headers/Fila.h"
+//#include "../Headers/Fila.h"
 #include "../Headers/Aresta.h"
 #include "../Headers/Vertice.h"
 #include "../Headers/Guloso.h"
@@ -28,13 +29,7 @@ using namespace std;
  */
 Grafo::Grafo()
 {
-  vertices = new Lista();
-  arquivoIn = NULL;
-  menorValor = NULL;
   ehDigrafo = false;
-  numeroArestas = 0;
-  numeroVertices = 0;
-  quantidadeGrausZero = 0;
   out = NULL;
 }
 
@@ -44,16 +39,10 @@ Grafo::Grafo()
  */
 Grafo::Grafo(string in)
 {
-  vertices = new Lista();
-  arquivoIn = new string;
-  *arquivoIn = in;
-
+ 
   out = NULL;
   ehDigrafo = false;
-  numeroArestas = 0;
-  numeroVertices = 0;
-  quantidadeGrausZero = 0;
-  leArquivo();
+  leArquivo(in);
 }
 
 /*
@@ -64,16 +53,9 @@ Grafo::Grafo(string in)
  */
 Grafo::Grafo(string in, GeraCsv *out)
 {
-  vertices = new Lista();
-  arquivoIn = new string;
-  *arquivoIn = in;
-
   ehDigrafo = false;
-  numeroArestas = 0;
-  numeroVertices = 0;
-  quantidadeGrausZero = 0;
   this->out = out;
-  leArquivo();
+  leArquivo(in);
 }
 
 /*
@@ -84,22 +66,13 @@ Grafo::Grafo(string in, GeraCsv *out)
  */
 Grafo::Grafo(string in, GeraCsv *out, string ehDigrafo)
 {
-  cout << "Construindo Grafo" << endl;
-
-  vertices = new Lista();
-
-  arquivoIn = new string;
-  *arquivoIn = in;
-
   this->out = out;
 
   if (ehDigrafo == "1")
     ehDigrafo = true;
   else
     ehDigrafo = false;
-  numeroArestas = 0;
-  numeroVertices = 0;
-  leArquivo();
+  leArquivo(in);
 }
 /*
  * ~Grafo() analiza memória alocada dinamicamente
@@ -109,13 +82,6 @@ Grafo::Grafo(string in, GeraCsv *out, string ehDigrafo)
 Grafo::~Grafo()
 {
   cout << "Destruindo Grafo" << endl;
-  if(vertices)
-    delete vertices;
-
-  if (arquivoIn)
-    delete arquivoIn;
-  if(menorValor)
-    delete menorValor;
 }
 //
 //
@@ -126,21 +92,21 @@ Grafo::~Grafo()
  * de entrada e coloca em variáveis 
  * para o processamento
  */
-void Grafo::leArquivo()
+void Grafo::leArquivo(string in)
 {
   clock_t inicio, fim;
-  LinhaCSV linha;
+  //LinhaCSV linha;
   // seta os valores da linha
-  linha.instancia = *arquivoIn;
-  linha.classe = "Grafo.h";
-  linha.algoritmo = "leArquivo";
-  linha.interacao = 0;
+  //linha.instancia = *arquivoIn;
+  // //linha.classe = "Grafo.h";
+  // linha.algoritmo = "leArquivo";
+  // linha.interacao = 0;
 
   // Pega o tempo do processador no inicio da leitura
   inicio = clock();
   fstream file;
 
-  file.open(*arquivoIn);
+  file.open(in);
 
   if (file.is_open())
   {
@@ -149,7 +115,7 @@ void Grafo::leArquivo()
     getline(file, str); // para nao pegar a primeira linha
     while (!file.eof())
     {
-      linha.interacao++;
+      // linha.interacao++;
       str = ' ';
       getline(file, str);
       if (str[0] >= '0' && str[0] <= '9')
@@ -176,8 +142,10 @@ void Grafo::leArquivo()
           line >> lixo;
           line >> peso;
 
-          vertices->insereVertice(vertice, peso);
-          numeroVertices++;
+          // cria novo No
+          Vertice *aux = new Vertice(vertice, peso);
+          //adiciona no na lista
+          vertices.push_back(aux);
         }
       }
       else if (str == "link")
@@ -185,8 +153,8 @@ void Grafo::leArquivo()
     }
     // pega o tempo do processador do fim da leitura
     fim = clock();
-    linha.tempo_execucao = to_string((1000 * (fim - inicio))/(double)(CLOCKS_PER_SEC)) + "ms";
-    out->imprime(linha);
+    // linha.tempo_execucao = to_string((1000 * (fim - inicio))/(double)(CLOCKS_PER_SEC)) + "ms";
+    // out->imprime(linha);
   }
   else
   {

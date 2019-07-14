@@ -26,9 +26,12 @@ Lista::~Lista()
 //insere um novo vertice a lista caso nao exista outro vertice com essa info
 
 void Lista::insereVertice (string info, int peso) {
-	
+	cout << "aaa" << endl;
 	if (primeiro == NULL) {
+		cout << "ssss" << endl;
+		cout << info << peso << endl;
 		primeiro = new Vertice();
+		cout << "llll" << endl;
 		primeiro->setInfo(info);
 		primeiro->setPeso(peso);
 		cout << "criando" << endl;
@@ -36,6 +39,7 @@ void Lista::insereVertice (string info, int peso) {
 		quantidade ++;
 	}
 	else if(buscaVertice(info) == NULL){
+		cout << "xxxx" << endl;
 		Vertice *p = primeiro;
 		
 		while (p->getProx() != NULL)

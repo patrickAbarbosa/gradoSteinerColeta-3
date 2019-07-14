@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "Lista.h"
 #include "Vertice.h"
 #include "GeraCsv.h"
 
@@ -27,10 +26,10 @@ public:
   void imprimeGrafoPNG();
   void menuSelecionado(char a);
   void menu();
-  Lista * getVertices(){ return vertices;}
-  Aresta * getMenorValor(){ return menorValor;}
+ // Lista * getVertices(){ return vertices;}
+ // Aresta * getMenorValor(){ return menorValor;}
 
-  void atualizaMaiorgrau();
+ // void atualizaMaiorgrau();
   Vertice * buscaVertice(int i);
   void buscaPorProfundidade(string verticeInicial);
   bool buscaPorLargura(string verticeInicial,string verticeFinal);
@@ -46,31 +45,34 @@ public:
   int algoritmoFloyd(string origem, string destino);
   int auxFloyd(Vertice *p, Vertice* destino);
 
-  void setCusto(int i){ custo = i;} 
-  int getCusto(){ return custo;}
-  int getNumeroVertices(){ return numeroVertices; }
-  int getNumeroArestas(){ return numeroArestas; }
+  // void setCusto(int i){ custo = i;} 
+  // int getCusto(){ return custo;}
+  // int getNumeroVertices(){ return numeroVertices; }
+  // int getNumeroArestas(){ return numeroArestas; }
+  protected:
+    // Vetor com os vertices do Grafo
+    vector<Vertice*> vertices;
+    // exporta pra csv
+    GeraCsv *out;
   private:
-    Lista  *vertices; // Vetor com os vertices do Grafo
+     
  
-    string *arquivoIn; // Estacia de entrada
+    //string *arquivoIn; // Estacia de entrada
 
-
-    int custo;
-    int numeroArestas;
-    int numeroVertices;
-    int quantidadeGrausZero;
+ //   int custo;
+ //   int numeroArestas;
+ //   int numeroVertices;
+ //   int quantidadeGrausZero;
 
     //Se verdadeiro é um digrafo
     bool ehDigrafo;
     //Aresta de menor valor
-    Aresta *menorValor; 
-    // exporta pra csv
-    GeraCsv *out;
+    //Aresta *menorValor; 
+    
 
     //private functions
     // Lê a instância e insere as informaçõe no grafo
-    void leArquivo();
+    void leArquivo(string in);
     // exporta as informações do grafo para um arquivo .txt 
     void exportGrafo();
     // auxilia a busca por profundidade, recebe o vertice atual e um vetor dos nós já visitados 
