@@ -28,10 +28,7 @@ Lista::~Lista()
 void Lista::insereVertice (string info, int peso) {
 
 	if (primeiro == NULL) {
-		primeiro = new Vertice();
-		primeiro->setInfo(info);
-		primeiro->setPeso(peso);
-		cout << "criando" << endl;
+		primeiro = new Vertice(info,peso);
 		maiorGrau = primeiro;
 		quantidade ++;
 	}

@@ -92,75 +92,37 @@ bool estaNoVetor(vector<string> *vet, string value)
       return true;
   return false;
 }
-/*
-Grafo *Guloso::algoritmoPrim(Vertice *inicial)
-{
-  cout << "PRIM" << endl;
-  if(inicial == NULL)
-    return grafo;
-  Grafo *arvore = new Grafo();
-  Lista *arv_vertices = arvore->getVertices();
 
-  // custo da solucaocriado
-  int c = 0;
-  // custo a pagar
-  int p = 0;
-  for (Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
-    p += aux->getPeso();
-
-  arv_vertices->insereVertice(inicial->getInfo(), inicial->getPeso());
-  Vertice *vAtual = inicial;
-  Aresta *aresta = inicial->getListaAdjacencia();
-  Fila2 fila;
-  vector<string> lidos;
-  lidos.push_back(vAtual->getInfo());
-  while (aresta != NULL){
-
-    int cAtual = c + aresta->getPeso();
-    int pAtual = p - aresta->getAdjacente()->getPeso();
-    if ((cAtual + pAtual) < (c + p) && !estaNoVetor(&lidos, aresta->getAdjacente()->getInfo()))
-    {
-      c = cAtual;
-      p = pAtual;
-      arv_vertices->insereVertice(aresta->getAdjacente()->getInfo(), aresta->getAdjacente()->getPeso());
-      arvore->addAresta(aresta->getOrigem()->getInfo(), aresta->getAdjacente()->getInfo(), aresta->getPeso());
-      fila.insere(aresta->getAdjacente());
-      lidos.push_back(aresta->getAdjacente()->getInfo());
-    }
-    aresta = aresta->getProx();
-    
-    if (aresta == NULL && !fila.vazia())
-    {
-      Vertice *aux = fila.retira();
-      aresta = aux->getListaAdjacencia();
-    }
-  }
-  //arvore->imprimeGrafoPNG();
-  custoSolucao = c;
-  custoPagar = p;
-  //arvore->imprimeGrafoPNG();
-  arvore->setCusto(custoSolucao + custoPagar);
-  cout << "saiu do PRIM" << endl;
-  return arvore;
-}*/
 Grafo * Guloso::algoritmoPrim(Vertice *inicial){
+
+  vector<Aresta *> vetor_arestas;
+
   Grafo * arvore = new Grafo ();
   Lista * arv_vertices = arvore->getVertices();
   arv_vertices->insereVertice(inicial->getInfo(),inicial->getPeso());
   
   while(custoPagar > custoSolucao){
-    Vertice * t = arv_vertices->getPrimeiro();
+
+    //Vertice * t = arv_vertices->getPrimeiro();
+    Vertice * t = vetor_arestas.front;
     Aresta * aux_aresta = NULL;
+
     while(t != NULL){
+
       Vertice * w = grafo->getVertices()->buscaVertice(t->getInfo());
+
       if(aux_aresta == NULL)
         aux_aresta = w->getListaAdjacencia();
+
       while(aux_aresta != NULL && arv_vertices->buscaVertice(aux_aresta->getAdjacente()->getInfo()) != NULL)
         aux_aresta = aux_aresta->getProx(); 
+
       if(aux_aresta != NULL){
         for(Aresta * aux = aux_aresta->getProx(); aux!= NULL; aux = aux->getProx()){
+
           int somaA = aux_aresta->getPeso() + custoSolucao + custoPagar - aux_aresta->getAdjacente()->getPeso();
           int somaB = aux->getPeso() + custoSolucao + custoPagar - aux->getAdjacente()->getPeso();
+          
           if(somaA > somaB){
             if(arv_vertices->buscaVertice(aux->getAdjacente()->getInfo()) == NULL)
               aux_aresta = aux;
@@ -171,16 +133,59 @@ Grafo * Guloso::algoritmoPrim(Vertice *inicial){
     }
     if(aux_aresta != NULL){
       Vertice * vertice_auxiliar = aux_aresta->getAdjacente();
-      arv_vertices->insereVertice(vertice_auxiliar->getInfo(),vertice_auxiliar->getPeso());
       //atualiza custo
       custoSolucao +=aux_aresta->getPeso();
       custoPagar -= vertice_auxiliar->getPeso();
-      arvore->addAresta(aux_aresta->getOrigem()->getInfo(),aux_aresta->getAdjacente()->getInfo(),aux_aresta->getPeso());
+      //adiciona a aresta no vector
+      vetor_arestas.push_back(aux_aresta);
     }
   }
+  Grafo * resultado = montaGrafo(vetor_arestas,custoPagar+custoSolucao);
   return arvore;
 }
 
+bool isVector(vector<Aresta*> *vet, Aresta * aux)
+{
+  if (!vet)
+  {
+    cout << "Vetor nao alocado!" << endl;
+    exit(1);
+  }
+
+  for (vector<Aresta*>::iterator it = vet->begin(); it != vet->end(); ++it)
+    if (*it == aux)
+      return true;
+  return false;
+}
+
+Grafo * Guloso::montaGrafo(vector<Aresta *> arestas,int custo){
+
+  if(arestas.empty()){
+    cout<<"Erro: vetor de arestas vazio!"<<endl;
+    return NULL;
+  }
+
+  Grafo * resultado = new Grafo();
+  Lista * vertices = resultado->getVertices();
+
+  for(int i = 0; i > grafo->getNumeroVertices();i++){ 
+    //separando as informações da aresta
+    Aresta * aux = arestas[i];
+    Vertice * origem = aux->getOrigem();
+    Vertice * adj = aux->getAdjacente();
+
+    //adiciona os vertices
+    if(vertices->buscaVertice(origem->getInfo()) == NULL)
+      vertices->insereVertice(origem->getInfo(),origem->getPeso());
+    if(vertices->buscaVertice(adj->getInfo()) == NULL)
+      vertices->insereVertice(adj->getInfo(),adj->getPeso());  
+    //adiciona a aresta
+    origem->insereAresta(aux);//talvez de erro aqui por criar vertices  diferentes
+  }
+  resultado->setCusto(custo);
+
+  return resultado;
+}
 
 Grafo *Guloso::calculaGuloso(Vertice *inicial){
 
@@ -194,15 +199,14 @@ Grafo *Guloso::calculaGuloso(Vertice *inicial){
     inicial = grafo->getVertices()->getPrimeiro();
     exit(1);
   }
-  cout << "Cal 1" << endl;
+
   //Arruma o custo incial
   custoSolucao = 0;
   custoPagar = 0;
   for (Vertice *aux = grafo->getVertices()->getPrimeiro(); aux != NULL; aux = aux->getProx())
     custoPagar += aux->getPeso();
-  cout << "Cal 2" << endl;
+
   // Calcula Arvore Minima
-  cout<<"aqui"<<endl;
   return algoritmoPrim(inicial);
 }
 

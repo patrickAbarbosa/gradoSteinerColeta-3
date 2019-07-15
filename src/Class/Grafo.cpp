@@ -165,7 +165,6 @@ void Grafo::leArquivo()
           line >> verticeA >> verticeB >> peso;
 
           addAresta(verticeA, verticeB, peso);
-//        addAresta(verticeB, verticeA, peso);
         }
         else
         {
