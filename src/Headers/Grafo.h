@@ -51,7 +51,7 @@ public:
   // int getNumeroArestas(){ return numeroArestas; }
   protected:
     // Vetor com os vertices do Grafo
-    vector<Vertice*> vertices;
+    vector<Vertice> vertices;
     // exporta pra csv
     GeraCsv *out;
   private:

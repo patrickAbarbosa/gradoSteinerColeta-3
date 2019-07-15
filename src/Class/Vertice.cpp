@@ -32,19 +32,18 @@ void Vertice::insereAresta(Aresta * a)
 
 void Vertice::deletaAresta(Aresta * a)
 {
-	adjacentes
+	int i = 0;
+	vector<Aresta*>::iterator it;
+	for(it = adjacentes.begin() ; it != adjacentes.end(); ++it)
+		if(*it == a)
+			break;
+	if(i != adjacentes.size())
+		adjacentes.erase(adjacentes.begin() + i);
 }
 
 Aresta * Vertice::buscaAresta(string adjacente){
-	
-	Aresta * p = adjacentes;
-	
-	while( p != NULL) {
-		Vertice * t = p->getAdjacente();
-		if( t->getInfo() == info)
-			return p;
-		p = p->getProx();
-	}
-	
+	for(vector<Aresta*>::iterator it = adjacentes.begin() ; it != adjacentes.end(); ++it)
+		if((*it)->getAdjacente()->getInfo() == adjacente)
+			return *it;
 	return NULL;
 }

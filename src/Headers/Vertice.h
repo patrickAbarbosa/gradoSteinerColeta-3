@@ -4,6 +4,7 @@
 #include "Aresta.h"
 #include <iostream>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -47,7 +48,7 @@ class Vertice{
 		int tamCaminho;
 		string info;
 		Vertice * proximo;
-    vector<Aresta*> adjacentes;
+   	vector<Aresta*>adjacentes;
  
 };
 
