@@ -8,6 +8,8 @@ using namespace std;
 // Estrutura da linha do gerador csv
 class LinhaCSV {
 public:
+  LinhaCSV();
+  ~LinhaCSV();
   string instancia; 
   int numero_vertces;
   int numero_aresta;

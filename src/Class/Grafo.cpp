@@ -29,7 +29,9 @@ using namespace std;
  */
 Grafo::Grafo()
 {
+  //Seta o grafo como  não orientado
   ehDigrafo = false;
+  //seta a saida como nula 
   out = NULL;
 }
 
@@ -39,7 +41,6 @@ Grafo::Grafo()
  */
 Grafo::Grafo(string in)
 {
- 
   out = NULL;
   ehDigrafo = false;
   leArquivo(in);
@@ -94,6 +95,7 @@ Grafo::~Grafo()
  */
 void Grafo::leArquivo(string in)
 {
+  // instancia as variáveis para calcular o tempo do
   clock_t inicio, fim;
   //LinhaCSV linha;
   // seta os valores da linha
@@ -104,51 +106,67 @@ void Grafo::leArquivo(string in)
 
   // Pega o tempo do processador no inicio da leitura
   inicio = clock();
+  // Variavel para ler o arquivo do grafo 
   fstream file;
-
+  // Tenta abrir o arquivo
   file.open(in);
-
+  // Verifica se o aquivo foi aberto com sucesso
   if (file.is_open())
   {
+    // Irá guardar se estamos lendo as arestas
     bool link = false;
+    // Guarda a linha lida para uma análise futura
     string str;
-    getline(file, str); // para nao pegar a primeira linha
+    // para nao pegar a primeira linha
+    getline(file, str); 
+    // Enquanto a variável file não estiver no final do arquivo
     while (!file.eof())
     {
       // linha.interacao++;
       str = ' ';
+      // Guarda a linha na variável str
       getline(file, str);
+      // Verifica se é não é um comentário no meio da leitura
       if (str[0] >= '0' && str[0] <= '9')
       {
+        // Cria uma variável que irá simular um arquivo para leitura e colocamos como entrada a str
         stringstream line(str);
         if (link)
         {
+          // Variáveis que serão utilizadas para descartar valores inuteis e guardará o peso
           int lixo, peso;
+          // Irá guardar as informações dos vertices A e B
           string verticeA, verticeB;
-
+          // Remove o primeiro valor e descartamos
           line >> lixo;
+          // seta as informações do verticeA, verticeB e peso.
           line >> verticeA >> verticeB >> peso;
-
+          // Cria uma aresta com os valores pré setados
           addAresta(verticeA, verticeB, peso);
-//          addAresta(verticeB, verticeA, peso);
         }
         else
         {
+          // Declarara o vetice
           string vertice;
+          // Variável para descarte e para guardar os valores
           int lixo, peso;
-
+          // Setamos a informação do vetice
           line >> vertice;
+          // Descartamos o valor
           line >> lixo;
+          // Descartamos o valor
           line >> lixo;
+          // Setamos o peso do vertice
           line >> peso;
-
-          // cria novo No
+          // cria novo Vertice
           Vertice *aux = new Vertice(vertice, peso);
           //adiciona no na lista
           vertices.push_back(aux);
         }
       }
+      // Verifica se iremos começar a ler arestas
       else if (str == "link")
+        // Seta como verdadeiro essa leitura
         link = true;
     }
     // pega o tempo do processador do fim da leitura
@@ -168,17 +186,20 @@ void Grafo::leArquivo(string in)
  */
 void Grafo::imprimeGrafoPNG()
 {
-
+  // Declaramos o arquivo de saida
   ofstream arquivo;
-  arquivo.open("GrafoPNG.dot", ios::trunc | ios::in); //cria se não existir ou reescreve no arquivo GrafoPNG.dot
+  // Setamos o nome do arquivo. Caso não existir cria, caso não reescreve no arquivo GrafoPNG.dot
+  arquivo.open("GrafoPNG.dot", ios::trunc | ios::in); 
 
+  // Verifica se o arquivo foi aberte 
   if (arquivo.is_open())
   {
+    // Dizemos que o grafo não terá multi-aresta
     arquivo << "Strict Graph A{" << endl;
+    // Dizemos que a escrita será da esquerda pra direita
     arquivo << "    rankdir=LR;" << endl;
-    Vertice *p = vertices->getPrimeiro();
-
-    while (p != NULL)
+  
+    for(it = adjacentes.begin() ; it != adjacentes.end(); ++it)
     { //p é o ponteiro que está na lista de vertices do grafo
       arquivo << "    ";
       arquivo << p->getInfo();

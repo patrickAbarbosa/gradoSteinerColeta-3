@@ -3,7 +3,6 @@
 
 using namespace std;
 //Contrutor padrao de vertices utilizando um id e um peso_vertice
-
 Vertice::Vertice()
 {
 	peso = 0;
@@ -11,7 +10,6 @@ Vertice::Vertice()
 	grau = 0;
 	tamCaminho = 0;
 }
-
 
 Vertice::Vertice(string id, int peso_vertice)
 {
