@@ -587,8 +587,8 @@ Vertice * Grafo::buscaVertice(int i){
  * isVector(vector<string> *vet, int value) verifica se o valor
  * está dentro do vetor.
  */
-bool isVector(vector<string> *vet, string value)
-{
+bool isVector(vector<string> *vet, string value){
+
   if (!vet)
   {
     cout << "Vetor nao alocado!" << endl;

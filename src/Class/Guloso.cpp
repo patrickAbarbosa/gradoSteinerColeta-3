@@ -93,72 +93,69 @@ bool estaNoVetor(vector<string> *vet, string value)
   return false;
 }
 
-Grafo * Guloso::algoritmoPrim(Vertice *inicial){
+int Guloso::algoritmoPrim(Vertice *inicial, vector<Aresta*> *vetor_arestas){
 
-  vector<Aresta *> vetor_arestas;
-  vector<Vertice *> vetor_vertices;
-
-  vetor_vertices.push_back(inicial);
+  vector<string> vetor_vertices;
+  vetor_vertices.push_back(inicial->getInfo());
   
   while(custoPagar > custoSolucao){
 
-    Vertice * t = vetor_vertices.front();
     Aresta * aux_aresta = NULL;
-    vector<Vertice *>::iterator  it = vetor_vertices.begin();
+    vector<string>::iterator  it = vetor_vertices.begin();
 
-    while(it != vetor_vertices.end()){
-
-      Vertice * w = grafo->getVertices()->buscaVertice(t->getInfo());
+    for(;it != vetor_vertices.end();++it){
+      Vertice * w = grafo->getVertices()->buscaVertice(*it);
 
       if(aux_aresta == NULL)
         aux_aresta = w->getListaAdjacencia();
 
-      while(aux_aresta != NULL && isVector(vetor_vertices,aux_aresta->getAdjacente()) == true)
+      while(aux_aresta != NULL && isVector(&vetor_vertices,aux_aresta->getAdjacente()->getInfo()) == true)
         aux_aresta = aux_aresta->getProx(); 
 
       if(aux_aresta != NULL){
         for(Aresta * aux = aux_aresta->getProx(); aux!= NULL; aux = aux->getProx()){
-
           int somaA = aux_aresta->getPeso() + custoSolucao + custoPagar - aux_aresta->getAdjacente()->getPeso();
           int somaB = aux->getPeso() + custoSolucao + custoPagar - aux->getAdjacente()->getPeso();
-          
+
           if(somaA > somaB){
-            if(isVector(vetor_vertices,aux_aresta->getAdjacente()) == false)
+            if(isVector(&vetor_vertices,aux->getAdjacente()->getInfo()) == false)
               aux_aresta = aux;
           }
         }
       }
-      ++it;
     }
     if(aux_aresta != NULL){
+
       Vertice * vertice_auxiliar = aux_aresta->getAdjacente();
       //atualiza custo
       custoSolucao +=aux_aresta->getPeso();
       custoPagar -= vertice_auxiliar->getPeso();
       //adiciona a aresta no vector
-      vetor_arestas.push_back(aux_aresta);
+      vetor_vertices.push_back(vertice_auxiliar->getInfo());
+      vetor_arestas->push_back(aux_aresta);
     }
   }
-  Grafo * resultado = montaGrafo(vetor_arestas,custoPagar+custoSolucao);
-  return resultado;
+  return custoPagar+custoSolucao;
 }
 
-bool Guloso::isVector(vector<Vertice*> vet, Vertice * aux){
-  if (vet.empty())
-  {
+bool Guloso::isVector(vector<string> *vet, string aux){
+
+  if (vet->empty()){
     cout << "Vetor nao alocado!" << endl;
     exit(1);
   }
 
-  for (vector<Vertice*>::iterator it = vet.begin(); it != vet.end(); ++it)
-    if (*it == aux)
+  for (vector<string>::iterator it = vet->begin(); it != vet->end(); ++it){
+    if (*it == aux){
       return true;
+    }
+  }
   return false;
 }
 
-Grafo * Guloso::montaGrafo(vector<Aresta *> arestas,int custo){
+Grafo * Guloso::montaGrafo(vector<Aresta *> * arestas,int custo){
 
-  if(arestas.empty()){
+  if(arestas->empty()){
     cout<<"Erro: vetor de arestas vazio!"<<endl;
     return NULL;
   }
@@ -166,14 +163,7 @@ Grafo * Guloso::montaGrafo(vector<Aresta *> arestas,int custo){
   Grafo * resultado = new Grafo();
   Lista * vertices = resultado->getVertices();
 
-  //Apagar esse teste
-  for(vector<Aresta *>::iterator it = arestas.begin(); it != arestas.end(); ++it){ 
-    Aresta * a = *it;
-    cout<< a->getPeso()<<" "<< a->getOrigem()->getInfo()<<endl;
-  }
-
-
-  for(vector<Aresta *>::iterator it = arestas.begin(); it != arestas.end(); ++it){ 
+  for(vector<Aresta *>::iterator it = arestas->begin(); it != arestas->end(); ++it){ 
     //separando as informações da aresta
     Aresta * aux = *it;
     Vertice * origem = aux->getOrigem();
@@ -198,11 +188,11 @@ Grafo * Guloso::montaGrafo(vector<Aresta *> arestas,int custo){
   return resultado;
 }
 
-Grafo *Guloso::calculaGuloso(Vertice *inicial){
+int Guloso::auxCalculaGuloso(Vertice *inicial, vector<Aresta *> * vetor_arestas){
 
   // Verifica se o grafo não possui vertice
   if (grafo == NULL)
-    return NULL;
+    return 0;
     
   if (inicial == NULL)
   {
@@ -218,7 +208,15 @@ Grafo *Guloso::calculaGuloso(Vertice *inicial){
     custoPagar += aux->getPeso();
 
   // Calcula Arvore Minima
-  return algoritmoPrim(inicial);
+  return algoritmoPrim(inicial,vetor_arestas);
+}
+
+Grafo * Guloso::calculaGuloso(string inicial){
+
+  Vertice *i = grafo->getVertices()->buscaVertice(inicial);
+  vector<Aresta *> vetor_arestas;
+  int custo = auxCalculaGuloso(i,&vetor_arestas);
+  return montaGrafo(&vetor_arestas,custo);
 }
 
 /*---------------------------------------------------------------------------
@@ -226,37 +224,37 @@ Grafo *Guloso::calculaGuloso(Vertice *inicial){
   que é utilizado para auxilar na randomização
 ---------------------------------------------------------------------------*/
 
-Grafo *Guloso::gulosoRandomizado(float alfa, int numeroInteracoes)
+int Guloso::auxGulosoRandomizado(float alfa, int numeroInteracoes, vector<Aresta *> *vetor_arestas_melhor)
 {
   int semente = 0; //semente utilizada
   srand(semente);
 
   int nVertices = grafo->getVertices()->getQuantidade();
-  Grafo *melhor = calculaGuloso(grafo->getVertices()->getPrimeiro());
+  int melhor = auxCalculaGuloso(grafo->getVertices()->getPrimeiro(),vetor_arestas_melhor);
 
-  for (int i = 0; i < numeroInteracoes; i++)
-  {
+  for (int i = 0; i < numeroInteracoes; i++){
+
     int vertice_randomizado = (int)(alfa * (rand() % nVertices));
     if (vertice_randomizado <= 0)
       vertice_randomizado = (vertice_randomizado * (-1)) + 1;
-    Vertice *p = grafo->getVertices()->buscaVertice(to_string(vertice_randomizado));
-    if(p != NULL)
-      cout << "oi 3->" << p->getInfo() << endl;
-    Grafo *aux = calculaGuloso(p);
-    cout<<"oi 3"<<endl;
 
-    if (aux->getCusto() < melhor->getCusto())
-    {
-      Grafo *lixo = melhor;
+    Vertice *p = grafo->getVertices()->buscaVertice(to_string(vertice_randomizado));
+    vector<Aresta *> vetor_arestas_aux;
+    int aux = auxCalculaGuloso(p,&vetor_arestas_aux);
+
+    if (aux < melhor){
       melhor = aux;
-      delete lixo;
-      cout << "deletou lizo" << endl;
+      *vetor_arestas_melhor = vetor_arestas_aux;
     }
-    cout << "oi 3.1" << endl;
   }
-  cout << "3.2" << endl;
-  cout<<"custo melhor"<<melhor->getCusto()<<endl;
   return melhor;
+}
+
+Grafo * Guloso::gulosoRandomizado(float alfa, int numeroInteracoes){
+
+  vector<Aresta *> vetor_arestas;
+  int custo = auxGulosoRandomizado(alfa,numeroInteracoes,&vetor_arestas);
+  return montaGrafo(&vetor_arestas,custo);
 }
 
 // https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-10-S1-S27
@@ -271,26 +269,26 @@ Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos,
   int nVertices = 0;
   Lista *aux = grafo->getVertices();
 
-  if (grafo->getVertices() == NULL)
+  if (aux == NULL)
     return NULL;
-  float custoMax = 0;
-  for (Vertice *p = aux->getPrimeiro(); p != NULL; p = p->getProx())
-    custoMax += p->getPeso();
-  // Maior custo da solução
-  custo = custoMax;
+
+  //calcula o custo maximo
+  for(Vertice *p = aux->getPrimeiro(); p != NULL; p = p->getProx())
+    custo += p->getPeso();
+
   // Definição de variáveis para auxiliar
   int n = 0, aleatorio = 0;
   double probabilidade[nAlphas]; //Inicia o verot com distribuição unifome
   for (int i = 0; i < nAlphas; i++)
     probabilidade[i] = 1 / nAlphas;
-  cout<<"aqui 0"<<endl;
+
   float chances[nAlphas];
   float media[nAlphas] = {0};
   float soma[nAlphas] = {0};
   float sum;
   float sum_chances;
 
-  Grafo *result = NULL;
+  vector<Aresta*> vetor_arestas_melhor;
   for (int i = 0; i < periodos; i++){
 
     aleatorio = rand() % 101;
@@ -299,27 +297,12 @@ Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos,
     for (sum += probabilidade[n] * 100; n < nAlphas && sum < aleatorio; n++)
       sum += probabilidade[n] * 100;
 
-    cout << "Alpha: " << alpha[n] << endl;
-    cout << "Interacao: " << i + 1 << endl;
-    Grafo *grafoAux = gulosoRandomizado(alpha[n], 100); //numero de interações do randomizado
-    cout<<"saiu aqui"<<endl;
-    int custoAux = grafoAux->getCusto();
+    vector<Aresta*>vetor_arestas_aux;
+    int custoGrafoAux = auxGulosoRandomizado(alpha[n], 100,&vetor_arestas_aux);
 
-    if (result && custo)
-    {
-      if (custo > custoAux)
-      {
-        custo = custoAux;
-        delete result;
-        result = grafoAux;
-      }
-      else
-        delete grafoAux;
-    }
-    else
-    {
-      custo = custoAux;
-      result = grafoAux;
+    if (custo > custoGrafoAux){
+      custo = custoGrafoAux;
+      vetor_arestas_melhor = vetor_arestas_aux;
     }
     soma[i] = custo;
     if (i % bloco == 0)
@@ -327,7 +310,6 @@ Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos,
       sum_chances = 0;
       for (int j = 0; j < nAlphas; j++)
       {
-        cout<<"aqui 5"<<endl;
         media[j] = soma[j] / i;
         if (media > 0)
           chances[j] = custo / media[j];
@@ -338,5 +320,5 @@ Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos,
       }
     }
   }
-  return NULL;
+  return montaGrafo(&vetor_arestas_melhor,custo);
 }
