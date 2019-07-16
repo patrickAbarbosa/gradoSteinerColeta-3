@@ -83,7 +83,6 @@ Vertice* Lista::buscaVertice(string info) {
 			return p;
 		p = p->getProx();
 	}
-	cout << "Nulo" << endl;
 	return NULL;
 }
 

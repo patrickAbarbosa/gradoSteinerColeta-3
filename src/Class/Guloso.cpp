@@ -96,25 +96,24 @@ bool estaNoVetor(vector<string> *vet, string value)
 Grafo * Guloso::algoritmoPrim(Vertice *inicial){
 
   vector<Aresta *> vetor_arestas;
+  vector<Vertice *> vetor_vertices;
 
-  Grafo * arvore = new Grafo ();
-  Lista * arv_vertices = arvore->getVertices();
-  arv_vertices->insereVertice(inicial->getInfo(),inicial->getPeso());
+  vetor_vertices.push_back(inicial);
   
   while(custoPagar > custoSolucao){
 
-    //Vertice * t = arv_vertices->getPrimeiro();
-    Vertice * t = vetor_arestas.front;
+    Vertice * t = vetor_vertices.front();
     Aresta * aux_aresta = NULL;
+    vector<Vertice *>::iterator  it = vetor_vertices.begin();
 
-    while(t != NULL){
+    while(it != vetor_vertices.end()){
 
       Vertice * w = grafo->getVertices()->buscaVertice(t->getInfo());
 
       if(aux_aresta == NULL)
         aux_aresta = w->getListaAdjacencia();
 
-      while(aux_aresta != NULL && arv_vertices->buscaVertice(aux_aresta->getAdjacente()->getInfo()) != NULL)
+      while(aux_aresta != NULL && isVector(vetor_vertices,aux_aresta->getAdjacente()) == true)
         aux_aresta = aux_aresta->getProx(); 
 
       if(aux_aresta != NULL){
@@ -124,12 +123,12 @@ Grafo * Guloso::algoritmoPrim(Vertice *inicial){
           int somaB = aux->getPeso() + custoSolucao + custoPagar - aux->getAdjacente()->getPeso();
           
           if(somaA > somaB){
-            if(arv_vertices->buscaVertice(aux->getAdjacente()->getInfo()) == NULL)
+            if(isVector(vetor_vertices,aux_aresta->getAdjacente()) == false)
               aux_aresta = aux;
           }
         }
       }
-      t = t->getProx();
+      ++it;
     }
     if(aux_aresta != NULL){
       Vertice * vertice_auxiliar = aux_aresta->getAdjacente();
@@ -141,18 +140,17 @@ Grafo * Guloso::algoritmoPrim(Vertice *inicial){
     }
   }
   Grafo * resultado = montaGrafo(vetor_arestas,custoPagar+custoSolucao);
-  return arvore;
+  return resultado;
 }
 
-bool isVector(vector<Aresta*> *vet, Aresta * aux)
-{
-  if (!vet)
+bool Guloso::isVector(vector<Vertice*> vet, Vertice * aux){
+  if (vet.empty())
   {
     cout << "Vetor nao alocado!" << endl;
     exit(1);
   }
 
-  for (vector<Aresta*>::iterator it = vet->begin(); it != vet->end(); ++it)
+  for (vector<Vertice*>::iterator it = vet.begin(); it != vet.end(); ++it)
     if (*it == aux)
       return true;
   return false;
@@ -168,9 +166,16 @@ Grafo * Guloso::montaGrafo(vector<Aresta *> arestas,int custo){
   Grafo * resultado = new Grafo();
   Lista * vertices = resultado->getVertices();
 
-  for(int i = 0; i > grafo->getNumeroVertices();i++){ 
+  //Apagar esse teste
+  for(vector<Aresta *>::iterator it = arestas.begin(); it != arestas.end(); ++it){ 
+    Aresta * a = *it;
+    cout<< a->getPeso()<<" "<< a->getOrigem()->getInfo()<<endl;
+  }
+
+
+  for(vector<Aresta *>::iterator it = arestas.begin(); it != arestas.end(); ++it){ 
     //separando as informações da aresta
-    Aresta * aux = arestas[i];
+    Aresta * aux = *it;
     Vertice * origem = aux->getOrigem();
     Vertice * adj = aux->getAdjacente();
 
@@ -178,9 +183,15 @@ Grafo * Guloso::montaGrafo(vector<Aresta *> arestas,int custo){
     if(vertices->buscaVertice(origem->getInfo()) == NULL)
       vertices->insereVertice(origem->getInfo(),origem->getPeso());
     if(vertices->buscaVertice(adj->getInfo()) == NULL)
-      vertices->insereVertice(adj->getInfo(),adj->getPeso());  
+      vertices->insereVertice(adj->getInfo(),adj->getPeso()); 
+
     //adiciona a aresta
-    origem->insereAresta(aux);//talvez de erro aqui por criar vertices  diferentes
+    origem = vertices->buscaVertice(origem->getInfo());
+    adj = vertices->buscaVertice(adj->getInfo());
+    
+    Aresta * aresta = new Aresta(origem,adj,aux->getPeso());
+
+    origem->insereAresta(aresta);
   }
   resultado->setCusto(custo);
 

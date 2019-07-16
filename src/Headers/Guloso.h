@@ -15,7 +15,8 @@ public:
 	// Calcula custo do grafo
 	int calculaCustoGrafo(Grafo *g);
 
-	Grafo * montaGrafo(vector<Aresta *> arestas,int custo);
+	bool isVector(vector<Vertice*> vet, Vertice * aux);
+	Grafo * montaGrafo(vector<Aresta*> arestas,int custo);
 	Grafo * calculaGuloso(Vertice *inicial);
 	Grafo * gulosoRandomizado (float alfa, int numeroInteracoes);
 	Grafo * algoritmoPrim(Vertice * inicial);

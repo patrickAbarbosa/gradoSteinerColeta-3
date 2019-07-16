@@ -36,9 +36,9 @@ void Vertice::insereAresta(Aresta * a)
 		Aresta * p = new Aresta();
 		Aresta * t = listaAdjacencia;
 		*p= *a;
-		 
-		while(t->getProx()!=NULL)
+		while(t->getProx()!=NULL){
 			t = t->getProx();
+		}
 		t->setProx(p);
 	}
 	grau++;
