@@ -29,8 +29,8 @@ public:
  // Lista * getVertices(){ return vertices;}
  // Aresta * getMenorValor(){ return menorValor;}
 
- // void atualizaMaiorgrau();
-  Vertice * buscaVertice(int i);
+  void atualizaMaiorgrau();
+  Vertice * buscaVertice(string id);
   void buscaPorProfundidade(string verticeInicial);
   bool buscaPorLargura(string verticeInicial,string verticeFinal);
   Vertice **ordenacaoTopologica();
@@ -60,15 +60,16 @@ public:
     //string *arquivoIn; // Estacia de entrada
 
  //   int custo;
- //   int numeroArestas;
- //   int numeroVertices;
- //   int quantidadeGrausZero;
+    int numeroArestas;
+    int numeroVertices;
+    int quantidadeGrausZero;
 
     //Se verdadeiro é um digrafo
     bool ehDigrafo;
     //Aresta de menor valor
-    //Aresta *menorValor; 
-    
+    Aresta *menorValor; 
+    //Vertice de maior graior grau
+    Vertice *maiorGrau;
 
     //private functions
     // Lê a instância e insere as informaçõe no grafo

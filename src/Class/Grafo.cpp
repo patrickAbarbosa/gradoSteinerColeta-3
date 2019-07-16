@@ -33,6 +33,8 @@ Grafo::Grafo()
   ehDigrafo = false;
   //seta a saida como nula 
   out = NULL;
+  //Seta o maior grau como nulo
+  maiorGrau = NULL;
 }
 
 /*
@@ -43,6 +45,8 @@ Grafo::Grafo(string in)
 {
   out = NULL;
   ehDigrafo = false;
+  //Seta o maior grau como nulo
+  maiorGrau = NULL;
   leArquivo(in);
 }
 
@@ -68,7 +72,8 @@ Grafo::Grafo(string in, GeraCsv *out)
 Grafo::Grafo(string in, GeraCsv *out, string ehDigrafo)
 {
   this->out = out;
-
+  //Seta o maior grau como nulo
+  maiorGrau = NULL;
   if (ehDigrafo == "1")
     ehDigrafo = true;
   else
@@ -198,35 +203,38 @@ void Grafo::imprimeGrafoPNG()
     arquivo << "Strict Graph A{" << endl;
     // Dizemos que a escrita será da esquerda pra direita
     arquivo << "    rankdir=LR;" << endl;
-  
-    for(it = adjacentes.begin() ; it != adjacentes.end(); ++it)
-    { //p é o ponteiro que está na lista de vertices do grafo
+  	
+    // Declaramos o interador para apontar para o inicio da lista de veritices até ser diferente do final
+    for(vector<Vertice*>::iterator it = vertices.begin() ; it != vertices.end(); ++it)
+    { 
+      // Colocamos um espaço na linha
       arquivo << "    ";
-      arquivo << p->getInfo();
-      cout << p->getGrau();
-      if (p->getGrau() > 0)
+      // Adicionamos a informação do vertice na linha
+      arquivo << (*it)->getInfo();
+      // Se o grau do vertice for maior que zero faça
+      if ((*it)->getGrau() > 0)
       {
-
-        Aresta *t = p->getListaAdjacencia();
+        // Colocamos "{" para dizer que seus adjacentes são esses valores
         arquivo << " -- {";
-
-        while (t != NULL)
-        { //t é o ponteiro que está na lista de aresta do no
-          arquivo << (t->getAdjacente())->getInfo() << " ";
-          t = t->getProx();
-        }
-
+        // Iniciamos o interador apontando para o inicio das arestas desse vertice it até ser diferente do fim
+        for(vector<Aresta*>::iterator aresta = (*it)->adjacentes.begin(); aresta != (*it)->adjacentes.end(); ++aresta)
+          // Colocamos a informação do vertice adjacente no arquivo
+          arquivo << (*aresta)->getAdjacente()->getInfo() << " ";
+        
+        // Adicionamos "}" no arquivo para identificar que os adjacentes ao vertice terminaram
         arquivo << "}";
       }
+      // Encerramos o vertice
       arquivo << ";" << endl;
-      p = p->getProx();
     }
-
+    // Encerramos o arquivo
     arquivo << "}";
+    // Fechamos o arquivo
     arquivo.close();
-    
+    // Chamamos a biblioteca para gerar o grafo a partir do arquivo criado
     system("dot -Tpng -O GrafoPNG.dot >> grafo.log"); // cria o png do grafo
     cout << "Arquivo Concluido!" << endl;
+    // Abrimos a imagem gerada a partir do grafo
     system("display GrafoPNG.dot.png >> grafo.log"); // mostra a imagem do grafo
   }
   else
@@ -237,7 +245,7 @@ void Grafo::imprimeGrafoPNG()
  * ExportaGrafo() Exporta os dados analizados durante a execução do
  * programa com determinada entrada para um arquivo do tipo "".csv"
  *
-/*
+/
 void Grafo::exportaGrafo()
 {
   cout << "Exportando analizes do Grafo!" << endl;
@@ -262,15 +270,18 @@ void Grafo::menuSelecionado(char a)
 
   case '1':
   {
+    // Utilizadas receber as informações do vertice
     string id_a, id_b;
+    // Irá receber o peso da aresta passada pelo usuário
     int peso;
 
     cout << "Adicionando Aresta" << endl;
     cout << "Digite o id dos vertices e em seguida o peso (ex: 23 45 0)" << endl;
     cin >> id_a >> id_b >> peso;
+
     Vertice *a = vertices->buscaVertice(id_a);
     Vertice *b = vertices->buscaVertice(id_b);
-    //a->insereAresta();
+    a->insereAresta();
     break;
   }
   case '2':
@@ -378,6 +389,7 @@ void Grafo::menuSelecionado(char a)
     if (auxG != NULL){
       auxG->imprimeGrafoPNG();
     }*/
+    /* AQUI VOLTA
     break;
   }
   case '0':
@@ -386,7 +398,7 @@ void Grafo::menuSelecionado(char a)
     imprimeGrafoPNG();
     break;
   }
-  /*----------------------Area de teste ----------------------- */
+//----------------------Area de teste -----------------------
   case 'a': 
   {
     cout<<endl;
@@ -419,8 +431,8 @@ void Grafo::menuSelecionado(char a)
     break;
   }
 }
-
-/* Menu de funcionalidades do Grafo */
+*/
+// Menu de funcionalidades do Grafo 
 void Grafo::menu()
 {
   char menu;
@@ -463,15 +475,33 @@ void Grafo::menu()
  */
 void Grafo::addAresta(string id_a, string id_b, int peso)
 {
+  // Vertice a e b para criamos uma aresta em cada uma
+  Vertice *a = NULL;
+  Vertice *b = NULL;
 
-  Vertice *a = vertices->buscaVertice(id_a);
-  Vertice *b = vertices->buscaVertice(id_b);
-
+  // Apontamos o interador para o inicio do vetor de vertices até o interador ser diferente do final e a !=null e b!=null
+  for(vector<Vertice *>::iterator it = vertices.begin(); it != vertices.end() && !a && !b; ++it)
+  {
+    // Verifica se a informação do vertice é igual ao id_a
+    if((*it)->getInfo() == id_a)
+      a = *it;
+    // Verifica se a informação do vertice é igual ao id_b
+    else if((*it)->getInfo() == id_b)
+      b = *it;
+  }
+  // Adiciona uma aresta entre os vertices
   auxAddAresta(a, b, peso);
 }
 
+/* 
+ * auxAddAresta(Vertice *a, Vertice *b, int peso)
+ * @Vertice *a recebe o vertice de oridem da aresta
+ * @Vertice *b receve o vertice de destino da aresta
+ * @int peso recebe o peso da aresta
+ */
 void Grafo::auxAddAresta(Vertice *a, Vertice *b, int peso)
 {
+  // Verifica se a e b é diferente de nulo para criar a aresta
   if (a == NULL || b == NULL)
   {
     cout << "Erro: Vertice invalido!" << endl;
@@ -479,10 +509,16 @@ void Grafo::auxAddAresta(Vertice *a, Vertice *b, int peso)
   }
   else
   {
+    // Criamos as arestas
     Aresta *p = new Aresta(a, b, peso);
-    Aresta *t  = new Aresta(b, a, peso);
+    //Inserimos a aresta no vertice
     a->insereAresta(p);
-    b->insereAresta(t);
+    // Verificamos se o grafo é digrafo ou não
+    if(!ehDigrafo)
+    {
+      Aresta *t  = new Aresta(b, a, peso);
+      b->insereAresta(t);
+    }
     numeroArestas++;
 
     //Aresta de menor valor
@@ -502,21 +538,50 @@ void Grafo::auxAddAresta(Vertice *a, Vertice *b, int peso)
  */
 void Grafo::deletaAresta(string id_a, string id_b)
 {
+  // Vertice a e b para receber o endereço dos vertices
+  Vertice *a = NULL;
+  Vertice *b = NULL;
 
-  Vertice *a = vertices->buscaVertice(id_a);
-  Vertice *b = vertices->buscaVertice(id_b);
-
-  if (a == NULL || b == NULL)
+  // Apontamos o interador para o inicio do vetor de vertices até o interador ser diferente do final e a !=null e b!=null
+  for(vector<Vertice *>::iterator it = vertices.begin(); it != vertices.end() && !a && !b; ++it)
+  {
+    // Verifica se a informação do vertice é igual ao id_a
+    if((*it)->getInfo() == id_a)
+      a = *it;
+    // Verifica se a informação do vertice é igual ao id_b
+    else if((*it)->getInfo() == id_b)
+      b = *it;
+  }
+  // Verifica se o valor a ou o valor b não foi encontrado caso seja um digrafo
+  if ((a == NULL || b == NULL) && !ehDigrafo)
+  {
+    cout << "Erro: Vertice invalido!" << endl;
+    return;
+  }
+  // Verifica se o vertice a não foi encontrado
+  else if(a == NULL)
   {
     cout << "Erro: Vertice invalido!" << endl;
     return;
   }
   else
   {
+    // Recebe a aresta a ser removida
     Aresta *p = a->buscaAresta(id_b);
-    Aresta *t = b->buscaAresta(id_a);
-
-    if (p == NULL || t == NULL)
+    // Cria t para receber uma aresta caso o grafo não seja um digrafo
+    Aresta *t = NULL;
+    // Verifica o grafo não é um digrafo
+    if(!ehDigrafo)
+      // t Recebe a aresta com a
+      t = b->buscaAresta(id_a);
+    // Verifica se p e t é nulo se o grafo não é orientado
+    if((p == NULL || t == NULL) && !ehDigrafo)
+    {
+      cout << "Erro: Aresta invalida!" << endl;
+      return;
+    }
+    // Verifica se p é nulo 
+    else if(p == NULL)
     {
       cout << "Erro: Aresta invalida!" << endl;
       return;
@@ -524,51 +589,53 @@ void Grafo::deletaAresta(string id_a, string id_b)
     else
     {
       a->deletaAresta(p);
-      b->deletaAresta(t);
+      //Verifica se o grafo é um digrafo para poder deletar a aresta em b
+      if(!ehDigrafo)
+        b->deletaAresta(t);
     }
   }
+  // Subtrai o numero de aresta
   numeroArestas--;
+  //Atualiza o vertice de maior grau
   atualizaMaiorgrau();
 }
-
 
 /*
  * atualizaMaiorgrau() compara os graus dos vertices para achar o
  * de maior grau.
  */
-void Grafo::atualizaMaiorgrau(){
-
-  Vertice * p = vertices->getPrimeiro();
+void Grafo::atualizaMaiorgrau()
+{
+  // Zeramos o contador de graus
   quantidadeGrausZero = 0;
-  int quantidadeArestas = 0;
+  // Zeramos o numero de aresta
+  numeroArestas = 0;
 
-  while(p != NULL){
-    quantidadeArestas = quantidadeArestas + p->getGrau();
-    Vertice * maiorGrau = vertices->getMaiorGrau();
-    if(maiorGrau == NULL)
-      vertices->setMaiorGrau(p);
-    if(p->getGrau() == 0)
+  maiorGrau = *vertices.begin();
+  for(vector<Vertice*>::iterator it = vertices.begin(); it != vertices.end(); ++i)
+  {
+    // recebe a quantidade de arestas 
+    numeroArestas += (*it)->getGrau();
+    // Verifica se o vertice atual tem grau maior que o de atual maior
+    if ((*it)->getGrau() > maiorGrau->getGrau())
+      maiorGrau = *it;
+    // Verifica se o vertice possoui grau zero 
+    else if((*it)->getGrau() == 0)
       quantidadeGrausZero++;
-    if(p->getGrau() > maiorGrau->getGrau()){
-      vertices->setMaiorGrau(p);
-    }
-    p = p->getProx();
   }
-  numeroArestas = quantidadeArestas;
 }
 
 /*
- *  buscarVertice(int i) 
+ *  buscarVertice(int i)
+ *  recebe um inteiro i para buscar com id = i do vetor
  */
-Vertice * Grafo::buscaVertice(int i){
-
-  Vertice * p = vertices->getPrimeiro();
-
-  while(p != NULL){
-    if(p->getInfo() == to_string(i))
-      return p;
-    p = p->getProx();
-  }
+Vertice * Grafo::buscaVertice(string id)
+{
+  // o interador recebe o inicio dos vertices até ele ser diferente do fim da lista
+  for(vector<Vertice*>::iterator it = vertices.begin(); it != vertices.end(); ++it)
+    // Verifica se a informação do vertice é = ao id solicitado
+    if((*it)->getInfo() == id)
+      return *it;
   return NULL;
 }
 
@@ -596,20 +663,20 @@ bool isVector(vector<string> *vet, string value)
  */
 void Grafo::auxBuscaPorProfundidade(Vertice *vertice, vector<string> *nosLidos)
 {
+  // Verifica se o vertice não é nulo
   if (vertice != NULL)
   {
+    // imprime a informação do vertice
     cout << vertice->getInfo() << endl;
-
-    Aresta *p = vertice->getListaAdjacencia();
-    while (p != NULL)
+    // Enquanto o interador for diferente do fim
+    for(vector<Aresta*>::iterator it = vertice->adjacentes.begin(); it != vertice->adjacentes.end(); ++it)
     {
-      Vertice *aux = p->getAdjacente();
-      if (!isVector(nosLidos, aux->getInfo()))
+      // Verifica se o vertice adjacente já foi lido
+      if (!isVector(nosLidos, (*it)->getAdjacente()->getInfo()))
       {
-        nosLidos->push_back(vertice->getInfo());
-        auxBuscaPorProfundidade(aux, nosLidos);
+        nosLidos->push_back((*it)->getAdjacente()->getInfo());
+        auxBuscaPorProfundidade((*it)->getAdjacente(), nosLidos);
       }
-      p = p->getProx();
     }
   }
 }
@@ -620,9 +687,11 @@ void Grafo::auxBuscaPorProfundidade(Vertice *vertice, vector<string> *nosLidos)
  */
 void Grafo::buscaPorProfundidade(string verticeInicial)
 {
-  Vertice *p = vertices->buscaVertice(verticeInicial);
+  // busca o vertice de partida
+  Vertice *p = buscaVertice(verticeInicial);
+  //o vetor irá guardar os vertices que já foram lidos
   vector<string> nosLidos;
-
+  // verifica se foi encontrado o verice
   if (p == NULL)
   {
     cout << "Vertice nao encontrado!" << endl;
@@ -630,26 +699,32 @@ void Grafo::buscaPorProfundidade(string verticeInicial)
   else
     auxBuscaPorProfundidade(p, &nosLidos);
 
-  for (Vertice *aux = vertices->getPrimeiro(); aux != NULL; aux = aux->getProx())
-    if (!isVector(&nosLidos, aux->getInfo()))
+  for(vector<Vertice*>::iterator it = vertices.begin(); it != vertices.end(); ++it)
+    if (!isVector(&nosLidos, (*it)->getInfo()))
     {
-      nosLidos.push_back(aux->getInfo());
-      auxBuscaPorProfundidade(aux, &nosLidos);
+      nosLidos.push_back((*it)->getInfo());
+      auxBuscaPorProfundidade(*it, &nosLidos);
     }
 }
 
+/*
+ * montaVetorVertices //comentar
+ */
 Vertice** Grafo::montaVetorVertices(int *cont, int tam){
   Vertice **infoVertice = new Vertice *[numeroVertices];
   
   int i = 0;
-  for(Vertice *aux = vertices->getPrimeiro(); aux != NULL; aux = aux->getProx()) // i++ ?
-    infoVertice[i] = aux;
+  for(vector<Vertice*>::iterator it = vertices.begin(); it != vertices.end(); ++it)
+  {
+    infoVertice[i] = *it;
+    i++;
+  }
 
-  for(Vertice *aux = vertices->getPrimeiro(); aux != NULL; aux = aux->getProx())
+  for(vector<Vertice*>::iterator it = vertices.begin(); it != vertices.end(); ++it)
   {
     i = 0;
-    for(Aresta *adjacente = aux->getListaAdjacencia(); i < numeroVertices && adjacente != NULL; i++) //adjacente = adjacente->getProx()?
-      if(infoVertice[i]->getInfo() == adjacente->getAdjacente()->getInfo())
+    for(vector<Aresta*>::iterator adjacente = (*it)->adjacentes;  i < numeroVertices && adjacente != (*it)->adjacentes.end(); ++adjacente)
+      if(infoVertice[i]->getInfo() == (*adjacente)->getAdjacente()->getInfo())
         cont[i]++;
   }
   return infoVertice;
@@ -661,31 +736,27 @@ Vertice** Grafo::montaVetorVertices(int *cont, int tam){
  */
 bool Grafo::ehConexo()
 {
-  if(vertices == NULL|| numeroVertices == 0){
+  if(vertices.size() == 0 || numeroArestas == 0){
     cout << "Grafo vazio" << endl;
     return false;
   }
-  if(quantidadeGrausZero != 0)
+  else if (quantidadeGrausZero != 0)
     return false;
-
-  Vertice * p = vertices->getPrimeiro(); 
 
   int contp = 0;
   int contq = 0;
-  while(p != NULL){
-    Vertice * q = vertices->getPrimeiro();
 
-    while(q!=NULL){ 
-      bool verif = buscaPorLargura(p->getInfo(),q->getInfo());
+  for(vector<Vertice*>::iterator it = vertices.begin(); it != vertices.end(); ++it)
+  {
+    for(vector<Vertice*>::iterator q = vertices.begin(); it != vertices.end(); ++it)
+    {
+      bool verif = buscaPorLargura((*it)->getInfo(),(*q)->getInfo());
       if(verif == false)
         return false;
-      q = q->getProx();
       contq++;
     }
     contp++;
-    p = p->getProx();
   }
-
   return true;
 }
 
@@ -701,26 +772,25 @@ Grafo *Grafo::complementar()
     return complementar;
   else
   {
-    //obtem o primeiro vertice da lista
-    Vertice *p = vertices->getPrimeiro();
-
     //para todos os vertice do grafo no grafo complementar
-    for (; p != NULL; p = p->getProx(), complementar->numeroVertices++)
+    for(vector<Vertice*>::iterator it = vertices.begin(); it != vertices.end(); ++it, complementar->numeroArestas++)
     {
-      complementar->vertices->insereVertice(p->getInfo(), p->getPeso());
-      Vertice *atual = complementar->vertices->buscaVertice(p->getInfo());
+      // copias as caracteristicas do vertice
+      Vertice *aux = new Vertice((*it)->getInfo(), (*it)->getPeso());
+      // Adiciona o vertice a lista de vertices
+      complementar->vertices.push_back(aux);
+      // atual recebe o ultimo vertice adicionado ao vetor
+      Vertice *atual = (*complementar->vertices.end());
 
-      Aresta *adjacente = p->getListaAdjacencia();
-
+      vector<Aresta *>::iterator adjacente = (*it)->adjacentes.begin();
       //Adiciona os vertices que não são adjacentes ao vertice de forma ordenada.
-      for (Vertice *aux = vertices->getPrimeiro(); aux != NULL && adjacente != NULL; aux = aux->getProx())
+      for (vector<Vertice*>::iterator it = vertices.begin(); it != vertices.end() && adjacente != (*it)->adjacentes.end(); it++, ++adjacente)
       {
-        if (adjacente->getAdjacente()->getInfo() != aux->getInfo())
+        if ((*adjacente)->getAdjacente()->getInfo() != aux->getInfo())
         {
           Aresta *novaAresta = new Aresta(atual, aux, 1);
           atual->insereAresta(novaAresta);
         }
-        adjacente = adjacente->getProx();
       }
     }
   }
@@ -751,7 +821,7 @@ int Grafo::auxOrdenacaoTopologica(int vet[], int tam)
  */
 Vertice** Grafo::ordenacaoTopologica()
 {
-  if(vertices->getPrimeiro() == NULL)
+  if(vertices.size() == 0)
     return NULL;
 
   int cont[numeroVertices];
@@ -771,9 +841,16 @@ Vertice** Grafo::ordenacaoTopologica()
 ///melhorar esse comenntário
 
 bool Grafo::buscaPorLargura(string verticeInicial,string verticeFinal){
+  Vertice *p = NULL;
+  Vertice *q = NULL;
 
-  Vertice *p = vertices->buscaVertice(verticeInicial);
-  Vertice *q = vertices->buscaVertice(verticeInicial);
+  for(vector<Vertice*>::iterator it = vertices.begin(); it != vertices.end() && (!p || !q); ++it)
+  {
+    if((*it)->getInfo() == verticeInicial)
+      p = *it;
+    else if((*it)->getInfo() == verticeFinal)
+      q = *it;
+  }
 
   if (p == NULL || q == NULL){
     cout << "Vertice nao encontrado!" << endl;
@@ -781,35 +858,29 @@ bool Grafo::buscaPorLargura(string verticeInicial,string verticeFinal){
   }
 
   vector<string> nosLidos;
-  Fila * aux = new Fila;
-  aux->insere(p);
+  queue<Vertice*> aux;
+  aux.push(p);
 
-  while (!aux->vazia())
+  while (aux.size() != 0)
   {
-    p = aux->retira();
-    Aresta *t = p->getListaAdjacencia();
+    p = aux.front();
+    aux.pop();
 
     if(p->getInfo() == verticeFinal){
-      delete aux;
       return true;
     }
 
-    if(!isVector(&nosLidos,p->getInfo())){
+    if(!isVector(&nosLidos,p->getInfo()))
       nosLidos.push_back(p->getInfo());
-    }    
-
-    while(t != NULL){
-      if(t->getAdjacente()->getInfo() == verticeFinal){
-        delete aux;
+    for(vector<Aresta*>::iterator t = p->adjacentes.begin(); t != p->adjacentes.end(); ++t) 
+    {
+      if((*t)->getAdjacente()->getInfo() == verticeFinal)
         return true;
+      if(!isVector(&nosLidos,(*t)->getAdjacente()->getInfo())){
+        aux.push((*t)->getAdjacente());
       }
-      if(!isVector(&nosLidos,t->getAdjacente()->getInfo())){
-        aux->insere(t->getAdjacente());
-      }
-      t = t->getProx();
     }
   }
-  delete aux;
   return false;
 }
 
@@ -817,24 +888,32 @@ bool Grafo::buscaPorLargura(string verticeInicial,string verticeFinal){
 * algoritmoDijkstra() calcula e retorna o valor do menor caminho saindo
 * do vertice de origem ate o de destino, usando busca em largura.
 */
-
 int Grafo::algoritmoDijkstra(string origem, string destino){
+  Vertice *p = NULL;
+  Vertice *q = NULL;
 
-  Vertice * p = vertices->buscaVertice(origem);
-  Vertice * q = vertices->buscaVertice(destino);
+  for(vector<Vertice*>::iterator it = vertices.begin(); it != vertices.end() && (!p || !q); ++it)
+  {
+    if((*it)->getInfo() == origem)
+      p = *it;
+    else if((*it)->getInfo() == destino)
+      q = *it;
+  }
 
   if(p == NULL || q == NULL){
     cout << "Vertice nao encontrado!" << endl;
     //return exit(1);
   }
 
-  vector <string> nosLidos;
-  Fila aux;
-  aux.insere(p);
-
-  while (!aux.vazia())
+  vector<string> nosLidos;
+  queue<Vertice*> aux;
+  aux.push(p);
+  
+  while (aux.size() != 0)
   {
-    p = aux.retira();
+    p = aux.front();
+    aux.pop();
+    
     Aresta * t = p->getListaAdjacencia();
     int caminho = p->getTamCaminho() + t->getPeso();
     
@@ -842,16 +921,16 @@ int Grafo::algoritmoDijkstra(string origem, string destino){
       nosLidos.push_back(p->getInfo());
     }
 
-    while(t != NULL){
-      Vertice * r = t->getAdjacente();
+    for(vector<Aresta*>::iterator t = p->adjacentes.begin(); t != p->adjacentes.end(); ++t) 
+    {
+      Vertice * r = (*t)->getAdjacente();
       if(!isVector(&nosLidos,r->getInfo())){
-        aux.insere(r);
+        aux.push(r);
         //adicionar tamanho do caminho ao chegar no vertice
       }
       if( caminho < r->getTamCaminho()){
         r->setTamCaminho(caminho);
       }
-      t = t->getProx();
     }
   }
   return q->getTamCaminho();
@@ -862,43 +941,62 @@ int Grafo::algoritmoDijkstra(string origem, string destino){
 * procura sempre a aresta de menor peso que conecte um vértice
 * da árvore a outro que ainda não esteja na árvore. 
 */
-
 Grafo * Grafo::algoritmoPrim(){
-
+  // Cria um novo grafo
   Grafo * arvore = new Grafo ();
-  Lista * arv_vertices = arvore->getVertices();
-  Vertice * p = menorValor->getOrigem();
-  Vertice * q = menorValor->getAdjacente();
+  
+  // Guarda a origem da menor aresta do grafo
+  Vertice *p = menorValor->getOrigem();
+  // Guarda o destino da menor aresta do grafo
+  Vertice *q = menorValor->getAdjacente();
 
-  arv_vertices->insereVertice(p->getInfo(),p->getPeso());
-  arv_vertices->insereVertice(q->getInfo(),q->getPeso());
+  // verifica se p e q é diferente de nulo
+  if(p == NULL && q == NULL)
+    return NULL;
+  // Cria o primeiro vertice do grafo
+  Vertice *aux = new Vertice(p->getInfo(), p->getPeso());
+  // Adiciona o vertice no grafo
+  arvore->vertices.push_back(aux);
+  // Cria um vertice
+  aux = new Vertice(q->getInfo(), q->getPeso());
+  // Adiciona o vertice no grafo
+  arvore->vertices.push_back(aux);
+  // Adiciona aresta entre os vertices
   arvore->addAresta(p->getInfo(), q->getInfo(), menorValor->getPeso());
-
-  while(arv_vertices->getQuantidade() != numeroVertices){
-    Vertice * t = arv_vertices->getPrimeiro();
+  // Enquanto o numero de vertices do novo grafo for diferente do numero de aresta do grafo
+  while(arvore->vertices.size() != numeroVertices)
+  {  
+    // Irá auxiliar as arestas
     Aresta * aux_aresta = NULL;
-
-    while(t != NULL){
-      Vertice * w = vertices->buscaVertice(t->getInfo());
+    // Declara um interador do tipo aresta
+    vector<Aresta*>::iterator w;
+    // O interador t recebe o inicio dos vertices e esquanto t for != do fim
+    for(vector<Vertice*>::iterator t = vertices.begin(); t != vertices.end(); ++t) 
+    {
+      // Verifica se aux_aresta é diferente de nulo
       if(aux_aresta == NULL)
-        aux_aresta = w->getListaAdjacencia();
+        // Recebe a primeira aresta adjacente do vertice
+        aux_aresta = *(*t)->adjacentes.begin();
+      //Parei aqui
+      for(w = (*t)->adjacentes.begin(); w != (*t)->adjacentes.end() && arvore->buscaVertice((*w)->getAdjacente()->getInfo()) != NULL; ++w) 
+        
+      if(w == (*t)->adjacentes.end())
+        aux_aresta = NULL;
 
-      while(aux_aresta != NULL && arv_vertices->buscaVertice(aux_aresta->getAdjacente()->getInfo()) != NULL)
-        aux_aresta = aux_aresta->getProx(); 
-
-      if(aux_aresta != NULL){
-        for(Aresta * aux = aux_aresta->getProx(); aux!= NULL; aux = aux->getProx()){
-          if(aux_aresta->getPeso() > aux->getPeso()){
-            if(arv_vertices->buscaVertice(aux->getAdjacente()->getInfo()) == NULL)
-              aux_aresta = aux;
-          }
-        }
+      if(aux_aresta != NULL)
+      {
+        for(; w != (*t)->adjacentes.end(); ++w) 
+          if(aux_aresta->getPeso() > (*w)->getPeso())
+            if(arvore->buscaVertice((*w)->getAdjacente()->getInfo()) == NULL)
+              aux_aresta = *w;
+        if(w == (*t)->adjacentes.end())
+          aux_aresta = NULL;
       }
-      t = t->getProx();
     }
     if(aux_aresta != NULL){
       Vertice * vertice_auxiliar = aux_aresta->getAdjacente();
-      arv_vertices->insereVertice(vertice_auxiliar->getInfo(),vertice_auxiliar->getPeso());
+      Vertice *aux = new Vertice(vertice_auxiliar->getInfo(), vertice_auxiliar->getPeso());
+      arvore->vertices.push_back(aux);
       arvore->addAresta(aux_aresta->getOrigem()->getInfo(),aux_aresta->getAdjacente()->getInfo(),aux_aresta->getPeso());
     }
   }
@@ -917,14 +1015,18 @@ int Grafo::auxFloyd(Vertice *p, Vertice *destino)
     if(p == destino)
       return 0;
 
-    Aresta *aresta = p->getListaAdjacencia();
+    // Recebe o primeiro adjacente do vertice
+    Aresta *aresta = *p->adjacentes.begin();
+    
+    // Verifica essa aresta é diferente de nulo
     if(aresta){
       // busca o primeiro valor dos vertices adjacentes e coloca como menor valor da lista
       int menor = auxFloyd(aresta->getAdjacente(), destino) + aresta->getPeso();
       
-      for(aresta = aresta->getProx(); aresta != NULL; aresta = aresta->getProx())
+      // Enquanto aresta != adjacentes.fim faça
+      for(vector<Aresta*>::iterator aresta = ++p->adjacentes.begin(); aresta != p->adjacentes.end(); ++aresta)
       {
-        int aux = auxFloyd(aresta->getAdjacente(), destino) + aresta ->getPeso();
+        int aux = auxFloyd((*aresta)->getAdjacente(), destino) + (*aresta)->getPeso();
         if(aux < menor)
           menor = aux;
       }
@@ -938,10 +1040,17 @@ int Grafo::auxFloyd(Vertice *p, Vertice *destino)
  * Algoritmo de Floyd encontra o menor caminho entre dois vertices.
  */
 int Grafo::algoritmoFloyd(string origem, string destino){
-  // busca os vertices inicial e final
-	Vertice *inicial = vertices->buscaVertice(origem);
-  Vertice *final = vertices->buscaVertice(destino);
-
+  Vertice *inicial = NULL;
+  Vertice *final = NULL;
+  // Busca os vertices no vetor de vertices
+  for(vector<Vertice*>::iterator it = vertices.begin(); it != vertices.end() && (!p || !q); ++it)
+  {
+    if((*it)->getInfo() == origem)
+      inicial = *it;
+    else if((*it)->getInfo() == destino)
+      final = *it;
+  }
+  
   // verifica se os vertices estão na lista
   if(inicial && final)
   {
@@ -959,21 +1068,19 @@ int Grafo::algoritmoFloyd(string origem, string destino){
 * algoritmoKruskal() ir pegando a menor aresta sem formar ciclo, até todos os vertices
 * estarem na arvore.
 */
-
-Aresta ** Grafo::ordenaArestas(){
-
+Aresta ** Grafo::ordenaArestas()
+{
   Aresta ** p = new Aresta*[numeroArestas];
   int count = 0;
   p[0] = menorValor;
   count ++;
-  Vertice * q = vertices->getPrimeiro();
+  vector<Vertice*>::iterator q = vertices.begin();
 
   while(count != numeroArestas){
-    for(Aresta * aux = q->getListaAdjacencia(); aux!=NULL; aux = aux->getProx()){
-      if(aux->getAdjacente()->getInfo() > to_string(count))//if necessario para a forma que as arestas sao feitas nao ficar duplicadas
-        p[count] = aux;
+    for(vector<Aresta*>::iterator aux = (*q)->adjacentes.begin(); aux != (*q)->adjacentes.end(); ++aux){
+      if((*aux)->getAdjacente()->getInfo() > to_string(count))//if necessario para a forma que as arestas sao feitas nao ficar duplicadas
+        p[count] = *aux;
     }
-    q = q->getProx();
     count ++;
   }
   for(int i = 0;i < numeroArestas;i++){
@@ -990,7 +1097,7 @@ Aresta ** Grafo::ordenaArestas(){
 
 bool Grafo::ciclo(string p, string q){
 
-  if(vertices->buscaVertice(p) == NULL|| vertices->buscaVertice(q) == NULL)
+  if(buscaVertice(p) == NULL || buscaVertice(q) == NULL)
     return false;
   if(buscaPorLargura(p,q))
     return true;
@@ -1000,25 +1107,31 @@ bool Grafo::ciclo(string p, string q){
 
 Grafo * Grafo::algoritmoKruskal(){
 
-  Grafo * arvore = new Grafo ();
-  Lista * arv_vertices = arvore->getVertices();
+  Grafo * arvore = new Grafo();
   Vertice * p = menorValor->getOrigem();
   Vertice * q = menorValor->getAdjacente();
   Aresta ** listaOrdena = ordenaArestas();
-
-  arv_vertices->insereVertice(p->getInfo(),p->getPeso());
-  arv_vertices->insereVertice(q->getInfo(),q->getPeso());
+  
+  Vertice *aux = new Vertice(p->getInfo(),p->getPeso());
+  arvore->vertices.push_back(aux);
+  aux = new Vertice(q->getInfo(),q->getPeso());
+  arvore->vertices.push_back(aux);
   arvore->addAresta(p->getInfo(), q->getInfo(), menorValor->getPeso());
 
-  for(int i = 1;arv_vertices->getQuantidade()!=numeroVertices;i++){
+  for(int i = 1; arvore->vertices.size() != numeroVertices; i++)
+  {
     p = listaOrdena[i]->getOrigem();   
     q = listaOrdena[i]->getAdjacente();
 
-    if(vertices->buscaVertice(p->getInfo()) == NULL){
-      arv_vertices->insereVertice(p->getInfo(),p->getPeso());
+    if(buscaVertice(p->getInfo()) == NULL)
+    {
+      aux = new Vertice(p->getInfo(),p->getPeso());
+      arvore->vertices.push_back(aux);
     }
-    if(vertices->buscaVertice(q->getInfo()) == NULL){
-      arv_vertices->insereVertice(q->getInfo(),q->getPeso());
+    if(buscaVertice(q->getInfo()) == NULL)
+    {
+      aux = new Vertice(p->getInfo(),p->getPeso());
+      arvore->vertices.push_back(aux);
     }
     if(ciclo(p->getInfo(),q->getInfo()) == false){
       arvore->addAresta(p->getInfo(), q->getInfo(), menorValor->getPeso());

@@ -13,6 +13,7 @@ class Aresta;
 class Vertice{
 
 	public:
+		vector<Aresta*> adjacentes;
 		//construtor do vertice
 		Vertice();
 		//construtor do vertice
@@ -48,7 +49,6 @@ class Vertice{
 		int tamCaminho;
 		string info;
 		Vertice * proximo;
-   	vector<Aresta*>adjacentes;
  
 };
 
