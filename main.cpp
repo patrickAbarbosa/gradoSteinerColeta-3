@@ -24,7 +24,8 @@ int main(int argc, char *argv[])
   switch (argc)
   {
   case 1:
-    a = new Grafo("K400.3.con.red");
+    geradorDeArquivo = new GeraCsv("teste");
+    a = new Grafo("K400.3.con.red", geradorDeArquivo);
     break;
   case 2:
     a = new Grafo(argv[1]);
@@ -47,13 +48,14 @@ int main(int argc, char *argv[])
 
   float vet [10]={0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50};
 
-
-  Vertice * x = a->getVertices()->buscaVertice("5");
-  Grafo * teste = guloso.calculaGuloso(x);//guloso.gulosoRandomizado(0.25, 2000);
+  Grafo * teste = guloso.calculaGuloso("5");
   teste->imprimeGrafoPNG();
 
+  teste = guloso.gulosoRandomizado(0.50,2000);
+  teste->imprimeGrafoPNG();
 
-  //guloso.gulosoRandomizadoReativo(vet,10,2000,100);
+  teste = guloso.gulosoRandomizadoReativo(vet,10,2000,100);
+  teste->imprimeGrafoPNG();
   
 
   if (a)

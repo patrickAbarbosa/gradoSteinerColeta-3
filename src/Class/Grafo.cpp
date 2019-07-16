@@ -367,34 +367,65 @@ void Grafo::menuSelecionado(char a)
   }
   case '8':
   {
+    //Algoritmo Guloso
+    int inicial;
+    cout<<"digite o vertice inicial: ";
+    cin>>inicial;
+    Guloso aux(this);
+    Grafo* gr = aux.calculaGuloso(to_string(inicial));
+    gr->imprimeGrafoPNG();
+    break;
+  }
+  case '9':
+  {
+    //Guloso Randomizado
+    float alfa;
+    int numeroInteracoes;
+    cout<<"digite o valor de alfa: ";
+    cin>>alfa;
+    cout<<"digite o numero de interacoes: ";
+    cin>>numeroInteracoes;
+    Guloso aux(this);
+    Grafo* gr = aux.gulosoRandomizado(alfa,numeroInteracoes);
+    gr->imprimeGrafoPNG();
+    break;
+  }
+  case '0':
+  {
+    //Guloso Randomizado Reativo
+    int numeroInteracoes;
+    int tamBloco;
+    int tamAlfa;
+    cout<<"digite a quantidade de alfas: ";
+    cin>>tamAlfa;
+    int vet[tamAlfa];
+    for(int i = 0; i<tamAlfa; i++){
+      cout<<"digite o alfa["<<i<<"]: ";
+      cin>>vet[i];
+    }
+    cout<<"digite o numero de interacoes: ";
+    cin>>numeroInteracoes;
+    cout<<"digite o tamanho do bloco: ";
+    cin>>tamBloco;
+    Guloso aux(this);
+    Grafo* gr = aux.gulosoRandomizadoReativo();
+    gr->imprimeGrafoPNG();
+    imprimeGrafoPNG();
+    break;
+  }
+  case 'p':
+  {
+    cout << "Imprimindo Grafo" << endl;
+    imprimeGrafoPNG();
+    break;
+  }
+  case 'i':
+  {
     cout << "Informaçoes do Grafo" << endl;
     cout << "Numero de Vertices: " << vertices->getQuantidade() << endl;
     cout << "Numero de Arestas: " << numeroArestas << endl;
     cout << "Numero de Vertices de Grau 0: " << quantidadeGrausZero << endl;
     cout << "Maior Grau: " << vertices->getMaiorGrau()->getGrau() << endl;
-    break;
-  }
-  case '9':
-  {/*
-    string inicio;
-    cout << "Digite o vertice de inicial: ";
-    cin >> inicio;
-    Grafo *aux = new Grafo();
-    aux->vertices = vertices;
-    Guloso guloso(aux);
-    cout << "criou instancia do guloso"<< endl;
-    
-    Grafo * auxG = guloso.calculaGuloso(inicio);
-    break;
-    if (auxG != NULL){
-      auxG->imprimeGrafoPNG();
-    }*/
-    break;
-  }
-  case '0':
-  {
-    cout << "Imprimindo Grafo" << endl;
-    imprimeGrafoPNG();
     break;
   }
   /*----------------------Area de teste ----------------------- */
@@ -446,9 +477,11 @@ void Grafo::menu()
     cout << "[5] - Buscar vertice" << endl;
     cout << "[6] - Vertices adjacentes" << endl;
     cout << "[7] - Limpar Grafo" << endl;
-    cout << "[8] - Informaçoes do Grafo" << endl;
-    cout << "[9] - Guloso" << endl;
-    cout << "[0] - Imprimir Grafo" << endl;
+    cout << "[8] - Guloso" << endl;
+    cout << "[9] - Guloso Randomizado" << endl;
+    cout << "[0] - Guloso Randomizado Reativo" << endl;
+    cout << "[p] - Imprimir Grafo" << endl;
+    cout << "[i] - Informaçoes do Grafo" << endl;
     cout << "[q] - Para sair" << endl;
     cout << endl;
     do

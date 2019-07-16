@@ -194,10 +194,8 @@ int Guloso::auxCalculaGuloso(Vertice *inicial, vector<Aresta *> * vetor_arestas)
   if (grafo == NULL)
     return 0;
     
-  if (inicial == NULL)
-  {
+  if (inicial == NULL){
     cout << "ERRO!!! Vertice nao encontrando, será utilizado o primerio vertice da lista" << endl;
-    inicial = grafo->getVertices()->getPrimeiro();
     exit(1);
   }
 
@@ -264,46 +262,46 @@ Grafo * Guloso::gulosoRandomizado(float alfa, int numeroInteracoes){
 
 Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco){
 
+  if (grafo->getVertices()== NULL)
+    return NULL;
+
   int nInteracoes = 0;
   int custo = -1;
   int nVertices = 0;
-  Lista *aux = grafo->getVertices();
-
-  if (aux == NULL)
-    return NULL;
 
   //calcula o custo maximo
-  for(Vertice *p = aux->getPrimeiro(); p != NULL; p = p->getProx())
+  for(Vertice *p = grafo->getVertices()->getPrimeiro(); p != NULL; p = p->getProx())
     custo += p->getPeso();
-
+  cout<<"aqui2"<<endl;
   // Definição de variáveis para auxiliar
   int n = 0, aleatorio = 0;
   double probabilidade[nAlphas]; //Inicia o verot com distribuição unifome
   for (int i = 0; i < nAlphas; i++)
     probabilidade[i] = 1 / nAlphas;
-
+  cout<<"aqui3"<<endl;
   float chances[nAlphas];
   float media[nAlphas] = {0};
   float soma[nAlphas] = {0};
   float sum;
   float sum_chances;
-
+  cout<<"aqui4"<<endl;
   vector<Aresta*> vetor_arestas_melhor;
   for (int i = 0; i < periodos; i++){
-
+    cout<<"aqui5"<<endl;
     aleatorio = rand() % 101;
     sum = 0;
     n = 0;
     for (sum += probabilidade[n] * 100; n < nAlphas && sum < aleatorio; n++)
       sum += probabilidade[n] * 100;
-
+    cout<<"antes do reativo"<<endl;
     vector<Aresta*>vetor_arestas_aux;
     int custoGrafoAux = auxGulosoRandomizado(alpha[n], 100,&vetor_arestas_aux);
-
+    cout<<"depoos do reativo"<<endl;
     if (custo > custoGrafoAux){
       custo = custoGrafoAux;
       vetor_arestas_melhor = vetor_arestas_aux;
     }
+    cout<<"antes do bloco"<<endl;
     soma[i] = custo;
     if (i % bloco == 0)
     {
@@ -320,5 +318,6 @@ Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos,
       }
     }
   }
+  cout<<"fim"<<endl;
   return montaGrafo(&vetor_arestas_melhor,custo);
 }
