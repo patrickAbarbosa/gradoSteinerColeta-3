@@ -24,11 +24,12 @@ int main(int argc, char *argv[])
   switch (argc)
   {
   case 1:
-    geradorDeArquivo = new GeraCsv("teste");
+    geradorDeArquivo = new GeraCsv("k400.3.con.red");
     a = new Grafo("K400.3.con.red", geradorDeArquivo);
     break;
   case 2:
-    a = new Grafo(argv[1]);
+    geradorDeArquivo = new GeraCsv(argv[1]);
+    a = new Grafo(argv[1],geradorDeArquivo);
     break;
   case 3:
     geradorDeArquivo = new GeraCsv(argv[2]);
@@ -44,12 +45,16 @@ int main(int argc, char *argv[])
 
   //Guloso guloso(a);
   Guloso guloso(a);
+  
   if (a)
   {
     a->menu();
-    delete a;  
+   
   }
-  //float vet [10]={0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50};
-  
+  float vet [10]={0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50};
+
+  Grafo * teste = guloso.gulosoRandomizadoReativo(vet,10,2000,100);
+  teste->imprimeGrafoPNG();
+   delete a;  
   return 0;
 }

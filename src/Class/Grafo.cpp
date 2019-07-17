@@ -28,8 +28,11 @@ using namespace std;
  */
 Grafo::Grafo()
 {
+  // Inicia uma lista vazia
   vertices = new Lista();
+  // Seta o arquivo de entrada como nulo
   arquivoIn = NULL;
+  // Menor
   menorValor = NULL;
   ehDigrafo = false;
   numeroArestas = 0;
@@ -185,7 +188,7 @@ void Grafo::leArquivo()
     }
     // pega o tempo do processador do fim da leitura
     fim = clock();
-    linha.tempo_execucao = to_string((1000 * (fim - inicio))/(double)(CLOCKS_PER_SEC)) + "ms";
+    linha.tempo_execucao = to_string((1000 * (fim - inicio))/(double)(CLOCKS_PER_SEC));
     out->imprime(linha);
   }
   else
@@ -371,8 +374,21 @@ void Grafo::menuSelecionado(char a)
     int inicial;
     cout<<"digite o vertice inicial: ";
     cin>>inicial;
+
+    clock_t inicio, fim;
+    LinhaCSV linha;
+    // seta os valores da linha
+    linha.instancia = *arquivoIn;
+    linha.classe = "Guloso";
+    linha.algoritmo = "guloso";
+    linha.interacao = 1;
     Guloso aux(this);
+    inicio = clock();
     Grafo* gr = aux.calculaGuloso(to_string(inicial));
+    fim = clock();
+    linha.melhor_solucao = to_string(gr->getCusto());
+    linha.tempo_execucao = to_string((1000 * (fim - inicio))/(double)(CLOCKS_PER_SEC));
+    out->imprime(linha);
     gr->imprimeGrafoPNG();
     break;
   }
@@ -381,12 +397,25 @@ void Grafo::menuSelecionado(char a)
     //Guloso Randomizado
     float alfa;
     int numeroInteracoes;
-    cout<<"Digite o valor de alfa: ";
+    cout<<"digite o valor de alfa: ";
     cin>>alfa;
-    cout<<"Digite o numero de interacoes: ";
+    cout<<"digite o numero de interacoes: ";
     cin>>numeroInteracoes;
     Guloso aux(this);
+    
+    clock_t inicio, fim;
+    LinhaCSV linha;
+    // seta os valores da linha
+    linha.instancia = *arquivoIn;
+    linha.classe = "Guloso";
+    linha.algoritmo = "gulosoRandomizado";
+    linha.parametro = to_string(alfa);
+    linha.interacao = numeroInteracoes;
+    inicio = clock();
     Grafo* gr = aux.gulosoRandomizado(alfa,numeroInteracoes);
+    fim = clock();
+    linha.tempo_execucao = to_string((1000 * (fim - inicio))/(double)(CLOCKS_PER_SEC));
+    out->imprime(linha);
     gr->imprimeGrafoPNG();
     break;
   }
@@ -396,19 +425,31 @@ void Grafo::menuSelecionado(char a)
     int numeroInteracoes;
     int tamBloco;
     int tamAlfa;
-    cout<<"Digite a quantidade de alfas: ";
+    cout<<"digite a quantidade de alfas: ";
     cin>>tamAlfa;
     float vet[tamAlfa];
     for(int i = 0; i<tamAlfa; i++){
-      cout<<"Digite o alfa["<<i<<"]: ";
+      cout<<"digite o alfa["<<i<<"]: ";
       cin>>vet[i];
     }
-    cout<<"Digite o numero de interacoes: ";
+    cout<<"digite o numero de interacoes: ";
     cin>>numeroInteracoes;
-    cout<<"Digite o tamanho do bloco: ";
+    cout<<"digite o tamanho do bloco: ";
     cin>>tamBloco;
     Guloso aux(this);
+    
+    clock_t inicio, fim;
+    LinhaCSV linha;
+    // seta os valores da linha
+    linha.instancia = *arquivoIn;
+    linha.classe = "Guloso";
+    linha.algoritmo = "gulosoRandomizadoReativo";
+    linha.interacao = numeroInteracoes;
+    inicio = clock();
     Grafo* gr = aux.gulosoRandomizadoReativo(vet,tamAlfa,numeroInteracoes,tamBloco);
+    fim = clock();
+    linha.tempo_execucao = to_string((1000 * (fim - inicio))/(double)(CLOCKS_PER_SEC));
+    out->imprime(linha);
     gr->imprimeGrafoPNG();
     imprimeGrafoPNG();
     break;

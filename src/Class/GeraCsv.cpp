@@ -18,7 +18,7 @@ GeraCsv::GeraCsv(string arquivoSaida)
   else
   {
     arquivo << "instancia, numero_vertices, numero_aresta, classe, ";
-    arquivo << "algoritimo, parametro, interacao, tempo_execucao, melhor_solucao";
+    arquivo << "algoritimo, parametro, interacao, tempo_execucao(ms), melhor_solucao";
     arquivo << endl;
   }
 }
