@@ -44,16 +44,12 @@ int main(int argc, char *argv[])
 
   //Guloso guloso(a);
   Guloso guloso(a);
-  /*
   if (a)
   {
     a->menu();
     delete a;  
-  }*/
-  float vet [10]={0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50};
-
-  Grafo * teste = guloso.gulosoRandomizadoReativo(vet,10,2000,100);
-  teste->imprimeGrafoPNG();
+  }
+  //float vet [10]={0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50};
   
   return 0;
 }
