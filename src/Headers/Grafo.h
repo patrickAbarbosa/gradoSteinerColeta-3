@@ -14,6 +14,9 @@ using namespace std;
 class Grafo
 {
 public:
+  // exporta pra csv
+  GeraCsv *out;
+  string *arquivoIn; // Estacia de entrada
   Grafo();
   Grafo(string in);
   Grafo(string in, GeraCsv *out);
@@ -52,9 +55,6 @@ public:
   int getNumeroArestas(){ return numeroArestas; }
   private:
     Lista  *vertices; // Vetor com os vertices do Grafo
- 
-    string *arquivoIn; // Estacia de entrada
-
 
     int custo;
     int numeroArestas;
@@ -65,8 +65,6 @@ public:
     bool ehDigrafo;
     //Aresta de menor valor
     Aresta *menorValor; 
-    // exporta pra csv
-    GeraCsv *out;
 
     //private functions
     // Lê a instância e insere as informaçõe no grafo

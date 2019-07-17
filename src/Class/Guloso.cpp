@@ -9,11 +9,12 @@
 #include "../Headers/Grafo.h"
 #include "../Headers/Lista.h"
 #include "../Headers/Fila.h"
-
+#include "../Headers/LinhaCSV.h";
 #include "../Headers/Fila2.h"
 
 using namespace std;
 
+// Construtor do guloso
 Guloso::Guloso(Grafo *g)
 {
   grafo = g;
@@ -53,17 +54,19 @@ bool estaNoVetor(vector<string> *vet, string value)
   o custo de solucao e o custo a pagar.
 
 ------------------------------------------------------------------*/
-
 int Guloso::algoritmoPrim(Vertice *inicial, vector<Aresta*> *vetor_arestas){
-
+  // Guarda os id's já lidos
   vector<string> vetor_vertices;
+  // Adiciona ao vetor o vertice inicial
   vetor_vertices.push_back(inicial->getInfo());
   
+  // Enquanto o custo a pagar for > que o custo da solução
   while(custoPagar > custoSolucao){
-
+    // Irá auxiliar na escolha da aresta com seu adjacente
     Aresta * aux_aresta = NULL;
+    // Recebe o interador do primeiro vertice da lista
     vector<string>::iterator  it = vetor_vertices.begin();
-
+    //
     for(;it != vetor_vertices.end();++it){
       Vertice * w = grafo->getVertices()->buscaVertice(*it);
 
@@ -190,8 +193,16 @@ Grafo * Guloso::calculaGuloso(string inicial){
 ---------------------------------------------------------------------------*/
 
 int Guloso::auxGulosoRandomizado(float alfa, int numeroInteracoes, vector<Aresta *> *vetor_arestas_melhor){
-
-  int semente = 0; //semente utilizada
+  clock_t inicio, fim;
+  LinhaCSV linha;
+  // seta os valores da linha
+  linha.instancia = *grafo->arquivoIn;
+  linha.classe = "Guloso";
+  linha.algoritmo = "gulosoRandomizado";
+  linha.numero_vertces = grafo->getNumeroVertices();
+  linha.numero_aresta = grafo->getNumeroArestas();
+  inicio = clock();
+  int semente = 355; //semente utilizada
   srand(semente);
 
   int nVertices = grafo->getVertices()->getQuantidade();
@@ -212,12 +223,18 @@ int Guloso::auxGulosoRandomizado(float alfa, int numeroInteracoes, vector<Aresta
       melhor = aux;
       *vetor_arestas_melhor = vetor_arestas_aux;
     }
+    fim = clock();
+    linha.interacao = i;
+    linha.melhor_solucao = to_string(melhor);
+    linha.parametro = to_string(alfa);
+    linha.tempo_execucao = to_string((1000 * (fim - inicio))/(double)(CLOCKS_PER_SEC));
+    grafo->out->imprime(linha);
   }
   return melhor;
 }
 
-Grafo * Guloso::gulosoRandomizado(float alfa, int numeroInteracoes){
-
+Grafo * Guloso::gulosoRandomizado(float alfa, int numeroInteracoes)
+{
   vector<Aresta *> vetor_arestas;
   int custo = auxGulosoRandomizado(alfa,numeroInteracoes,&vetor_arestas);
   return montaGrafo(&vetor_arestas,custo);
@@ -226,7 +243,13 @@ Grafo * Guloso::gulosoRandomizado(float alfa, int numeroInteracoes){
 // GRASP Reativo
 
 Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco){
-
+  clock_t inicio, fim;
+  LinhaCSV linha;
+  // seta os valores da linha
+  linha.instancia = *grafo->arquivoIn;
+  linha.classe = "Guloso";
+  linha.algoritmo = "gulosoRandomizadoReativo";
+  inicio = clock();
   if (grafo->getVertices()== NULL)
     return NULL;
 
@@ -265,7 +288,6 @@ Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos,
     vetor_arestas_aux.clear();
 
     int custoGrafoAux = auxGulosoRandomizado(alpha[n],100,&vetor_arestas_aux);
-
     if (custo > custoGrafoAux){
       custo = custoGrafoAux;
       vetor_arestas_melhor = vetor_arestas_aux;
@@ -285,6 +307,11 @@ Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos,
         sum_chances += chances[j];
       }
     }
+    fim = clock();
+    linha.interacao = nInteracoes;
+    linha.parametro = to_string(alpha[n]);
+    linha.tempo_execucao = to_string((1000 * (fim - inicio))/(double)(CLOCKS_PER_SEC));
+    grafo->out->imprime(linha);
   }
   return montaGrafo(&vetor_arestas_melhor,custo);
 }
