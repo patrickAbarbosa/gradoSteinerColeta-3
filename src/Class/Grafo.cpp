@@ -264,6 +264,7 @@ void Grafo::exportaGrafo()
  * qual opção selecionada e requisita determinado
  * parametro caso precise.
  */
+/*
 void Grafo::menuSelecionado(char a)
 {
   switch (a){
@@ -279,9 +280,17 @@ void Grafo::menuSelecionado(char a)
     cout << "Digite o id dos vertices e em seguida o peso (ex: 23 45 0)" << endl;
     cin >> id_a >> id_b >> peso;
 
-    Vertice *a = vertices->buscaVertice(id_a);
-    Vertice *b = vertices->buscaVertice(id_b);
-    a->insereAresta();
+    Vertice *a = NULL;
+    Vertice *b = NULL;
+    // Busca os vertices no vetor de vertices
+    for(vector<Vertice*>::iterator it = vertices.begin(); it != vertices.end() && (!p || !q); ++it)
+    {
+      if((*it)->getInfo() == id_a)
+        a = *it;
+      else if((*it)->getInfo() == id_b)
+        b = *it;
+    }
+    a->;
     break;
   }
   case '2':
@@ -367,6 +376,60 @@ void Grafo::menuSelecionado(char a)
   }
   case '8':
   {
+    //Algoritmo Guloso
+    int inicial;
+    cout<<"digite o vertice inicial: ";
+    cin>>inicial;
+    Guloso aux(this);
+    Grafo* gr = aux.calculaGuloso(to_string(inicial));
+    gr->imprimeGrafoPNG();
+    break;
+  }
+  case '9':
+  {
+    //Guloso Randomizado
+    float alfa;
+    int numeroInteracoes;
+    cout<<"digite o valor de alfa: ";
+    cin>>alfa;
+    cout<<"digite o numero de interacoes: ";
+    cin>>numeroInteracoes;
+    Guloso aux(this);
+    Grafo* gr = aux.gulosoRandomizado(alfa,numeroInteracoes);
+    gr->imprimeGrafoPNG();
+    break;
+  }
+  case '0':
+  {
+    //Guloso Randomizado Reativo
+    int numeroInteracoes;
+    int tamBloco;
+    int tamAlfa;
+    cout<<"digite a quantidade de alfas: ";
+    cin>>tamAlfa;
+    int vet[tamAlfa];
+    for(int i = 0; i<tamAlfa; i++){
+      cout<<"digite o alfa["<<i<<"]: ";
+      cin>>vet[i];
+    }
+    cout<<"digite o numero de interacoes: ";
+    cin>>numeroInteracoes;
+    cout<<"digite o tamanho do bloco: ";
+    cin>>tamBloco;
+    Guloso aux(this);
+    Grafo* gr = aux.gulosoRandomizadoReativo();
+    gr->imprimeGrafoPNG();
+    imprimeGrafoPNG();
+    break;
+  }
+  case 'p':
+  {
+    cout << "Imprimindo Grafo" << endl;
+    imprimeGrafoPNG();
+    break;
+  }
+  case 'i':
+  {
     cout << "Informaçoes do Grafo" << endl;
     cout << "Numero de Vertices: " << vertices->getQuantidade() << endl;
     cout << "Numero de Arestas: " << numeroArestas << endl;
@@ -374,31 +437,8 @@ void Grafo::menuSelecionado(char a)
     cout << "Maior Grau: " << vertices->getMaiorGrau()->getGrau() << endl;
     break;
   }
-  case '9':
-  {/*
-    string inicio;
-    cout << "Digite o vertice de inicial: ";
-    cin >> inicio;
-    Grafo *aux = new Grafo();
-    aux->vertices = vertices;
-    Guloso guloso(aux);
-    cout << "criou instancia do guloso"<< endl;
-    
-    Grafo * auxG = guloso.calculaGuloso(inicio);
-    break;
-    if (auxG != NULL){
-      auxG->imprimeGrafoPNG();
-    }*/
-    /* AQUI VOLTA
-    break;
-  }
-  case '0':
-  {
-    cout << "Imprimindo Grafo" << endl;
-    imprimeGrafoPNG();
-    break;
-  }
-//----------------------Area de teste -----------------------
+  /*----------------------Area de teste ----------------------- */
+  /*
   case 'a': 
   {
     cout<<endl;
@@ -433,6 +473,7 @@ void Grafo::menuSelecionado(char a)
 }
 */
 // Menu de funcionalidades do Grafo 
+/*
 void Grafo::menu()
 {
   char menu;
@@ -447,9 +488,11 @@ void Grafo::menu()
     cout << "[5] - Buscar vertice" << endl;
     cout << "[6] - Vertices adjacentes" << endl;
     cout << "[7] - Limpar Grafo" << endl;
-    cout << "[8] - Informaçoes do Grafo" << endl;
-    cout << "[9] - Guloso" << endl;
-    cout << "[0] - Imprimir Grafo" << endl;
+    cout << "[8] - Guloso" << endl;
+    cout << "[9] - Guloso Randomizado" << endl;
+    cout << "[0] - Guloso Randomizado Reativo" << endl;
+    cout << "[p] - Imprimir Grafo" << endl;
+    cout << "[i] - Informaçoes do Grafo" << endl;
     cout << "[q] - Para sair" << endl;
     cout << endl;
     do
@@ -480,17 +523,26 @@ void Grafo::addAresta(string id_a, string id_b, int peso)
   Vertice *b = NULL;
 
   // Apontamos o interador para o inicio do vetor de vertices até o interador ser diferente do final e a !=null e b!=null
-  for(vector<Vertice *>::iterator it = vertices.begin(); it != vertices.end() && !a && !b; ++it)
+  for(vector<Vertice *>::iterator it = vertices.begin(); it != vertices.end() &&(!a || !b); ++it)
   {
+    cout << "Valor: " << (*it)->getInfo() << endl;
     // Verifica se a informação do vertice é igual ao id_a
-    if((*it)->getInfo() == id_a)
-      a = *it;
+    if((*it)->getInfo() == id_a){
+      a = (*it);
+      cout << "A valor encontrado" << endl;
+      
+    }
     // Verifica se a informação do vertice é igual ao id_b
-    else if((*it)->getInfo() == id_b)
+    if((*it)->getInfo() == id_b){
       b = *it;
+      cout << "B valor encontrado" << endl;
+    }
   }
-  // Adiciona uma aresta entre os vertices
+
+  cout << a->getInfo() << endl;
+  cout << b->getInfo() << endl;
   auxAddAresta(a, b, peso);
+  
 }
 
 /* 
@@ -520,7 +572,7 @@ void Grafo::auxAddAresta(Vertice *a, Vertice *b, int peso)
       b->insereAresta(t);
     }
     numeroArestas++;
-
+    cout << "Numero: " << numeroArestas << endl;
     //Aresta de menor valor
     if(menorValor == NULL){
       menorValor = p;
@@ -612,7 +664,7 @@ void Grafo::atualizaMaiorgrau()
   numeroArestas = 0;
 
   maiorGrau = *vertices.begin();
-  for(vector<Vertice*>::iterator it = vertices.begin(); it != vertices.end(); ++i)
+  for(vector<Vertice*>::iterator it = vertices.begin(); it != vertices.end(); ++it)
   {
     // recebe a quantidade de arestas 
     numeroArestas += (*it)->getGrau();
@@ -643,8 +695,8 @@ Vertice * Grafo::buscaVertice(string id)
  * isVector(vector<string> *vet, int value) verifica se o valor
  * está dentro do vetor.
  */
-bool isVector(vector<string> *vet, string value)
-{
+bool isVector(vector<string> *vet, string value){
+
   if (!vet)
   {
     cout << "Vetor nao alocado!" << endl;
@@ -723,7 +775,7 @@ Vertice** Grafo::montaVetorVertices(int *cont, int tam){
   for(vector<Vertice*>::iterator it = vertices.begin(); it != vertices.end(); ++it)
   {
     i = 0;
-    for(vector<Aresta*>::iterator adjacente = (*it)->adjacentes;  i < numeroVertices && adjacente != (*it)->adjacentes.end(); ++adjacente)
+    for(vector<Aresta*>::iterator adjacente = (*it)->adjacentes.begin();  i < numeroVertices && adjacente != (*it)->adjacentes.end(); ++adjacente)
       if(infoVertice[i]->getInfo() == (*adjacente)->getAdjacente()->getInfo())
         cont[i]++;
   }
@@ -914,8 +966,7 @@ int Grafo::algoritmoDijkstra(string origem, string destino){
     p = aux.front();
     aux.pop();
     
-    Aresta * t = p->getListaAdjacencia();
-    int caminho = p->getTamCaminho() + t->getPeso();
+    int caminho = p->getTamCaminho() + p->adjacentes.front()->getPeso();
     
     if(!isVector(&nosLidos,p->getInfo())){
       nosLidos.push_back(p->getInfo());
@@ -1043,7 +1094,7 @@ int Grafo::algoritmoFloyd(string origem, string destino){
   Vertice *inicial = NULL;
   Vertice *final = NULL;
   // Busca os vertices no vetor de vertices
-  for(vector<Vertice*>::iterator it = vertices.begin(); it != vertices.end() && (!p || !q); ++it)
+  for(vector<Vertice*>::iterator it = vertices.begin(); it != vertices.end() && (!inicial || !final); ++it)
   {
     if((*it)->getInfo() == origem)
       inicial = *it;

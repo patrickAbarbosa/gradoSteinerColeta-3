@@ -47,7 +47,8 @@ int main(int argc, char *argv[])
   switch (argc)
   {
   case 1:
-    a = new Grafo("K400.3.con.red");
+    geradorDeArquivo = new GeraCsv("teste");
+    a = new Grafo("K400.3.con.red", geradorDeArquivo);
     break;
   case 2:
     a = new Grafo(argv[1]);
@@ -63,21 +64,28 @@ int main(int argc, char *argv[])
   default:
     break;
   }
-
+  cout << "Arestas: " << a->getNumeroArestas() <<endl;
+  //a->imprimeGrafoPNG();
+  return 0;
   //Guloso guloso(a);
   Guloso guloso(a);
 
-  float vet[10] = {0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50};
-  //guloso.gulosoRandomizadoReativo(vet,10,2000,100);
 
-  Grafo *teste = guloso.gulosoRandomizadoReativo(vet, 4, 200, 5); //guloso.gulosoRandomizado(0.25, 2000);
+  float vet [10]={0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50};
+
+  Grafo * teste = guloso.calculaGuloso("5");
   teste->imprimeGrafoPNG();
 
-  //Grafo * agm = guloso.calculaGuloso("5");
-  //agm->imprimeGrafoPNG();
+  teste = guloso.gulosoRandomizado(0.50,2000);
+  teste->imprimeGrafoPNG();
+
+  teste = guloso.gulosoRandomizadoReativo(vet,10,2000,100);
+  teste->imprimeGrafoPNG();
+  
+
   if (a)
   {
-    a->menu();
+    //a->menu();
     delete a;
   }
   return 0;

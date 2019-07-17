@@ -15,10 +15,16 @@ public:
 	// Calcula custo do grafo
 	int calculaCustoGrafo(Grafo *g);
 
-//	Grafo * calculaGuloso(string verticeInicial);
-	Grafo * calculaGuloso(Vertice *partida);
-	Grafo * gulosoRandomizado (float alfa, int numeroInteracoes);
-	Grafo * algoritmoPrim(Vertice * inicial);
+	bool isVector(vector<string> *vet, string aux);
+	Grafo * montaGrafo(vector<Aresta*> * arestas,int custo);
+	//guloso
+	Grafo * calculaGuloso(string inicial);
+	int auxCalculaGuloso(Vertice *inicial, vector<Aresta*> *vetor_arestas);
+	int  algoritmoPrim(Vertice * inicial, vector<Aresta*> *vetor_arestas);
+	//guloso randomizado
+	Grafo * gulosoRandomizado(float alfa, int numeroInteracoes);
+	int auxGulosoRandomizado (float alfa, int numeroInteracoes,vector<Aresta *> *vetor_arestas_melhor);
+	//guloso randomizado Reativo
 	Grafo * gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco);
 
 private: 

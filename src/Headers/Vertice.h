@@ -40,7 +40,7 @@ class Vertice{
 		void insereAresta (Aresta * a);
 		void deletaAresta (Aresta * a);
 		
-		Aresta * getListaAdjacencia () { return adjacentes; }
+		vector<Aresta*> *getListaAdjacencia () { return &adjacentes; }
 		Aresta * buscaAresta(string adjacente);
 		
 	private:

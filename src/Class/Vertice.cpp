@@ -17,6 +17,7 @@ Vertice::Vertice(string id, int peso_vertice)
 	peso = peso_vertice;
 	grau = 0;
 	tamCaminho = 0;
+	adjacentes.clear();
 }
 
 Vertice::~Vertice()

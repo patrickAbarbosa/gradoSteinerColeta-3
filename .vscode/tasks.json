@@ -12,6 +12,7 @@
                 "${file}",
                 "${fileDirname}/src/Class/GeraCsv.cpp",
                 "${fileDirname}/src/Headers/GeraCsv.h",
+                "${fileDirname}/src/Class/Fila2.cpp",
                 "${fileDirname}/src/Class/Fila.cpp",
                 "${fileDirname}/src/Class/Grafo.cpp",
                 "${fileDirname}/src/Class/Lista.cpp",
@@ -23,7 +24,6 @@
                 "${fileDirname}/src/Headers/Lista.h",
                 "${fileDirname}/src/Headers/Vertice.h",
                 "${fileDirname}/src/Headers/Fila2.h",
-                "${fileDirname}/src/Class/Fila2.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
                 //g++ main.cpp src/Class/* src/Headers/* -o grafosGrupo3

@@ -44,22 +44,19 @@ public:
 
   int algoritmoFloyd(string origem, string destino);
   int auxFloyd(Vertice *p, Vertice* destino);
-
-  // void setCusto(int i){ custo = i;} 
-  // int getCusto(){ return custo;}
-  // int getNumeroVertices(){ return numeroVertices; }
-  // int getNumeroArestas(){ return numeroArestas; }
-  protected:
-    // Vetor com os vertices do Grafo
-    vector<Vertice*> vertices;
-    // exporta pra csv
-    GeraCsv *out;
+  vector<Vertice*> *getVertices(){return &vertices; }
+  void setCusto(int i){ custo = i;} 
+  int getCusto(){ return custo;}
+  int getNumeroVertices(){ return numeroVertices; }
+  int getNumeroArestas(){ return numeroArestas; }
   private:
-     
- 
+  // Vetor com os vertices do Grafo
+  vector<Vertice*> vertices;
+  // exporta pra csv
+  GeraCsv *out;
     //string *arquivoIn; // Estacia de entrada
 
- //   int custo;
+    int custo;
     int numeroArestas;
     int numeroVertices;
     int quantidadeGrausZero;
