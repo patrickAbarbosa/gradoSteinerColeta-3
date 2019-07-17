@@ -14,57 +14,6 @@
 
 using namespace std;
 
-/*----------------------Algoritmo Guloso--------------------------
-  
-  O Algoritmo Guloso funciona usando ...
-  
-
-
-
-
-  Também temos uma função auxiliar custoSteiner(Grafo * arvore),
-  que é utilizada para encontrar o custo da arvore passada em 
-  relacao ao original.
-
- --------------------------Pseudocódigo--------------------------
-
-  Guloso(Vertice * p, Grafo * arvore):
-
-    se condição de parada então
-      retorne custoSteiner(resultado); //calcula e retorna o custo da arvore criada
-    fim-se
-
-    adjacentes <- p->getListaAdjacencia();
-    melhor <- adjacentes;
-    gasto_melhor <- melhor->getAdjacente()->getPeso() - melhor->getPeso();
-
-    enquanto adjacentes != NULL faça
-
-      gasto_outro <- adjacentes->getAdjacente()->getPeso() - adjacentes->getPeso();
-
-      se gasto_melhor > gasto_outro então    
-        melhor <- adjacentes;
-        gasto_melhor <- gasto_outro;
-      fim-se
-      
-      adjacentes <- adjacentes->getProx();              
-    fim-enquanto
-
-    listaVertices <- resultado->getVertices();
-    melhorVertice <- melhor->getAdjacente();
-
-    se o melhorVertice encontrado ja está na solucao então  
-      //ver a melhor forma de optimizar
-    fim-se
-    senão
-      insere o melhor vertice na arvore;
-      cria aresta existente entre os vertices;
-      retorne Guloso(melhorVertice, arvore);       
-    fim-se
-  fim
-
----------------------------------------------------------------------------*/
-
 Guloso::Guloso(Grafo *g)
 {
   grafo = g;
@@ -92,6 +41,18 @@ bool estaNoVetor(vector<string> *vet, string value)
       return true;
   return false;
 }
+
+/*----------------------Algoritmo Guloso--------------------------
+  
+  O Algoritmo Guloso funciona usando o algoritmo de Prim como
+  base e vai calculando o custo enquanto procura a arvore minima 
+  de steiner, após finalizado usa uma função auxiliar para montar
+  o Grafo a partir do vetor de vertices recebido.
+  
+  Obs: O algoritmo de prim para ao conseguir um equilibrio entre
+  o custo de solucao e o custo a pagar.
+
+------------------------------------------------------------------*/
 
 int Guloso::algoritmoPrim(Vertice *inicial, vector<Aresta*> *vetor_arestas){
 
@@ -137,7 +98,9 @@ int Guloso::algoritmoPrim(Vertice *inicial, vector<Aresta*> *vetor_arestas){
   }
   return custoPagar+custoSolucao;
 }
-
+/*
+  isVector() verifica se o valor está contido no vetor
+ */
 bool Guloso::isVector(vector<string> *vet, string aux){
 
   if (vet->empty()){
@@ -153,6 +116,10 @@ bool Guloso::isVector(vector<string> *vet, string aux){
   return false;
 }
 
+/* ---------------------------------------------------------------------------
+  montaGrafo() pega o vetor de arestas recebido e adiciona os vertices,
+  arestas, seta o custo e retorna o grafo.
+ ---------------------------------------------------------------------------*/
 Grafo * Guloso::montaGrafo(vector<Aresta *> * arestas,int custo){
 
   if(arestas->empty()){
@@ -222,8 +189,8 @@ Grafo * Guloso::calculaGuloso(string inicial){
   que é utilizado para auxilar na randomização
 ---------------------------------------------------------------------------*/
 
-int Guloso::auxGulosoRandomizado(float alfa, int numeroInteracoes, vector<Aresta *> *vetor_arestas_melhor)
-{
+int Guloso::auxGulosoRandomizado(float alfa, int numeroInteracoes, vector<Aresta *> *vetor_arestas_melhor){
+
   int semente = 0; //semente utilizada
   srand(semente);
 
@@ -238,6 +205,7 @@ int Guloso::auxGulosoRandomizado(float alfa, int numeroInteracoes, vector<Aresta
 
     Vertice *p = grafo->getVertices()->buscaVertice(to_string(vertice_randomizado));
     vector<Aresta *> vetor_arestas_aux;
+
     int aux = auxCalculaGuloso(p,&vetor_arestas_aux);
 
     if (aux < melhor){
@@ -255,9 +223,6 @@ Grafo * Guloso::gulosoRandomizado(float alfa, int numeroInteracoes){
   return montaGrafo(&vetor_arestas,custo);
 }
 
-// https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-10-S1-S27
-//// PDF: https://bmcbioinformatics.biomedcentral.com/track/pdf/10.1186/1471-2105-10-S1-S27
-
 // GRASP Reativo
 
 Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos, int bloco){
@@ -272,36 +237,39 @@ Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos,
   //calcula o custo maximo
   for(Vertice *p = grafo->getVertices()->getPrimeiro(); p != NULL; p = p->getProx())
     custo += p->getPeso();
-  cout<<"aqui2"<<endl;
+
   // Definição de variáveis para auxiliar
   int n = 0, aleatorio = 0;
   double probabilidade[nAlphas]; //Inicia o verot com distribuição unifome
   for (int i = 0; i < nAlphas; i++)
     probabilidade[i] = 1 / nAlphas;
-  cout<<"aqui3"<<endl;
+
   float chances[nAlphas];
   float media[nAlphas] = {0};
   float soma[nAlphas] = {0};
   float sum;
   float sum_chances;
-  cout<<"aqui4"<<endl;
-  vector<Aresta*> vetor_arestas_melhor;
+
+  vector<Aresta*> vetor_arestas_melhor; //vetor que fica com o mennor custo()
+  vector<Aresta*> vetor_arestas_aux; //vetor auxiliar
+
   for (int i = 0; i < periodos; i++){
-    cout<<"aqui5"<<endl;
+
     aleatorio = rand() % 101;
     sum = 0;
     n = 0;
     for (sum += probabilidade[n] * 100; n < nAlphas && sum < aleatorio; n++)
       sum += probabilidade[n] * 100;
-    cout<<"antes do reativo"<<endl;
-    vector<Aresta*>vetor_arestas_aux;
-    int custoGrafoAux = auxGulosoRandomizado(alpha[n], 100,&vetor_arestas_aux);
-    cout<<"depoos do reativo"<<endl;
+
+    //limpa o vetor auxiliar
+    vetor_arestas_aux.clear();
+
+    int custoGrafoAux = auxGulosoRandomizado(alpha[n],100,&vetor_arestas_aux);
+
     if (custo > custoGrafoAux){
       custo = custoGrafoAux;
       vetor_arestas_melhor = vetor_arestas_aux;
     }
-    cout<<"antes do bloco"<<endl;
     soma[i] = custo;
     if (i % bloco == 0)
     {
@@ -318,6 +286,5 @@ Grafo *Guloso::gulosoRandomizadoReativo(float *alpha, int nAlphas, int periodos,
       }
     }
   }
-  cout<<"fim"<<endl;
   return montaGrafo(&vetor_arestas_melhor,custo);
 }

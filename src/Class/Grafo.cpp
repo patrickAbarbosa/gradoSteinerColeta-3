@@ -398,7 +398,7 @@ void Grafo::menuSelecionado(char a)
     int tamAlfa;
     cout<<"digite a quantidade de alfas: ";
     cin>>tamAlfa;
-    int vet[tamAlfa];
+    float vet[tamAlfa];
     for(int i = 0; i<tamAlfa; i++){
       cout<<"digite o alfa["<<i<<"]: ";
       cin>>vet[i];
@@ -408,7 +408,7 @@ void Grafo::menuSelecionado(char a)
     cout<<"digite o tamanho do bloco: ";
     cin>>tamBloco;
     Guloso aux(this);
-    Grafo* gr = aux.gulosoRandomizadoReativo();
+    Grafo* gr = aux.gulosoRandomizadoReativo(vet,tamAlfa,numeroInteracoes,tamBloco);
     gr->imprimeGrafoPNG();
     imprimeGrafoPNG();
     break;
